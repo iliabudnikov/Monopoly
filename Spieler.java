@@ -1,33 +1,18 @@
-
-/**
- * Beschreiben Sie hier die Klasse Spieler.
- * 
- * @author (Ihr Name) 
- * @version (eine Versionsnummer oder ein Datum)
- */
+import java.util.ArrayList;
 public class Spieler
 {
-    // Instanzvariablen - ersetzen Sie das folgende Beispiel mit Ihren Variablen
-    private int x;
-
-    /**
-     * Konstruktor für Objekte der Klasse Spieler
-     */
+    //Das Geld, dass der Spieler hat
+    private int geld;
+    //Die Positon des Spielers auf dem Spielfeld
+    private int position;
+    //Die Grundstücke die der Spieler gekauft hat. Hier wird die Position des Grundstückes gespeichert. 
+    private Arraylist Grundstücke;
+    //Jeder Spieler braucht eine Spielernummer, damit man die Spieler unterscheiden kann
+    private int Spielernummer;
+    
+    
     public Spieler()
     {
-        // Instanzvariable initialisieren
-        x = 0;
-    }
-
-    /**
-     * Ein Beispiel einer Methode - ersetzen Sie diesen Kommentar mit Ihrem eigenen
-     * 
-     * @param  y    ein Beispielparameter für eine Methode
-     * @return        die Summe aus x und y
-     */
-    public int beispielMethode(int y)
-    {
-        // tragen Sie hier den Code ein
-        return x + y;
+        
     }
 }
