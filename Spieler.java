@@ -5,7 +5,7 @@ public class Spieler
     private int geld;
     //Die Positon des Spielers auf dem Spielfeld
     private int position;
-    //Die Grundstücke die der Spieler gekauft hat. Hier wird die Position des Grundstückes gespeichert. 
+    //Die GrundstÃ¼cke die der Spieler gekauft hat. Hier wird die Position des GrundstÃ¼ckes gespeichert. 
     private ArrayList<Integer> grundstücke;
     //Jeder Spieler braucht eine Spielernummer, damit man die Spieler unterscheiden kann
     private int spielernummer;
@@ -15,6 +15,8 @@ public class Spieler
     {
         grundstücke = new ArrayList<Integer>();
     }
+    
+    //Getter und Setter für alle Instanzvariablen
     public int getGeld()
     {
         return geld;
@@ -41,18 +43,23 @@ public class Spieler
     }
     public int[] getGrundstücke()
     {
-        return grundstücke.toArray();
+        int[] ausgabe = new int[grundstücke.size()];
+        for(int i = 0; i < ausgabe.length; i++)
+        {
+        	ausgabe[i] = grundstücke.get(i);
+        }
+        return ausgabe;
     }
     public void addGrundstück(int Position)
     {
-        
+        grundstücke.add(Position);
     }
-    public void removeGrundstück()
+    public void removeGrundstück(int Position)
     {
-        
+        grundstücke.remove(Position);
     }
     public int getSpielernummer()
     {
-        
+        return spielernummer;
     }
 }
