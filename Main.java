@@ -4,7 +4,7 @@ public class Main
     {
         //Alle Regeln von dieser Website: https://monopoly-regeln.de/monopoly-spielregeln/
         //Spieler Erstellen
-        //Spielfeld Erstellen
+        //Spielfeld Erstellen(https://de.wikipedia.org/wiki/Monopoly Das Spielfeld)
         
         
         //Startgeld verteilen

@@ -9,8 +9,11 @@ public class Spieler
     private ArrayList<Integer> grundstücke;
     //Jeder Spieler braucht eine Spielernummer, damit man die Spieler unterscheiden kann
     private int spielernummer;
-    
-    
+    //Ist dieser Spieler gerade im Gefängnis?
+    private boolean imGefängnis = false;
+    private int rundenImGefängnis = 0;
+    //Die anzahl von "Komm aus dem Gefängnis Frei" Karten, die der Spieler besitzt
+    private int kommAusDemGefängnisFreiKarten = 0;
     public Spieler()
     {
         grundstücke = new ArrayList<Integer>();
@@ -39,7 +42,29 @@ public class Spieler
     }
     public void setPosition(int Position)
     {
-        position = Position;
+        if(Position < 0)
+        {
+        	Position = 39 + Position;
+        }
+    	position = Position;
+    }
+    public boolean getImGefängnis()
+    {
+    	return imGefängnis;
+    }
+    public void setImGefängnis()
+    {
+    	imGefängnis = true;
+    	position = 10;
+    	rundenImGefängnis = 0;
+    }
+    public int getRundenImGefängnis()
+    {
+    	return rundenImGefängnis;
+    }
+    public void increaseRundenImGefängnis()
+    {
+    	rundenImGefängnis++;
     }
     public int[] getGrundstücke()
     {
@@ -62,4 +87,17 @@ public class Spieler
     {
         return spielernummer;
     }
+    public int getGefängnisKarte()
+    {
+    	return kommAusDemGefängnisFreiKarten;
+    }
+    public void addGefängnisKarte()
+    {
+    	kommAusDemGefängnisFreiKarten++;
+    }
+    public void subtractGefängnisKarte()
+    {
+    	kommAusDemGefängnisFreiKarten--;
+    }
+    
 }
