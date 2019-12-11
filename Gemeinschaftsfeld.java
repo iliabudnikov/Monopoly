@@ -4,9 +4,11 @@ import java.util.Random;
 public class Gemeinschaftsfeld extends Aktionsfelder
 {
     //Alle Ereigniskarten aus diesem PDF: https://monopoly-vogtland.de/downloads/kartentexte_vogtland.pdf
-    public Gemeinschaftsfeld(int Feldnummer)
+    public Gemeinschaftsfeld(int Feldnummer, String Feld)
     {
         super.feldnummer = Feldnummer;
+        super.feld = "Gemeinschaftsfeld";
+        super.feldname = "Gemeinschaftsfeld";
     }
     
     public ArrayList<Spieler> ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
@@ -113,5 +115,10 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         }
         
         return alleSpieler;
+    }
+    
+    public void feldBetreten()
+    {
+        System.out.println("Du hast ein " + feld + " betreten");
     }
 }

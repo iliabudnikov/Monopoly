@@ -1,33 +1,35 @@
-
-/**
- * Beschreiben Sie hier die Klasse Steuern.
- * 
- * @author (Ihr Name) 
- * @version (eine Versionsnummer oder ein Datum)
- */
+import java.util.ArrayList;
 public class Steuern extends Aktionsfelder
 {
-    // Instanzvariablen - ersetzen Sie das folgende Beispiel mit Ihren Variablen
-    private int x;
-
-    /**
-     * Konstruktor für Objekte der Klasse Steuern
-     */
-    public Steuern()
+    //Diese Boolean unterscheidet zwischen dem "Zusatzsteuer"(true) und dem "Einkommenssteuer"(false) Feld.
+    private boolean welchesFeld;
+    public Steuern(int Feldnummer, String Feld, boolean WelchesFeld) //Die Boolean "welchesFeld" ist dazu da um zwischen den beiden Steuerfeldern zu unterscheiden
     {
-        // Instanzvariable initialisieren
-        x = 0;
+        super.feldnummer = Feldnummer;
+        super.feld = Feld; 
+        welchesFeld = WelchesFeld;
     }
-
-    /**
-     * Ein Beispiel einer Methode - ersetzen Sie diesen Kommentar mit Ihrem eigenen
-     * 
-     * @param  y    ein Beispielparameter für eine Methode
-     * @return        die Summe aus x und y
-     */
-    public int beispielMethode(int y)
+    
+    public ArrayList<Spieler> ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
     {
-        // tragen Sie hier den Code ein
-        return x + y;
+        feldBetreten();
+        //Zusatzsteuer
+        if(welchesFeld)
+        {
+            System.out.println("Du musst die Zusatzsteuer von 100 Geld bezahlen!");
+            alleSpieler.get(aktiverSpieler).subtractGeld(100);
+        }
+        //Einkommenssteuer
+        else
+        {
+            System.out.println("Du musst die Einkommenssteuer von 200 Geld bezahlen!");
+            alleSpieler.get(aktiverSpieler).subtractGeld(200);
+        }
+        return alleSpieler;
+    }
+    
+    public void feldBetreten()
+    {
+        System.out.println("Du hast ein " + feld + " betreten");
     }
 }

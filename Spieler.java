@@ -46,6 +46,10 @@ public class Spieler
         {
         	Position = 39 + Position;
         }
+        if(Position > 39)
+        {
+            Position = Position - 39;
+        }
     	position = Position;
     }
     public boolean getImGefängnis()

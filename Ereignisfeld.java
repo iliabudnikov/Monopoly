@@ -7,10 +7,13 @@ public class Ereignisfeld extends Aktionsfelder
     public Ereignisfeld(int Feldnummer)
     {
         super.feldnummer = Feldnummer;
+        super.feld = "Ereignisfeld";
+        super.feldname = "Ereignisfeld";
     }
     
     public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
     {
+        feldBetreten();
         //Erstellen eines Random objektes, um ein Ereignis auszwählen
         Random rnd = new Random();
         //Setzt den Seed abhängig von der Systemzeit, damit bei jedem Spieldurchlauf die Reihenfolge der Ereigniskarten variiert
@@ -210,5 +213,10 @@ public class Ereignisfeld extends Aktionsfelder
         }
         
         return alleSpieler;
+    }
+    
+    public void feldBetreten()
+    {
+        System.out.println("Du hast ein " + feld + " betreten");
     }
 }
