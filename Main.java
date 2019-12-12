@@ -4,6 +4,7 @@ public class Main
     {
         //Alle Regeln von dieser Website: https://monopoly-regeln.de/monopoly-spielregeln/
         //Spieler Erstellen
+        
         //Spielfeld Erstellen(https://de.wikipedia.org/wiki/Monopoly Das Spielfeld)
         
         
@@ -27,4 +28,5 @@ public class Main
         
         //Muss ein Spieler mehr Geld zahlen als er besitzt kann er Hypotheken aufnehmen. Wenn er nicht genug Geld bekommen kann, ist er bankrott/hat verloren. Seine Grundstücke werden hypothekenfrei an die restlichen Spieler versteigert 
     }
+    
 }

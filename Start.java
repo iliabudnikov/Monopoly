@@ -1,33 +1,20 @@
-
-/**
- * Beschreiben Sie hier die Klasse Start.
- * 
- * @author (Ihr Name) 
- * @version (eine Versionsnummer oder ein Datum)
- */
+import java.util.ArrayList;
 public class Start extends Aktionsfelder
 {
-    // Instanzvariablen - ersetzen Sie das folgende Beispiel mit Ihren Variablen
-    private int x;
-
-    /**
-     * Konstruktor für Objekte der Klasse Start
-     */
-    public Start()
+    
+    public Start(int Feldnummer)
     {
-        // Instanzvariable initialisieren
-        x = 0;
+        super.feldnummer = Feldnummer;
+        super.feld = "Los";
+        super.feldtyp = false;
     }
-
-    /**
-     * Ein Beispiel einer Methode - ersetzen Sie diesen Kommentar mit Ihrem eigenen
-     * 
-     * @param  y    ein Beispielparameter für eine Methode
-     * @return        die Summe aus x und y
-     */
-    public int beispielMethode(int y)
+    public ArrayList<Spieler> ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
     {
-        // tragen Sie hier den Code ein
-        return x + y;
+        feldBetreten();
+        return alleSpieler;
+    }
+    public void feldBetreten()
+    {
+        System.out.println("Du hast das " + feld + " Feld betreten");
     }
 }
