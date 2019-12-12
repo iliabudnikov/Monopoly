@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+ import java.util.ArrayList;
 public class Spieler
 {
     //Das Geld, dass der Spieler hat
@@ -39,10 +39,10 @@ public class Spieler
     {
         position = Position;
     }
-    public int[] getGrundstücke()
+    /*public Spielfeld[] getGrundstücke()
     {
-        return grundstücke.toArray();
-    }
+        return Spielfeld.toArray();
+    }*/
     public void addGrundstück(int Position)
     {
         
@@ -51,8 +51,8 @@ public class Spieler
     {
         
     }
-    public int getSpielernummer()
+    /*public int getSpielernummer()
     {
         
-    }
+    }*/
 }
