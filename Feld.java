@@ -8,4 +8,12 @@ public abstract class Feld
     public String feld; 
     //z.B. Südbahnhof, Schlossallee
     public String feldname;
+    
+    public Feld (int feldnummer, boolean feldtyp, String feld, String feldname)
+    {
+        this.feldnummer = feldnummer;
+        this.feldtyp = feldtyp;
+        this. feld = feld;
+        this.feldname = feldname;
+    }
 }

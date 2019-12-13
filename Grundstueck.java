@@ -1,18 +1,20 @@
 import java.util.Scanner;
-public abstract class Grundstück extends Feld
+public abstract class Grundstueck extends Feld
 {
     public Scanner sc = new Scanner(System.in); 
     
-    
-    // Def KONS
-    // KONSTRUKTOR
-    
-    
-    
     // Nummer des Besitzters des Grundstücks
     private int besitzer;
-    // preis des Grundstückes
+    // Preis des Grundstückes
     private int preis;
+    
+    Grundstueck (int feldnummer, String feld, String feldname, int besitzer, int preis)
+    {
+        super(feldnummer, true, feld, feldname);
+        this.besitzer = besitzer;
+        this.preis = preis;
+    }
+    
     
     public boolean getBesitzt()
     {
@@ -34,6 +36,7 @@ public abstract class Grundstück extends Feld
         this.preis = preis;
     }
     
+    // ---------------- Auktionsteil ----------------
     // zählt, wie viele Spieler noch in der Auktion teilnehmen (will nicht teilnehmen oder Budget < Gebot)
     private static int zählMöglicheTeilnehmer(int [] teilnehmer, int teilnehmerSize, int Gebot)
     {
@@ -96,13 +99,19 @@ public abstract class Grundstück extends Feld
         }
             
         if (spitzenreiter != -1) // wenn irgendjemand ein Spitzenreiter war
-            Spieler.alleSpieler.get(spitzenreiter).addGrundstück(position);
+        {
+            besitzer = Spieler.alleSpieler.get(aktiverSpieler);
+            Spieler.alleSpieler.get(aktiverSpieler).addGrundstück(position);
+            Spieler.alleSpieler.get(aktiverSpieler).subtractGeld(this.getPreis());
+        }
         else
         {
             System.out.println("\nDas Grundstück bleibt unbesitzt.");
         }
     }
+    // ---------------- Auktionsteil ----------------
     
+    // fragen, ob der Spieler das Grungstück kaufen will
     public void askKaufentscheidung()
     {
         int entscheidung;
@@ -113,13 +122,16 @@ public abstract class Grundstück extends Feld
         
         if (entscheidung == 1)
         {
-            this.besitzer = Spieler.alleSpieler.get(aktiverSpieler);
+            besitzer = Spieler.alleSpieler.get(aktiverSpieler);
             Spieler.alleSpieler.get(aktiverSpieler).addGrundstück(position);
             Spieler.alleSpieler.get(aktiverSpieler).subtractGeld(this.getPreis());
         }
         else
         {
-            Auktion.versteigGrundstück();
+            this.versteigGrundstück();
         }
     }
+    
+    // zeigt das Grundstückinfos
+    public abstract void toString();
 }
