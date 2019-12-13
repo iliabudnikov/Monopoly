@@ -11,7 +11,7 @@ public class Ereignisfeld extends Aktionsfelder
         super.feldname = "Ereignisfeld";
     }
     
-    public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] grundstück)
     {
         feldBetreten();
         //Erstellen eines Random objektes, um ein Ereignis auszwählen
@@ -27,7 +27,7 @@ public class Ereignisfeld extends Aktionsfelder
         		System.out.println("Rücken Sie vor bis zur Schlossallee.");
         		alleSpieler.get(aktiverSpieler).setPosition(39);
         		//Dieser Teil des Programms ist noch nicht Implementiert.
-        		spielfeld[39].aktion oder so
+        		grundstück[39].aktion oder so
         		break;
         	//Machen Sie einen Ausflug zum Südbahnhof. Wenn Sie über Los kommen, ziehen Sie M 200 ein.
         	case 1:
@@ -39,7 +39,7 @@ public class Ereignisfeld extends Aktionsfelder
         		}
         		alleSpieler.get(aktiverSpieler).setPosition(5);
         		//Dieser Teil des Programms ist noch nicht Implementiert.
-        		spielfeld[39].aktion oder so
+        		grundstück[39].aktion oder so
         		break;
         	//Ihr Bausparvertrag wird fällig. Sie erhalten M 200.
         	case 2:
@@ -55,7 +55,7 @@ public class Ereignisfeld extends Aktionsfelder
         		}
         		alleSpieler.get(aktiverSpieler).setPosition(24);
         		//Dieser Teil des Programms ist noch nicht Implementiert.
-        		spielfeld[39].aktion oder so
+        		grundstück[39].aktion oder so
         		break;
         	//Rücken Sie vor bis zum nächsten Versorgungswerk. Werfen Sie die Würfel und zahlen dem Eigentümer den zehnfachen Betrag Ihres Wurfergebnisses. Wenn das Werk noch niemandem gehört, können Sie es von der Bank kaufen
         	case 4:
@@ -131,7 +131,7 @@ public class Ereignisfeld extends Aktionsfelder
         		System.out.println("Gehen Sie 3 Felder zurück.");
         		alleSpieler.get(aktiverSpieler).setPosition(alleSpieler.get(aktiverSpieler).getPosition() - 3);
         		//Diese Funktion ist noch nicht Implementiert
-        		spielfeld[alleSpieler.get(aktiverSpieler).getPosition()].aktion oder so
+        		grundstück[alleSpieler.get(aktiverSpieler).getPosition()].aktion oder so
         		break;
         	//Strafzettel! Zahlen Sie M 15.
         	case 14:
@@ -151,7 +151,7 @@ public class Ereignisfeld extends Aktionsfelder
         			alleSpieler.get(aktiverSpieler).addGeld(200);
         			alleSpieler.get(aktiverSpieler).setPosition(5);
         			//Diese Funktion ist noch nicht implementiert
-        			spielfeld[5],aktion oder so
+        			grundstück[5],aktion oder so
         		}
         		else
         		{
@@ -188,25 +188,25 @@ public class Ereignisfeld extends Aktionsfelder
         					alleSpieler.get(aktiverSpieler).setPosition(5);
         					System.out.println("Du rückst auf den Bahnhof auf");
         					//Diese Funktion ist noch nicht Implementiert
-        					spielfeld[5].aktion oder so
+        					grundstück[5].aktion oder so
         					break;
         				case 1:
         					alleSpieler.get(aktiverSpieler).setPosition(15);
         					System.out.println("Du rückst auf den Bahnhof auf");
         					//Diese Funktion ist noch nicht Implementiert
-        					spielfeld[15].aktion oder so
+        					grundstück[15].aktion oder so
         					break;
         				case 2:
         					alleSpieler.get(aktiverSpieler).setPosition(25);
         					System.out.println("Du rückst auf den Bahnhof auf");
         					//Diese Funktion ist noch nicht Implementiert
-        					spielfeld[25].aktion oder so
+        					grundstück[25].aktion oder so
         					break;
         				case 3:
         					alleSpieler.get(aktiverSpieler).setPosition(35);
         					System.out.println("Du rückst auf den Bahnhof auf");
         					//Diese Funktion ist noch nicht Implementiert
-        					spielfeld[35].aktion oder so
+        					grundstück[35].aktion oder so
         					break;
         			}
         		}
