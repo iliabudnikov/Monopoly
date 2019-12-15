@@ -7,33 +7,51 @@ public abstract class Grundstueck extends Feld
     private int besitzer;
     // Preis des Grundstückes
     private int preis;
+    // Position des Grundstücks auf dem Feld
+    private int position;
     
-    Grundstueck (int feldnummer, String feld, String feldname, int besitzer, int preis)
+    Grundstueck (int feldnummer, String feld, String feldname, int preis)
     {
         super(feldnummer, true, feld, feldname);
-        this.besitzer = besitzer;
+        this.besitzer = -1;
         this.preis = preis;
     }
     
     
-    public boolean getBesitzt()
+    public int getBesitzer()
     {
-        return this.besitzt;
+        return this.besitzer;
     }
-    
-    public void setBesitzt(boolean besitzt)
+    public void setBesitzer(int besitzer)
     {
-        this.besitzt = besitzt;
+        this.besitzer = besitzer;
     }
     
     public int getPreis()
     {
         return this.preis;
     }
-    
     public void setPreis(int preis)
     {
         this.preis = preis;
+    }
+    
+    public int getPosition()
+    {
+        return position;
+    }
+    public void setPosition(int position)
+    {
+        if(position < 0)
+        {
+            position += 39;
+        }
+        if(position > 39)
+        {
+            position -= 39;
+        }
+        
+        this.position = position;
     }
     
     // ---------------- Auktionsteil ----------------

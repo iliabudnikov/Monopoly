@@ -1,26 +1,45 @@
- import java.util.ArrayList;
+import java.util.ArrayList;
  
 public class Spieler
 {
-    //Das Geld, dass der Spieler hat (in Mark)
+    // Der Name der Figur, mit der der Spieler spielt
+    private String figur;
+    
+    // Das Geld, dass der Spieler hat (in Mark)
     private int geld;
-    //Die Positon des Spielers auf dem Grundstück
-    private int position;
-    //Die Grundstücke die der Spieler gekauft hat. Hier wird die Position des Grundstükes gespeichert. 
-    private ArrayList<Integer> grundstücke;
-    //Jeder Spieler braucht eine Spielernummer, damit man die Spieler unterscheiden kann
+    
+    // Jeder Spieler braucht eine Spielernummer, damit man die Spieler unterscheiden kann
     private int spielernummer;
-    //Ist dieser Spieler gerade im Gefängnis?
+    
+    // Die Positon des Spielers auf dem Feld
+    private int position;
+    
+    // Die grundstuecke die der Spieler gekauft hat. Hier wird die Position des Grundstükes gespeichert. 
+    private ArrayList<Grundstueck> grundstuecke;
+    
+    // Ist dieser Spieler gerade im Gefängnis?
     private boolean imGefängnis = false;
     private int rundenImGefängnis = 0;
-    //Die anzahl von "Komm aus dem Gefängnis Frei" Karten, die der Spieler besitzt
+    // Die anzahl von "Komm aus dem Gefängnis Frei" Karten, die der Spieler besitzt
     private int kommAusDemGefängnisFreiKarten = 0;
-    public Spieler()
+    
+    // Ein neuer Spieler
+    public Spieler(String figur, int spielernummer)
     {
-        grundstücke = new ArrayList<Integer>();
+        this.figur = figur;
+        geld = 1500; // Startgeld
+        position = 0; // Los
+        this.spielernummer = spielernummer;
+        grundstuecke = new ArrayList<Grundstueck>();
+    }
+
+    
+    // Getter und Setter für alle Instanzvariablen
+    public int getSpielernummer()
+    {
+        return spielernummer;
     }
     
-    //Getter und Setter für alle Instanzvariablen
     public int getGeld()
     {
         return geld;
@@ -29,6 +48,7 @@ public class Spieler
     {
         geld = Geld;
     }
+    
     public void addGeld(int Geld)
     {
         geld += Geld;
@@ -37,132 +57,101 @@ public class Spieler
     {
         geld -= Geld;
     }
+    
     public int getPosition()
     {
         return position;
     }
-    public void setPosition(int Position)
+    public void setPosition(int position)
     {
-        if(Position < 0)
+        if(position < 0)
         {
-        	Position = 39 + Position;
+            position += 39;
         }
-        if(Position > 39)
+        if(position > 39)
         {
-            Position = Position - 39;
+            position -= 39;
         }
-    	position = Position;
-<<<<<<< HEAD
-=======
-    }
-    public boolean getImGefängnis()
-    {
-    	return imGefängnis;
-    }
-    public void setImGefängnis()
-    {
-    	imGefängnis = true;
-    	position = 10;
-    	rundenImGefängnis = 0;
-    }
-    public int getRundenImGefängnis()
-    {
-    	return rundenImGefängnis;
-    }
-    public void increaseRundenImGefängnis()
-    {
-    	rundenImGefängnis++;
->>>>>>> e3c151b5bfd8050101bc67e6683e68fb01bacf1f
-    }
-    public boolean getImGefängnis()
-    {
-<<<<<<< HEAD
-    	return imGefängnis;
-=======
-        int[] ausgabe = new int[grundstücke.size()];
-        for(int i = 0; i < ausgabe.length; i++)
-        {
-        	ausgabe[i] = grundstücke.get(i);
-        }
-        return ausgabe;
->>>>>>> e3c151b5bfd8050101bc67e6683e68fb01bacf1f
-    }
-    public void setImGefängnis()
-    {
-    	imGefängnis = true;
-    	position = 10;
-    	rundenImGefängnis = 0;
-    }
-    public int getRundenImGefängnis()
-    {
-    	return rundenImGefängnis;
-    }
-    public void increaseRundenImGefängnis()
-    {
-    	rundenImGefängnis++;
-    }
-    public Spielfeld[] getGrundstücke()
-    {
-<<<<<<< HEAD
-        return Spielfeld.toArray();
-    }
-=======
-        int[] ausgabe = new int[grundstücke.size()];
-        for(int i = 0; i < ausgabe.length; i++)
-        {
-        	ausgabe[i] = grundstücke.get(i);
-        }
-        return ausgabe;
-    }
->>>>>>> e3c151b5bfd8050101bc67e6683e68fb01bacf1f
-    public void addGrundstück(int Position)
-    {
-        grundstücke.add(Position);
-    }
-    public void removeGrundstück(int Position)
-    {
-        grundstücke.remove(Position);
-    }
-    public int getSpielernummer()
-    {
-<<<<<<< HEAD
-<<<<<<< HEAD
         
+        this.position = position;
     }
-}
-=======
-        return spielernummer;
-    }
-    public int getGefängnisKarte()
+    
+    public boolean getImGefängnis()
     {
-    	return kommAusDemGefängnisFreiKarten;
+        return imGefängnis;
+    }
+    public void setImGefängnis()
+    {
+        imGefängnis = true;
+        position = 10;
+        rundenImGefängnis = 0;
+    }
+    public int getRundenImGefängnis()
+    {
+        return rundenImGefängnis;
+    }
+    public void increaseRundenImGefängnis()
+    {
+        rundenImGefängnis++;
+    }
+        public int getGefängnisKarte()
+    {
+        return kommAusDemGefängnisFreiKarten;
     }
     public void addGefängnisKarte()
     {
-    	kommAusDemGefängnisFreiKarten++;
+        kommAusDemGefängnisFreiKarten++;
     }
     public void subtractGefängnisKarte()
     {
-    	kommAusDemGefängnisFreiKarten--;
+        kommAusDemGefängnisFreiKarten--;
     }
     
-}
->>>>>>> e3c151b5bfd8050101bc67e6683e68fb01bacf1f
-=======
-        return spielernummer;
-    }
-    public int getGefängnisKarte()
+    public Grundstueck[] getGrundstuecke()
     {
-    	return kommAusDemGefängnisFreiKarten;
+        Grundstueck[] ausgabe = new Grundstueck[grundstuecke.size()];
+        for(int i = 0; i < ausgabe.length; i++)
+        {
+            ausgabe[i] = grundstuecke.get(i);
+        }
+        return ausgabe;
     }
-    public void addGefängnisKarte()
+    public void addGrundstück(Grundstueck grundstueck)
     {
-    	kommAusDemGefängnisFreiKarten++;
+        grundstuecke.add(grundstueck);
     }
-    public void subtractGefängnisKarte()
+    public void removeGrundstück(int position)
     {
-    	kommAusDemGefängnisFreiKarten--;
+        int i = 0;
+        while (i < grundstuecke.size() && grundstuecke.get(i).getPosition() != position)
+            i++;
+        
+        grundstuecke.remove(i);
     }
     
+    // bauen ein Haus?
+    public boolean sayIfCanHaus()
+    {
+        int strassenAnzahl; // die Anzahl von Straßen mit gleichen Farben
+        for(int i = 0; i < grundstuecke.size()-1; i++)
+        {
+            if (grundstuecke.get(i).getFeld() == "Straße") // wenn das Grundstück eine Straße ist 
+            {
+                strassenAnzahl = 1;
+                for(int j = i+1; j < grundstuecke.size(); j++)
+                {
+                    if (grundstuecke.get(i).getFeld() == "Straße")
+                    {
+                        if (grundstuecke.get(i).getFarbe() == grundstuecke.get(j).getFarbe()) // wenn noch eine Straße gefunden ist und ihre Farbe passend ist
+                            strassenAnzahl += 1;
+                    }
+                }
+                
+                if (strassenAnzahl == 4)
+                    return true;
+            }
+        }
+        
+        return false;
+    } 
 }
->>>>>>> e3c151b5bfd8050101bc67e6683e68fb01bacf1f

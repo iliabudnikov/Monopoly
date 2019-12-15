@@ -1,13 +1,13 @@
 public abstract class Feld
 {
     //Nummer des Feldes in der Reihenfolge des Gesammten Spielfeldes
-    public int feldnummer;
+    private int feldnummer;
     //Boolean zur unterscheidung von Aktionsfeldern(False) und Spielfeldern(True)
-    public boolean feldtyp;
+    private boolean feldtyp;
     //Was für ein Feld ist es genau? Straße? Bahnhof? Ereignisfeld? Als String
-    public String feld; 
+    private String feld; 
     //z.B. Südbahnhof, Schlossallee
-    public String feldname;
+    private String feldname;
     
     public Feld (int feldnummer, boolean feldtyp, String feld, String feldname)
     {
@@ -15,5 +15,26 @@ public abstract class Feld
         this.feldtyp = feldtyp;
         this. feld = feld;
         this.feldname = feldname;
+    }
+    
+    
+    public int getFeldnummer()
+    {
+        return feldnummer;
+    }
+    
+    public boolean getfeldtyp()
+    {
+        return feldtyp;
+    }
+    
+    public String getFeld()
+    {
+        return feld;
+    }
+    
+    public String getFeldname()
+    {
+        return feldname;
     }
 }

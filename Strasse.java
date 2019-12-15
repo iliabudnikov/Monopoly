@@ -11,7 +11,7 @@ public class Strasse extends Grundstueck
     }
     
     
-    public int getFarbe()
+    public String getFarbe()
     {
         return this.farbe;
     }
@@ -32,7 +32,7 @@ public class Strasse extends Grundstueck
     }
     
     // --!-- In MAIN: if Straße : wenn Spieler besitzt alle Felder der Farbe => fragen nach dem neuen Huus
-    // bauen ein Haus?
+    
     public void bauHaus()
     {
         
