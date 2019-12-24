@@ -1,7 +1,7 @@
 public abstract class Aktionsfelder extends Feld
 {
-    public Aktionsfelder()
+    public Aktionsfelder(int Feldnummer, boolean feldtyp, String feld, String feldname)
     {
-        super.feldtyp = false;
+        super(Feldnummer, feldtyp, feld, feldname);
     }
 }

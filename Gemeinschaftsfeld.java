@@ -4,11 +4,9 @@ import java.util.Random;
 public class Gemeinschaftsfeld extends Aktionsfelder
 {
     //Alle Ereigniskarten aus diesem PDF: https://monopoly-vogtland.de/downloads/kartentexte_vogtland.pdf
-    public Gemeinschaftsfeld(int Feldnummer, String Feld)
+    public Gemeinschaftsfeld(int Feldnummer)
     {
-        super.feldnummer = Feldnummer;
-        super.feld = "Gemeinschaftsfeld";
-        super.feldname = "Gemeinschaftsfeld";
+    	super(Feldnummer, false, "Gemeinschaftsfeld", "Gemeinschaftsfeld");
     }
     
     public ArrayList<Spieler> ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
@@ -29,7 +27,7 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         	//Schulgeld. Zahlen Sie M 50.
         	case 1:
         		System.out.println("Schulgeld. Zahlen Sie M 50.");
-        		alleSpieler.get(aktiverSpieler).subtractGeld(50);
+        		alleSpieler.get(aktiverSpieler).subtractGeld(50, alleSpieler, spielfeld, aktiverSpieler);
         		break;
         	//Urlaubsgeld! Sie erhalten M 100.
         	case 2:
@@ -44,7 +42,7 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         	//Arzt-Kosten. Zahlen Sie M 50.
         	case 4:
         		System.out.println("Arzt-Kosten. Zahlen Sie M 50.");
-        		alleSpieler.get(aktiverSpieler).subtractGeld(50);
+        		alleSpieler.get(aktiverSpieler).subtractGeld(50, alleSpieler, spielfeld, aktiverSpieler);
         		break;
         	//Einkommenssteuerrückerstattung. Sie erhalten M 20.
         	case 5:
@@ -53,7 +51,7 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         		break;
         	//Krankenhausgebühren. Zahlen Sie M 100.
         	case 6:
-        		alleSpieler.get(aktiverSpieler).subtractGeld(100);
+        		alleSpieler.get(aktiverSpieler).subtractGeld(100, alleSpieler, spielfeld, aktiverSpieler);
         		System.out.println("Krankenhausgebühren. Zahlen Sie M 100.");
         		break;
         	//Gehen Sie in das Gefängnis. Begeben Sie sich direkt dorthin. Gehen Sie nicht über Los. Ziehen Sie nicht M 200 ein.
@@ -75,7 +73,7 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         		{
         			if(i != aktiverSpieler)
         			{
-        				alleSpieler.get(i).subtractGeld(10);
+        				alleSpieler.get(i).subtractGeld(10, alleSpieler, spielfeld, aktiverSpieler);
         				geschenkGeld += 10;
         			}
         		}
@@ -119,6 +117,6 @@ public class Gemeinschaftsfeld extends Aktionsfelder
     
     public void feldBetreten()
     {
-        System.out.println("Du hast ein " + feld + " betreten");
+        System.out.println("Du hast ein " + getFeld() + " betreten");
     }
 }

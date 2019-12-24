@@ -2,16 +2,23 @@ public class Strasse extends Grundstueck
 {
     private String farbe;
     private int hausAnzahl; // 5 Häuse => Hotel
+    private int hausPreis;
     
-    public Strasse (int feldnummer, String feld, String feldname, int besitzer, int preis, String farbe, int hausAnzahl)
+    public Strasse (int feldnummer, String feldname, int besitzer, int preis, String farbe, int hausAnzahl, int hausPreis)
     {
         super(feldnummer, "Straße", feldname, besitzer, ???);
         this.farbe = farbe;
         this.hausAnzahl = hausAnzahl;
+        this.hausPreis = hausPreis;
     }
     
     
-    public String getFarbe()
+    public int getHausPreis() {
+		return hausPreis;
+	}
+
+
+	public String getFarbe()
     {
         return this.farbe;
     }
@@ -31,6 +38,14 @@ public class Strasse extends Grundstueck
         this.hausAnzahl = hausAnzahl;
     }
     
+    public boolean hasHaus()
+    {
+    	if(hausAnzahl > 0)
+    	{
+    		return true;
+    	}
+    	return false;
+    }
     // --!-- In MAIN: if Straße : wenn Spieler besitzt alle Felder der Farbe => fragen nach dem neuen Huus
     
     public void bauHaus()
@@ -41,7 +56,7 @@ public class Strasse extends Grundstueck
     // zeigt Straßeninfos mit (True) oder ohne (False) Immobilieninfos
     public void toString(boolean mitImmobilien)
     {
-        System.out.println("\nDie " + feldname + " Straße in der Farbe " + farbe + "kostet " + preis + " Mark.");
+        System.out.println("\nDie " + getFeldname() + " Straße in der Farbe " + farbe + "kostet " + getPreis() + " Mark.");
         if (mitImmobilien)
         {
             switch (hausAnzahl)
@@ -60,4 +75,11 @@ public class Strasse extends Grundstueck
             }
         }
     }
+
+
+	@Override
+	public void toString() {
+		// TODO Auto-generated method stub
+		
+	}
 }

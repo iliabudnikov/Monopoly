@@ -5,14 +5,12 @@ public class Gefängnis extends Aktionsfelder
 {
     public Gefängnis(int Feldnummer)
     {
-        super.feldnummer = Feldnummer;
-        super.feld = "Gefängnis";
-        super.feldname = "Gefängnis";
+    	super(Feldnummer, false, "Gefängnis", "Gefängnis");
     }
     
     public ArrayList<Spieler> ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
     {
-        feldBetreten(alleSpieler, aktiverSpieler);
+        feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
         return alleSpieler;
     }
     
@@ -21,7 +19,7 @@ public class Gefängnis extends Aktionsfelder
         //Wenn der Spieler nicht im Gefängnis ist, dann wird nur ein Text ausgegeben
         if(!alleSpieler.get(aktiverSpieler).getImGefängnis())
         {
-             System.out.println("Du hast das " + feld + " betreten");
+             System.out.println("Du hast das " + getFeld() + " betreten");
             System.out.println("Du bist nur zu besuch");
         }
         else 
@@ -32,7 +30,7 @@ public class Gefängnis extends Aktionsfelder
             if(alleSpieler.get(aktiverSpieler).getRundenImGefängnis() == 3)
             {
                 System.out.println("Du bist bereits 3 Runden im Gefängnis, du musst 50 Geld bezahlen");
-                zahlen();
+                zahlen(alleSpieler, aktiverSpieler, spielfeld);
             }
             else
             {
@@ -84,6 +82,7 @@ public class Gefängnis extends Aktionsfelder
         {
             System.out.println("Du hast eine " + ersteZahl + " und eine " + zweiteZahl + " Gewürfelt.\nDu kommst aus dem Gefängnis frei. Rücke " + (ersteZahl + zweiteZahl) + " Felder vor");
             alleSpieler.get(aktiverSpieler).setPosition(alleSpieler.get(aktiverSpieler).getPosition() + ersteZahl + zweiteZahl);
+            alleSpieler.get(aktiverSpieler).addPasch();
             //Diese Funktion ist noch nicht Implementiert
             spielfeld[alleSpieler.get(aktiverSpieler).getPosition()].aktion oder so
         }

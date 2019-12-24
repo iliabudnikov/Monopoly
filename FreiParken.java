@@ -3,9 +3,7 @@ public class FreiParken extends Aktionsfelder
 {
     public FreiParken(int Feldnummer)
     {
-        super.feldnummer = Feldnummer;
-        super.feld = "FreiParken";
-        super.feldtyp = false;
+    	super(Feldnummer, false, "Frei Parken", "Frei Parken");
     }
     public ArrayList<Spieler> ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
     {
@@ -14,6 +12,6 @@ public class FreiParken extends Aktionsfelder
     }
     public void feldBetreten()
     {
-        System.out.println("Du hast ein " + feld + " Feld betreten");
+        System.out.println("Du hast ein " + getFeld() + " Feld betreten");
     }
 }

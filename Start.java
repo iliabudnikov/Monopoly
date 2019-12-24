@@ -4,9 +4,9 @@ public class Start extends Aktionsfelder
     
     public Start(int Feldnummer)
     {
-        super.feldnummer = Feldnummer;
-        super.feld = "Los";
-        super.feldtyp = false;
+    	//int feldnummer, boolean feldtyp, String feld, String feldname
+        super(Feldnummer, false, "Los", "Los");
+    	
     }
     public ArrayList<Spieler> ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
     {
@@ -15,6 +15,6 @@ public class Start extends Aktionsfelder
     }
     public void feldBetreten()
     {
-        System.out.println("Du hast das " + feld + " Feld betreten");
+        System.out.println("Du hast das " + getFeld() + " Feld betreten");
     }
 }

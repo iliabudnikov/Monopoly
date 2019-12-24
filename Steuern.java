@@ -5,8 +5,7 @@ public class Steuern extends Aktionsfelder
     private boolean welchesFeld;
     public Steuern(int Feldnummer, String Feld, boolean WelchesFeld) //Die Boolean "welchesFeld" ist dazu da um zwischen den beiden Steuerfeldern zu unterscheiden
     {
-        super.feldnummer = Feldnummer;
-        super.feld = Feld; 
+        super(Feldnummer, true, "Steuern", Feld);
         welchesFeld = WelchesFeld;
     }
     
@@ -30,6 +29,6 @@ public class Steuern extends Aktionsfelder
     
     public void feldBetreten()
     {
-        System.out.println("Du hast ein " + feld + " betreten");
+        System.out.println("Du hast ein " + getFeld() + " betreten");
     }
 }

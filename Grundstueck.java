@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 public abstract class Grundstueck extends Feld
 {
@@ -9,12 +10,19 @@ public abstract class Grundstueck extends Feld
     private int preis;
     // Position des Grundstücks auf dem Feld
     private int position;
+    //Hat dieses Grundstück eine Hypothek?
+    private boolean hypothek;
+    //Wie viel Geld es kostet, eine Hypothek auf dieses Grundstück abzubezahlen
+    private int hypotheksPreis;
     
-    Grundstueck (int feldnummer, String feld, String feldname, int preis)
+    
+	Grundstueck (int feldnummer, String feld, String feldname, int preis)
     {
         super(feldnummer, true, feld, feldname);
         this.besitzer = -1;
         this.preis = preis;
+        this.hypothek = false;
+        hypotheksPreis = (int)((preis * 0.5) + ((preis *0.5)* 0.1));
     }
     
     
@@ -40,21 +48,33 @@ public abstract class Grundstueck extends Feld
     {
         return position;
     }
-    public void setPosition(int position)
+    
+    public boolean getHypothek() 
     {
-        if(position < 0)
-        {
-            position += 39;
-        }
-        if(position > 39)
-        {
-            position -= 39;
-        }
-        
-        this.position = position;
+		return hypothek;
+	}
+    public int getHypothekPreis()
+    {
+    	return hypotheksPreis;
     }
     
-    // ---------------- Auktionsteil ----------------
+    //Ändert den Status von hypothek auf True und gibt dem Spieler der die Hypothek aufnimmt den Geldwert der Hypothek
+	public ArrayList<Spieler> hypothekAufnehmen(ArrayList<Spieler> alleSpieler, int aktiverSpieler)
+	{
+		hypothek = true;
+		alleSpieler.get(aktiverSpieler).addGeld((int)(preis*0.5));
+		System.out.println("Du hast eine Hypothek auf das Grundstück " + getFeldname() + " aufgenommen und " + (preis*0.5) + " Geld bekommen.");
+		return alleSpieler;
+	}
+    //Ändert den Status von hypothek auf false und zieht die kosten der Hypothek von dem Geld des Aktiven Spielers ab
+	public ArrayList<Spieler> hypothekAbbezahlen(ArrayList<Spieler> alleSpieler,Feld[] spielfeld, int aktiverSpieler)
+	{
+		hypothek = false;
+		alleSpieler.get(aktiverSpieler).subtractGeld(hypotheksPreis, alleSpieler, spielfeld, aktiverSpieler);
+		return alleSpieler;
+	}
+
+	// ---------------- Auktionsteil ----------------
     // zählt, wie viele Spieler noch in der Auktion teilnehmen (will nicht teilnehmen oder Budget < Gebot)
     private static int zählMöglicheTeilnehmer(int [] teilnehmer, int teilnehmerSize, int Gebot)
     {
