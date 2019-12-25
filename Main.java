@@ -106,22 +106,37 @@ public class Main
             // Spieler Erstellen
             
             //       SEITE EXISTIERT NICHT        Spielfeld Erstellen (https://de.wikipedia.org/wiki/Monopoly Das Spielfeld)
-           
+        	
+        	Main main = new Main();
+        	// Random die Reihenfolge festlegen, in der die Spieler an der Reihe sind
+        	ArrayList<Integer> reihenfolge = new ArrayList<Integer>();
+        	int[] temp = reihenfolgeFestlegen();
+        	for(int i = 0; i < temp.length; i++)
+        	{
+        		reihenfolge.add(temp[i]);
+        	}
+        	
         	while(true)
         	{
-        		Main main = new Main();
-        		// Random die Reihenfolge festlegen, in der die Spieler an der Reihe sind
-        		int[] reihenfolge = reihenfolgeFestlegen();
+        		
+        		
         		
         		//Spielbeginn
         		for(int i = 0; i < alleSpieler.size(); i++)
         		{
         			//Setzen des aktiven Spielers nach der Reihenfolge, welche vorher festgelegt wurde
-        			aktiverSpieler = reihenfolge[i];
+        			aktiverSpieler = reihenfolge.get(i);
         			
         			//Eine String ArrayList, welche alle möglichen Aktionen Beinhaltet, die der Spieler gerade ausführen kann. Wird in der Spieler Klasse durch eine Methode generiert.
         			//Wird nach jeder Ausgeführten Aktion neu generiert, um nicht mehr mögliche Aktionen zu entfernen.
-        			ArrayList<String> möglicheAktionen;
+        			
+        			//Sollte diese Methode false returnen, hat der Aktive Spieler verloren und wird aus der Spieler arrayList entfernt. Da das nächste element in der ArrayList nun den Index dieses Elementes hat, muss außerdem i um 1 verringert werden
+        			if(!aktionenAusführen(aktiverSpieler));
+        			{
+        				alleSpieler.remove(aktiverSpieler);
+        				reihenfolge.remove(i);
+        				i--;
+        			}
         			
         		}
         		
@@ -151,35 +166,46 @@ public class Main
         }
         
         //Ermöglicht dem Spieler alle möglichen eingaben während des Spieles zu machen
-        public void aktionenAusführen()
+        public static boolean aktionenAusführen(int aktiverSpieler)
         {
-        	//Beinhaltet alle möglichen Aktionen die der Spieler ausführen kann
-        	ArrayList<String> aktionen = alleSpieler.get(aktiverSpieler).möglicheAktionen(alleSpieler, aktiverSpieler, spielfeld);
-        	System.out.println("Was möchtest du tun?");
-        	//Gibt aus, welche aktionen der Spieler ausführen kann und welche Zahl er dafür eingeben soll
-        	for(int i = 0; i < aktionen.size(); i++)
+        	while(!alleSpieler.get(aktiverSpieler).getHatVerloren())
         	{
-        		System.out.println("Zum " + aktionen.get(i) + "gebe " + (i + 1) + " ein.");
-        	}
-        	
-        	//Eingabe der Zahl durch den Nutzer
-        	Scanner sc = new Scanner(System.in);
-        	
-        	boolean eingabeKorrekt = false;
-        	int eingabe = -1;
-        	//Wenn die Eingabe nicht korrekt ist wird dieser Loop wiederholt. Er läuft immer mindestens einmal
-        	while(!eingabeKorrekt)
-        	{
-        		//Hat der Nutzer eine Zahl eingegeben? Falls ja, weiter, falls nein war die Eingabe fehlerhaft und muss wiederholt werden.
-        		if(sc.hasNextInt())
-        		{
-        			eingabe = sc.nextInt();
-        			//Wenn die Eingabe innerhalb von 1 - aktionen.size() liegt, ist die Eingabe korrekt. Wenn dies nicht der Fall ist, wird die Eingabe wiederholt
-        			if(eingabe > 0 && eingabe <= aktionen.size())
-        			{
-        				eingabeKorrekt = true;
-        			}
-        			else
+        		//Beinhaltet alle möglichen Aktionen die der Spieler ausführen kann
+            	ArrayList<String> aktionen = alleSpieler.get(aktiverSpieler).möglicheAktionen(alleSpieler, aktiverSpieler, spielfeld);
+            	System.out.println("Was möchtest du tun?");
+            	//Gibt aus, welche aktionen der Spieler ausführen kann und welche Zahl er dafür eingeben soll
+            	for(int i = 0; i < aktionen.size(); i++)
+            	{
+            		System.out.println("Zum " + aktionen.get(i) + "gebe " + (i + 1) + " ein.");
+            	}
+            	
+            	//Eingabe der Zahl durch den Nutzer
+            	Scanner sc = new Scanner(System.in);
+            	
+            	boolean eingabeKorrekt = false;
+            	int eingabe = -1;
+            	//Wenn die Eingabe nicht korrekt ist wird dieser Loop wiederholt. Er läuft immer mindestens einmal
+            	while(!eingabeKorrekt)
+            	{
+            		//Hat der Nutzer eine Zahl eingegeben? Falls ja, weiter, falls nein war die Eingabe fehlerhaft und muss wiederholt werden.
+            		if(sc.hasNextInt())
+            		{
+            			eingabe = sc.nextInt();
+            			//Wenn die Eingabe innerhalb von 1 - aktionen.size() liegt, ist die Eingabe korrekt. Wenn dies nicht der Fall ist, wird die Eingabe wiederholt
+            			if(eingabe > 0 && eingabe <= aktionen.size())
+            			{
+            				eingabeKorrekt = true;
+            			}
+            			else
+                		{
+                			System.out.println("Die Eingabe war nicht korrekt, versuch es noch einmal. Die möglichen Eingaben sind: ");
+                			for(int i = 0; i < aktionen.size(); i++)
+                        	{
+                        		System.out.println("Zum " + aktionen.get(i) + "gebe " + (i + 1) + " ein.");
+                        	}
+                		}
+            		}
+            		else
             		{
             			System.out.println("Die Eingabe war nicht korrekt, versuch es noch einmal. Die möglichen Eingaben sind: ");
             			for(int i = 0; i < aktionen.size(); i++)
@@ -187,50 +213,46 @@ public class Main
                     		System.out.println("Zum " + aktionen.get(i) + "gebe " + (i + 1) + " ein.");
                     	}
             		}
-        		}
-        		else
-        		{
-        			System.out.println("Die Eingabe war nicht korrekt, versuch es noch einmal. Die möglichen Eingaben sind: ");
-        			for(int i = 0; i < aktionen.size(); i++)
-                	{
-                		System.out.println("Zum " + aktionen.get(i) + "gebe " + (i + 1) + " ein.");
-                	}
-        		}
+            	}
+            	
+            	//Hier kann nun die ausgewählte Aktion ausgeführt werden
+            	switch(aktionen.get(eingabe  - 1))
+            	{
+            		case"Würfeln":
+            			Würfeln();
+            			break;
+            		case"Zug beenden":
+            			return true;
+            		case"Aus dem Gefängnis freikaufen (Dies kostet 50 Geld)":
+            			alleSpieler.get(aktiverSpieler).subtractGeld(50, alleSpieler,  spielfeld, aktiverSpieler);
+            			alleSpieler.get(aktiverSpieler).ausGefängnis();
+            			System.out.println("Du hast 50 Geld bezahlt und bist nun nicht mehr eingesperrt.");
+            			break;
+            		case"'Komme aus dem Gefängnis Frei' Karte verwenden":
+            			alleSpieler.get(aktiverSpieler).ausGefängnis();
+            			System.out.println("Du hast eine 'Komme aus dem Gefängnis Frei' verwendet und bist nun nicht mehr eingesperrt.");
+            			break;
+            		case"Haus bauen":
+            			
+            			break;
+            		case"Häuser verkaufen":
+            			alleSpieler = alleSpieler.get(aktiverSpieler).hausVerkaufen(alleSpieler, spielfeld, aktiverSpieler);
+            			break;
+            		case"Handeln":
+            			
+            			break;
+            		case"Hypothen auf ein Grundstück aufnehmen":
+            			alleSpieler.get(aktiverSpieler).hypothekAufnehmen(alleSpieler, spielfeld, aktiverSpieler);
+            			break;
+            		case"Hypotheken abbezahlen":
+            			alleSpieler.get(aktiverSpieler).hypothekAbbezahlen(alleSpieler, spielfeld, aktiverSpieler);
+            			break;
+            			
+            		//Man sollte warscheinich auch eine Art inventar hinzufügen, wo der Spieler ansehen kann was er alles so hat(Grundstücke, komm aus dem Gefängnis frei Karten, All sein Geld, ob seine Grundstücke Hypotheken haben, usw)
+            	}
         	}
-        	
-        	//Hier kann nun die ausgewählte Aktion ausgeführt werden
-        	switch(aktionen.get(eingabe  - 1))
-        	{
-        		case"Würfeln":
-        			Würfeln();
-        			break;
-        		case"Aus dem Gefängnis freikaufen (Dies kostet 50 Geld)":
-        			alleSpieler.get(aktiverSpieler).subtractGeld(50, alleSpieler,  spielfeld, aktiverSpieler);
-        			alleSpieler.get(aktiverSpieler).ausGefängnis();
-        			System.out.println("Du hast 50 Geld bezahlt und bist nun nicht mehr eingesperrt.");
-        			break;
-        		case"'Komme aus dem Gefängnis Frei' Karte verwenden":
-        			alleSpieler.get(aktiverSpieler).ausGefängnis();
-        			System.out.println("Du hast eine 'Komme aus dem Gefängnis Frei' verwendet und bist nun nicht mehr eingesperrt.");
-        			break;
-        		case"Haus bauen":
-        			
-        			break;
-        		case"Häuser verkaufen":
-        			alleSpieler = alleSpieler.get(aktiverSpieler).hausVerkaufen(alleSpieler, spielfeld, aktiverSpieler);
-        			break;
-        		case"Handeln":
-        			
-        			break;
-        		case"Hypothen auf ein Grundstück aufnehmen":
-        			alleSpieler.get(aktiverSpieler).hypothekAufnehmen(alleSpieler, spielfeld, aktiverSpieler);
-        			break;
-        		case"Hypotheken abbezahlen":
-        			alleSpieler.get(aktiverSpieler).hypothekAbbezahlen(alleSpieler, spielfeld, aktiverSpieler);
-        			break;
-        			
-        		//Man sollte warscheinich auch eine Art inventar hinzufügen, wo der Spieler ansehen kann was er alles so hat(Grundstücke, komm aus dem Gefängnis frei Karten, All sein Geld, ob seine Grundstücke Hypotheken haben, usw)
-        	}
+        	//Der Loop kann nur verlassen werden, wenn der Spieler verloren hat. Sollte diese Funktion also false returnen, wird der Aktive Spieler entfernt
+        	return false;
         	
         }
         

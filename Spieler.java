@@ -126,7 +126,17 @@ public class Spieler
     	}
     }
     
-    public int getPosition()
+    public boolean getHatVerloren() {
+		return hatVerloren;
+	}
+
+
+	public void setHatVerloren(boolean hatVerloren) {
+		this.hatVerloren = hatVerloren;
+	}
+
+
+	public int getPosition()
     {
         return position;
     }
@@ -389,6 +399,11 @@ public class Spieler
     	if(!hatGewürfelt)
     	{
     		ausgabe.add("Würfeln");
+    	}
+    	//Wenn der Spieler gewürftelt hat, kann er seinen Zug beenden
+    	if(hatGewürfelt)
+    	{
+    		ausgabe.add("Zug beenden");
     	}
     	
     	//Wenn der Spieler im Gefängis ist, kann der Spieler sich aus dem Gefängis freikaufen
