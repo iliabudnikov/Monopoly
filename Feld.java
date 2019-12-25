@@ -5,7 +5,7 @@ public abstract class Feld
     //Boolean zur unterscheidung von Aktionsfeldern(False) und Spielfeldern(True)
     private boolean feldtyp;
     //Was für ein Feld ist es genau? Straße? Bahnhof? Ereignisfeld? Als String
-    private String feld; 
+    private String feld;
     //z.B. Südbahnhof, Schlossallee
     private String feldname;
     

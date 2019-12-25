@@ -4,9 +4,9 @@ public class Strasse extends Grundstueck
     private int hausAnzahl; // 5 Häuse => Hotel
     private int hausPreis;
     
-    public Strasse (int feldnummer, String feldname, int besitzer, int preis, String farbe, int hausAnzahl, int hausPreis)
+    public Strasse (int feldnummer, String feldname, Spieler besitzer, int preis, String farbe, int hausAnzahl, int hausPreis)
     {
-        super(feldnummer, "Straße", feldname, besitzer, ???);
+        super(feldnummer, "Straße", feldname, preis);
         this.farbe = farbe;
         this.hausAnzahl = hausAnzahl;
         this.hausPreis = hausPreis;
@@ -50,36 +50,38 @@ public class Strasse extends Grundstueck
     
     public void bauHaus()
     {
-        
+        setHausAnzahl(getHausAnzahl()+1);
+        String hausOderhotel = (getHausAnzahl() < 4) ? "Haus" : "Hotel";
+    
+        if(hausOderhotel == "Haus")
+        {
+            getBesitzer().subtractGeld(getHausPreis());
+        }
     }
     
     // zeigt Straßeninfos mit (True) oder ohne (False) Immobilieninfos
-    public void toString(boolean mitImmobilien)
+    public String toString(boolean mitImmobilien)
     {
-        System.out.println("\nDie " + getFeldname() + " Straße in der Farbe " + farbe + "kostet " + getPreis() + " Mark.");
+        String ergebnis = "Die " + getFeldname() + " Straße in der Farbe " + farbe;
+
         if (mitImmobilien)
         {
             switch (hausAnzahl)
             {
                 case 0:
-                    System.out.println("\nAuf der Straße gibt es keine Immobilien.");
+                    ergebnis += ". Auf der Straße gibt es keine Immobilien.";
                     break;
                 case 1:
-                    System.out.println("\nAuf der Straße gibt es ein Haus.");
+                    ergebnis += ". Auf der Straße gibt es ein Haus.";
                     break;
                 case 5:
-                    System.out.println("\nAuf der Straße ist ein Hotel");
+                    ergebnis += ". Auf der Straße ist ein Hotel";
                     break;
                 default:
-                    System.out.println("\nAuf der Straße gibt es " + hausAnzahl + " Häuse.");
+                    ergebnis += ". Auf der Straße gibt es " + hausAnzahl + " Häuse.";
             }
         }
+
+        return ergebnis;
     }
-
-
-	@Override
-	public void toString() {
-		// TODO Auto-generated method stub
-		
-	}
 }
