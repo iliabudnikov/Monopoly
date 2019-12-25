@@ -4,7 +4,7 @@ public class Stromwerk extends Stadtwerk
 {
     public Stromwerk(int feldnummer)
     {
-    	super(feldnummer, "Stadtwerk", "Elektrizitätswerk", 150);
+    	super(feldnummer, "Elektrizitätswerk", "Elektrizitätswerk", 150);
     }
     
     public void toString()

@@ -9,7 +9,7 @@ public class Gemeinschaftsfeld extends Aktionsfelder
     	super(Feldnummer, false, "Gemeinschaftsfeld", "Gemeinschaftsfeld");
     }
     
-    public ArrayList<Spieler> ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
     {
         //Erstellen eines Random objektes, um ein Ereignis auszwählen
         Random rnd = new Random();
@@ -115,8 +115,9 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         return alleSpieler;
     }
     
-    public void feldBetreten()
+    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
     {
         System.out.println("Du hast ein " + getFeld() + " betreten");
+        return Ereignis(alleSpieler, aktiverSpieler, spielfeld);
     }
 }

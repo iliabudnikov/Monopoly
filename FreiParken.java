@@ -5,13 +5,13 @@ public class FreiParken extends Aktionsfelder
     {
     	super(Feldnummer, false, "Frei Parken", "Frei Parken");
     }
-    public ArrayList<Spieler> ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
     {
-        feldBetreten();
         return alleSpieler;
     }
-    public void feldBetreten()
+    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
     {
         System.out.println("Du hast ein " + getFeld() + " Feld betreten");
+        return alleSpieler;
     }
 }

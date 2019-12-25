@@ -4,7 +4,7 @@ public class Wasserwerk extends Stadtwerk
 {
 	public Wasserwerk(int feldnummer)
     {
-    	super(feldnummer, "Stadtwerk", "Wasserwerk", 150);
+    	super(feldnummer, "Wasserwerk", "Wasserwerk", 150);
     }
     
 	//Bei Stadtwerken, wird die Miete anders berechnet als bei anderen Feldern. 

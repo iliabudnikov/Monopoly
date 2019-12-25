@@ -256,7 +256,7 @@ public class Main
         	
         }
         
-        public void Würfeln()
+        public static void Würfeln()
         {
             int paschAnzahl = 0;
             Random rnd = new Random();
@@ -287,7 +287,43 @@ public class Main
                 
                 alleSpieler.get(aktiverSpieler).setPosition(alleSpieler.get(aktiverSpieler).getPosition() + rndInt1 + rndInt2);
                 //Triggern der Aktion des Feldes
-                spielfeld[alleSpieler.get(aktiverSpieler).getPosition()].aktion oder so; 
+                
+                String feld = spielfeld[alleSpieler.get(aktiverSpieler).getPosition()].getFeld();
+                
+                switch(feld)
+                {
+                case"Strasse":
+                	break;
+                case"Bahnhof":
+                	alleSpieler = ((Bahnhof)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                case"Ereignisfeld":
+                	alleSpieler = ((Ereignisfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                case"Gemeinschaftsfeld":
+                	alleSpieler = ((Gemeinschaftsfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                case"Wasserwerk":
+                	alleSpieler = ((Wasserwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
+                	break;
+                case"Stromwerk":
+                	alleSpieler = ((Stromwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
+                	break;
+                case"Los":
+                	alleSpieler = ((Start)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                case"Steuern":
+                	alleSpieler = ((Steuern)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                case"Frei Parken":
+                	alleSpieler = ((FreiParken)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                case"Ins Gefängnis":
+                	alleSpieler = ((InsGefängnis)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                }
+                
+               
                 
             }
         }

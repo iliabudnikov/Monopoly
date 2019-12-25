@@ -213,9 +213,10 @@ public class Ereignisfeld extends Aktionsfelder
         return alleSpieler;
     }
     
-    public void feldBetreten()
+    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
     {
         System.out.println("Du hast ein " + getFeld() + " betreten");
+        return Ereignis(alleSpieler, aktiverSpieler, spielfeld);
     }
 
 }

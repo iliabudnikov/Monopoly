@@ -100,7 +100,7 @@ public class Gefängnis extends Aktionsfelder
         int ersteZahl = rnd.nextInt(6) + 1;
         int zweiteZahl= rnd.nextInt(6) + 1;
         //Abziehen des Geldes
-        alleSpieler.get(aktiverSpieler).subtractGeld(50);
+        alleSpieler.get(aktiverSpieler).subtractGeld(50, alleSpieler, spielfeld, aktiverSpieler);
         
         System.out.println("Du hast 50 Geld bezahlt und eine " + ersteZahl + " und eine " + zweiteZahl + " Gewürfelt.\nRücke " + (ersteZahl + zweiteZahl) + " Felder vor");
         alleSpieler.get(aktiverSpieler).setPosition(alleSpieler.get(aktiverSpieler).getPosition() + ersteZahl + zweiteZahl);
