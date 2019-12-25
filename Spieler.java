@@ -328,7 +328,7 @@ public class Spieler
         }
     }
     
-    //Kann der Spieler auf ein Gundstück 
+    //Kann der Spieler auf ein Gundstück eine Hypothek aufnehmen?
     public boolean sayIfCanHypothek(Feld[] spielfeld)
     {
     	for(int i = 0; i < grundstuecke.size(); i++)
