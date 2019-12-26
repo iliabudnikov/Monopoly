@@ -46,18 +46,6 @@ public class Strasse extends Grundstueck
     	}
     	return false;
     }
-    // --!-- In MAIN: if Straße : wenn Spieler besitzt alle Felder der Farbe => fragen nach dem neuen Huus
-    
-    public void bauHaus()
-    {
-        setHausAnzahl(getHausAnzahl()+1);
-        String hausOderhotel = (getHausAnzahl() < 4) ? "Haus" : "Hotel";
-    
-        if(hausOderhotel == "Haus")
-        {
-            getBesitzer().subtractGeld(getHausPreis());
-        }
-    }
     
     // zeigt Straßeninfos mit (True) oder ohne (False) Immobilieninfos
     public String toString(boolean mitImmobilien)

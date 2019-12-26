@@ -8,8 +8,8 @@ public class Main
 {
     public static ArrayList<Spieler> alleSpieler;
     public static Feld [] spielfeld;
-	static int aktiverSpieler;
-	Scanner sc = new Scanner(System.in);
+	private static int aktiverSpieler;
+	private static Scanner sc = new Scanner(System.in);
 	
 	// überprüft die Eingabe des Benutzer (funktioniert mit ganzen Zahlen)
 	// als die Grenze kann man -1 eingeben, wenn keine Grenze nötig sind; die Grenze sind weich (>=, =<)
@@ -40,7 +40,7 @@ public class Main
     {
         alleSpieler = new ArrayList<Spieler>();
         //Begrüßung der Spieler. Frage nach der Spieleranzahl
-        System.out.println("Willkommen zu Monopoly\nMit wie vielen Spielern möchtest du Spielen? (2 - 4)");
+        System.out.println("Willkommen zu Monopoly!\n\nMit wie vielen Spielern möchtest du Spielen? (2 - 4)");
 		//Eingabe der Spieleranzahl
 		int spielerAnzahl = checkCorrectNum(2, 4);
         
@@ -58,7 +58,7 @@ public class Main
         for(int i = 0; i < spielerAnzahl; i++)
         {
         	//Figur aussuchen
-        	System.out.println("Welche Figur möchte Spieler " + (i+1) + "?");
+        	System.out.println("\nWelche Figur möchte Spieler " + (i+1) + "?\n");
 			for(int j = 0; j < figuren.size(); j++)
             {
             		System.out.println("Für die Figur \"" + figuren.get(j) + "\" schreibe " + (j+1));
@@ -100,9 +100,6 @@ public class Main
         	
         	while(true)
         	{
-        		
-        		
-        		
         		//Spielbeginn
         		for(int i = 0; i < alleSpieler.size(); i++)
         		{
@@ -147,7 +144,7 @@ public class Main
         	{
         		//Beinhaltet alle möglichen Aktionen die der Spieler ausführen kann
             	ArrayList<String> aktionen = alleSpieler.get(aktiverSpieler).möglicheAktionen();
-            	System.out.println("Was möchtest du tun?");
+            	System.out.println("\nWas möchtest du tun?\n");
             	//Gibt aus, welche aktionen der Spieler ausführen kann und welche Zahl er dafür eingeben soll
             	for(int i = 0; i < aktionen.size(); i++)
             	{
@@ -203,37 +200,18 @@ public class Main
             			alleSpieler.get(aktiverSpieler).ausGefängnis();
             			System.out.println("Du hast 50 Geld bezahlt und bist nun nicht mehr eingesperrt.");
             			break;
-            		case"'Komme aus dem Gefängnis Frei' Karte verwenden":
+            		case"\"Komme aus dem Gefängnis Frei\" Karte verwenden":
             			alleSpieler.get(aktiverSpieler).ausGefängnis();
             			System.out.println("Du hast eine 'Komme aus dem Gefängnis Frei' verwendet und bist nun nicht mehr eingesperrt.");
             			break;
             		case"Haus bauen":
-						System.out.println("\nDie möglichen Straßen für die Bebauung:");
-						int [] strassen = new int[alleSpieler.get(aktiverSpieler).sayWhereCanHaus().size()];
-						for(int i = 0; i < strassen.length; i++)
-						{
-							strassen[i] = alleSpieler.get(aktiverSpieler).sayWhereCanHaus().get(i);
-						}
-						int zaehler = 1;
-
-						for (int i : strassen)
-						{	// Zählen alle erlaubten Straßen auf
-							System.out.println(zaehler + ". ");
-							((Strasse)spielfeld[i]).toString(true);
-							zaehler++;
-						}
-						
-						int eingabeHB = checkCorrectNum(1, zaehler-1);
-						((Strasse)spielfeld[eingabeHB]).bauHaus();
-						alleSpieler.get(aktiverSpieler).hausKaufen(eingabeHB);
-						
+						alleSpieler.get(aktiverSpieler).HausKaufenVerfahren();
 						break;
 					case"Häuser verkaufen":
-						
-            			alleSpieler.get(aktiverSpieler).hausVerkaufen();
+            			alleSpieler.get(aktiverSpieler).HausVerkaufenVerfahren();
             			break;
             		case"Handeln":
-            			
+						alleSpieler.get(aktiverSpieler).HandelnVerfahren();
             			break;
             		case"Hypothen auf ein Grundstück aufnehmen":
             			alleSpieler.get(aktiverSpieler).hypothekAufnehmen();
@@ -244,10 +222,10 @@ public class Main
             			
             		//Man sollte warscheinich auch eine Art inventar hinzufügen, wo der Spieler ansehen kann was er alles so hat(Grundstücke, komm aus dem Gefängnis frei Karten, All sein Geld, ob seine Grundstücke Hypotheken haben, usw)
             	}
-        	}
+			}
+			
         	//Der Loop kann nur verlassen werden, wenn der Spieler verloren hat. Sollte diese Funktion also false returnen, wird der Aktive Spieler entfernt
         	return false;
-        	
         }
         
         public static void Würfeln()
