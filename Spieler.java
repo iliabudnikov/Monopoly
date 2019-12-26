@@ -393,8 +393,8 @@ public class Spieler
 		return strassen;
 	}
     
-    //Kann der Spieler auf ein Gundstück 
-    public boolean sayIfCanHypothek()
+    //Kann der Spieler auf ein Gundstück eine Hypothek aufnehmen?
+    public boolean sayIfCanHypothek(Feld[] spielfeld)
     {
     	for(int i : grundstuecke)
     	{
