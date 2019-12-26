@@ -676,7 +676,7 @@ public class Spieler
     	return schulden;
     }
 
-	// gibt alle Straßen, die getascht werden können
+	// gibt alle Straßen, die getauscht werden können
 	public ArrayList<Integer> sayWhatCanTauschen()
 	{
 		ArrayList<Integer> strassen = new ArrayList<Integer>();
