@@ -7,42 +7,42 @@ import java.util.Scanner;
 public class Main
 {
     public static ArrayList<Spieler> alleSpieler;
-    public static Feld[] spielfeld;
-    static int aktiverSpieler;
-    
-    //Das erstellen eines Main objektes in der main Methode, erlaubt die Nutzung von variablen und Objekten in der gesammten Main Klasse
+    public static Feld [] spielfeld;
+	static int aktiverSpieler;
+	Scanner sc = new Scanner(System.in);
+	
+	// überprüft die Eingabe des Benutzer (funktioniert mit ganzen Zahlen)
+	// als die Grenze kann man -1 eingeben, wenn keine Grenze nötig sind; die Grenze sind weich (>=, =<)
+	public static int checkCorrectNum(int grenzeLinks, int grenzeRechts)
+	{
+		int eingabe;
+		boolean eingabeKorrekt = false;
+		do {
+			System.out.print("\nGib eine Ganzzahl von " + 1 + " bis " + 10 + " ein.\n\n-> ");
+			while (!sc.hasNextInt()) {
+				System.out.println("\nDas ist keine Zahl. Versuch noch einmal.");
+				sc.next();
+				System.out.print("\nGib eine Ganzzahl von " + 1 + " bis " + 10 + " ein.\n\n-> ");
+			}
+
+			eingabe = sc.nextInt();
+			if (eingabe < 1 || eingabe > 10)
+				System.out.println("\nDie Zahl liegt außerhalb des zugelassenen Bereichs. Versuch noch einmal.");
+			else
+				eingabeKorrekt = true;
+		} while (!eingabeKorrekt);
+		
+		return eingabe;
+	}
+
+    //Das erstellen eines Main-Objektes in der main Methode, erlaubt die Nutzung von variablen und Objekten in der gesammten Main Klasse
     public Main()
     {
         alleSpieler = new ArrayList<Spieler>();
         //Begrüßung der Spieler. Frage nach der Spieleranzahl
         System.out.println("Willkommen zu Monopoly\nMit wie vielen Spielern möchtest du Spielen? (2 - 4)");
-        //Eingabe der Spieleranzahl
-        Scanner sc = new Scanner(System.in);
-        //Boolean für den Loop zur überprüfung der Eingabe
-        boolean eingabeKorrekt = false;
-        String eingabe;
-        int spielerAnzahl = 0;
-        while(!eingabeKorrekt)
-        {
-            eingabe= sc.nextLine();
-            switch(eingabe)
-            {
-                case"2":
-                    spielerAnzahl = 2;
-                    eingabeKorrekt = true;
-                    break;
-                case"3":
-                    spielerAnzahl = 3;
-                    eingabeKorrekt = true;
-                    break;
-                case"4":
-                    spielerAnzahl = 4;
-                    eingabeKorrekt = true;
-                    break;
-                default:
-                    System.out.println("Es können nur 2 - 4 Spieler spielen.\n Sie können nur 2,3 oder 4 eingeben, versuchen sie es nochmal");
-            }
-        }
+		//Eingabe der Spieleranzahl
+		int spielerAnzahl = checkCorrectNum(2, 4);
         
         //Erstellen der Benötigten Spieler
         alleSpieler = new ArrayList<Spieler>();
@@ -52,35 +52,20 @@ public class Main
         List<String> figurNamen = Arrays.asList("Hund", "Schuh", "Auto", "Schiff", "Hut", "Fingerhut", "Schubkarre", "Bügeleisen");
         figuren.addAll(figurNamen);
         //Integer welche speichert, welche figur der Nutzer ausgewählt hat
-        int welcheFigur = -1;
+        int welcheFigur;
 
         
         for(int i = 0; i < spielerAnzahl; i++)
         {
-        	welcheFigur = -1;
         	//Figur aussuchen
         	System.out.println("Welche Figur möchte Spieler " + (i+1) + "?");
-        	//Dieser Loop wird solange ausgeführt, bis der Spieler eine Zahl zwischen  1 und der Anzahl der Elemente in Figuren eingibt
-        	eingabeKorrekt = false;
-        	while(!eingabeKorrekt)
-        	{
-        		//Ausgabe der Figuren, die der Spieler auswählen kann
-        		for(int j =0; j < figuren.size(); j++)
-            	{
-            		System.out.println("Für die Figur" + figuren.get(j) + " schreibe " + (j +1));
-            	}
-        		
-        		welcheFigur = sc.nextInt();
-        		//Hat die eingegebene Zahl ein Korrespondierendes Element in Figuren?
-        		if(welcheFigur < 0 && welcheFigur >= figuren.size())
-        		{
-        			eingabeKorrekt = true;
-        		}
-        		else
-        		{
-        			System.out.println("Die Eingabe war nicht korrekt, versuch es nocheinmal.");
-        		}
-        	}
+			for(int j = 0; j < figuren.size(); j++)
+            {
+            		System.out.println("Für die Figur \"" + figuren.get(j) + "\" schreibe " + (j+1));
+			}
+			
+			welcheFigur = checkCorrectNum(1, figuren.size()) - 1;
+			
         	//Erstellen des Spielers mit der Figur, die gewählt wurde
         	alleSpieler.add(new Spieler(figuren.get(welcheFigur).toString(), i));
         	//Entfernen der Figur aus der Arraylist, damit kein anderer Spieler diese auswählen kann
@@ -89,23 +74,20 @@ public class Main
         	
       //Erstellen des Spielfelds
         spielfeld = new Feld[]{
-        	new Start(0), new Strasse(1, "Badstraße", 0, 80, "Lila", 0, 50), new Gemeinschaftsfeld(2) , new Strasse(3, "Turmstraße", 0,  80, "Lila", 0, 50), new Steuern(4, "Einkommenssteuer", false), new Bahnhof(5, "Südbahnhof"), new Strasse(6, "Chaussee-Straße", 0, 100, "Hellblau", 0, 50), new Ereignisfeld(7),  new Strasse(8, "Elisenstraße", 0, 100, "Hellblau", 0, 50), new Strasse(9, "Poststraße", 0, 120, "Hellblau", 0, 50),
-        	new Gefängnis(10), new Strasse(11, "Seestraße", 0, 140, "Magenta", 0, 100), new Stromwerk(12), new Strasse(13, "Hafenstraße", 0, 140, "Magenta", 0, 100), new Strasse(14, "Neue Straße", 0, 160, "Magenta", 0, 100), new Bahnhof(15, "Westbahnhof"), new Strasse(16, "Münchner Straße", 0, 180, "Orange", 0, 100), new Gemeinschaftsfeld(17), new Strasse(18, "Wiener Straße", 0, 180, "Orange", 0, 100), new Strasse(19,  "Berliner Straße", 0, 200, "Orange", 0, 100), 
-        	new FreiParken(20), new Strasse(21, "Theaterstraße", 0, 220, "Rot", 0, 150), new Ereignisfeld(22), new Strasse(23, "Museumsstraße", 0, 220, "Rot", 0, 150), new Strasse(24, "Opernplatz", 0, 240, "Rot", 0, 150), new Strasse(24, "Opernplatz", 0, 240, "Rot", 0, 150), new Bahnhof(25, "Nordbahnhof"), new Strasse(26, "Lessingstraße", 0, 260, "Gelb", 0, 150), new Strasse(27, "SchillerStraße", 0, 260, "Gelb", 0, 150), new Wasserwerk(28), new Strasse(29, "Goethetraße", 0, 280, "Gelb", 0, 150), 
-        	new InsGefängnis(30), new Strasse(31, "Rathausplatz", 0, 300, "Grün", 0, 200), new Strasse(32, "Hauptstraße", 0, 300, "Grün", 0, 200), new Gemeinschaftsfeld(33), new Strasse(34, "Bahnhofstraße", 0, 320, "Grün", 0, 200), new Bahnhof(35, "Hauptbahnhof"), new Ereignisfeld(36), new Strasse(37, "Parkstraße", 0, 350, "Blau", 0, 200), new Steuern(38, "Zusatzsteuer" ,true), new Strasse(39, "Schlossallee", 0, 400, "Blau", 0, 200)     
+        	new Start(0), new Strasse(1, "Badstraße", null, 80, "Lila", 0, 50), new Gemeinschaftsfeld(2) , new Strasse(3, "Turmstraße", null,  80, "Lila", 0, 50), new Steuern(4, "Einkommenssteuer", false), new Bahnhof(5, "Südbahnhof"), new Strasse(6, "Chaussee-Straße", null, 100, "Hellblau", 0, 50), new Ereignisfeld(7),  new Strasse(8, "Elisenstraße", null, 100, "Hellblau", 0, 50), new Strasse(9, "Poststraße", null, 120, "Hellblau", 0, 50),
+        	new Gefängnis(10), new Strasse(11, "Seestraße", null, 140, "Magenta", 0, 100), new Stromwerk(12), new Strasse(13, "Hafenstraße", null, 140, "Magenta", 0, 100), new Strasse(14, "Neue Straße", null, 160, "Magenta", 0, 100), new Bahnhof(15, "Westbahnhof"), new Strasse(16, "Münchner Straße", null, 180, "Orange", 0, 100), new Gemeinschaftsfeld(17), new Strasse(18, "Wiener Straße", null, 180, "Orange", 0, 100), new Strasse(19,  "Berliner Straße", null, 200, "Orange", 0, 100), 
+        	new FreiParken(20), new Strasse(21, "Theaterstraße", null, 220, "Rot", 0, 150), new Ereignisfeld(22), new Strasse(23, "Museumsstraße", null, 220, "Rot", 0, 150), new Strasse(24, "Opernplatz", null, 240, "Rot", 0, 150), new Strasse(24, "Opernplatz", null, 240, "Rot", 0, 150), new Bahnhof(25, "Nordbahnhof"), new Strasse(26, "Lessingstraße", null, 260, "Gelb", 0, 150), new Strasse(27, "SchillerStraße", null, 260, "Gelb", 0, 150), new Wasserwerk(28), new Strasse(29, "Goethetraße", null, 280, "Gelb", 0, 150), 
+        	new InsGefängnis(30), new Strasse(31, "Rathausplatz", null, 300, "Grün", 0, 200), new Strasse(32, "Hauptstraße", null, 300, "Grün", 0, 200), new Gemeinschaftsfeld(33), new Strasse(34, "Bahnhofstraße", null, 320, "Grün", 0, 200), new Bahnhof(35, "Hauptbahnhof"), new Ereignisfeld(36), new Strasse(37, "Parkstraße", null, 350, "Blau", 0, 200), new Steuern(38, "Zusatzsteuer" ,true), new Strasse(39, "Schlossallee", null, 400, "Blau", 0, 200)     
         };	
     }
         
-        
-        
-  
         public static void main(String[] args)
         {
             // --!-- Nur ein Spieler? Ist ein Gewinner automatisch!
             // Alle Regeln von dieser Website: https://monopoly-regeln.de/monopoly-spielregeln/
             // Spieler Erstellen
             
-            //       SEITE EXISTIERT NICHT        Spielfeld Erstellen (https://de.wikipedia.org/wiki/Monopoly Das Spielfeld)
+            // Spielfeld Erstellen (https://de.wikipedia.org/wiki/Monopoly Das Spielfeld)
         	
         	Main main = new Main();
         	// Random die Reihenfolge festlegen, in der die Spieler an der Reihe sind
@@ -139,16 +121,8 @@ public class Main
         			}
         			
         		}
-        		
-        		
         	}
         	
-            
-            
-            
-            
-            
-            
             // Würfeln mit 2 Würfeln. Addieren der gewürfelten Zahlen und so viele Felder vorrücken. Zwei gleiche Zahlen = noch einmal würfeln.
             // Wenn er sich über Start/Los geht, bekommt ein Spieler 200 Geld
             
@@ -165,13 +139,14 @@ public class Main
 
         }
         
-        //Ermöglicht dem Spieler alle möglichen eingaben während des Spieles zu machen
+		//Ermöglicht dem Spieler alle möglichen eingaben während des Spieles zu machen
+		// true, wenn Zug beenden, sonst false
         public static boolean aktionenAusführen(int aktiverSpieler)
         {
         	while(!alleSpieler.get(aktiverSpieler).getHatVerloren())
         	{
         		//Beinhaltet alle möglichen Aktionen die der Spieler ausführen kann
-            	ArrayList<String> aktionen = alleSpieler.get(aktiverSpieler).möglicheAktionen(alleSpieler, aktiverSpieler, spielfeld);
+            	ArrayList<String> aktionen = alleSpieler.get(aktiverSpieler).möglicheAktionen();
             	System.out.println("Was möchtest du tun?");
             	//Gibt aus, welche aktionen der Spieler ausführen kann und welche Zahl er dafür eingeben soll
             	for(int i = 0; i < aktionen.size(); i++)
@@ -224,7 +199,7 @@ public class Main
             		case"Zug beenden":
             			return true;
             		case"Aus dem Gefängnis freikaufen (Dies kostet 50 Geld)":
-            			alleSpieler.get(aktiverSpieler).subtractGeld(50, alleSpieler,  spielfeld, aktiverSpieler);
+            			alleSpieler.get(aktiverSpieler).subtractGeld(50);
             			alleSpieler.get(aktiverSpieler).ausGefängnis();
             			System.out.println("Du hast 50 Geld bezahlt und bist nun nicht mehr eingesperrt.");
             			break;
@@ -233,19 +208,38 @@ public class Main
             			System.out.println("Du hast eine 'Komme aus dem Gefängnis Frei' verwendet und bist nun nicht mehr eingesperrt.");
             			break;
             		case"Haus bauen":
-            			
-            			break;
-            		case"Häuser verkaufen":
-            			alleSpieler = alleSpieler.get(aktiverSpieler).hausVerkaufen(alleSpieler, spielfeld, aktiverSpieler);
+						System.out.println("\nDie möglichen Straßen für die Bebauung:");
+						int [] strassen = new int[alleSpieler.get(aktiverSpieler).sayWhereCanHaus().size()];
+						for(int i = 0; i < strassen.length; i++)
+						{
+							strassen[i] = alleSpieler.get(aktiverSpieler).sayWhereCanHaus().get(i);
+						}
+						int zaehler = 1;
+
+						for (int i : strassen)
+						{	// Zählen alle erlaubten Straßen auf
+							System.out.println(zaehler + ". ");
+							((Strasse)spielfeld[i]).toString(true);
+							zaehler++;
+						}
+						
+						int eingabeHB = checkCorrectNum(1, zaehler-1);
+						((Strasse)spielfeld[eingabeHB]).bauHaus();
+						alleSpieler.get(aktiverSpieler).hausKaufen(eingabeHB);
+						
+						break;
+					case"Häuser verkaufen":
+						
+            			alleSpieler.get(aktiverSpieler).hausVerkaufen();
             			break;
             		case"Handeln":
             			
             			break;
             		case"Hypothen auf ein Grundstück aufnehmen":
-            			alleSpieler.get(aktiverSpieler).hypothekAufnehmen(alleSpieler, spielfeld, aktiverSpieler);
+            			alleSpieler.get(aktiverSpieler).hypothekAufnehmen();
             			break;
             		case"Hypotheken abbezahlen":
-            			alleSpieler.get(aktiverSpieler).hypothekAbbezahlen(alleSpieler, spielfeld, aktiverSpieler);
+            			alleSpieler.get(aktiverSpieler).hypothekAbbezahlen();
             			break;
             			
             		//Man sollte warscheinich auch eine Art inventar hinzufügen, wo der Spieler ansehen kann was er alles so hat(Grundstücke, komm aus dem Gefängnis frei Karten, All sein Geld, ob seine Grundstücke Hypotheken haben, usw)
@@ -322,9 +316,6 @@ public class Main
                 	alleSpieler = ((InsGefängnis)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
                 	break;
                 }
-                
-               
-                
             }
         }
         

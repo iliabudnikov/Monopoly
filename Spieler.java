@@ -31,7 +31,9 @@ public class Spieler
     
     //Boolean die True wird, wenn der Spieler verloren hat. Er wird daraufhin in Main von alleSpieler entfernt
     private boolean hatVerloren = false;
-    
+	
+	private Scanner sc = new Scanner(System.in);
+
 	// Ein neuer Spieler
     public Spieler(String Figur, int Spielernummer)
     {
@@ -42,7 +44,6 @@ public class Spieler
         position = 0; // Los
     }
 
-    
     // Getter und Setter für alle Instanzvariablen
     public int getSpielernummer()
     {
@@ -61,22 +62,23 @@ public class Spieler
     public void addGeld(int Geld)
     {
         geld += Geld;
-    }
-    public void subtractGeld(int Geld, ArrayList<Spieler> alleSpieler, Feld[] spielfeld, int aktiverSpieler)
+	}
+	
+    public void subtractGeld(int geld)
     {
     	//Hat der Spieler genug Geld, um den Gewünschten wert abzubezahlen?
-    	if(geld >= Geld)
+    	if(this.geld >= geld)
     	{
-    		geld -= Geld;
+    		this.geld -= geld;
     	}
     	else
     	{
     		//Wenn der Spieler nicht genug geld hat, ist er vorrübergehend pleite. Er kann Hypotheken aufnehmen und Häuser verkaufen, um an genug Geld zu kommen. Wenn er danach genug geld hat, kann er bezahlen, sonst ist er raus.
-    		int neuGeld = pleite(alleSpieler, spielfeld, aktiverSpieler, Geld);
+    		int neuGeld = pleite(geld);
     		//Wenn der Spieler nun genug Geld hat, kann er den gewünschten wert abbezahlen
-    		if(neuGeld >= Geld)
+    		if(neuGeld >= geld)
     		{
-    			geld -= Geld;
+    			this.geld -= geld;
     		}
     		//Wenn der Spieler aufgegeben hat, hat er verloren. In diesem Fall wird sein gesamter Besitz versteigert
     		else
@@ -89,20 +91,20 @@ public class Spieler
     //Wenn einer der Spieler einem anderen Geld geben muss
     public ArrayList<Spieler> paySpieler(ArrayList<Spieler> alleSpieler, int welcherSpieler, int schulden, Feld[] spielfeld, int aktiverSpieler)
     {
-    	//Hat der Spieler genug geld, um seine Schulden bei dem Anderen Spieler abzubezahlen?
+    	//Hat der Spieler genug geld, um seine Schuld\en bei dem Anderen Spieler abzubezahlen?
     	if(geld >= schulden)
     	{
-    		subtractGeld(schulden, alleSpieler, spielfeld, aktiverSpieler);
+    		subtractGeld(schulden);
     		alleSpieler.get(welcherSpieler).addGeld(schulden);
     	}
     	//Wenn der Spieler nicht genug geld hat, ist er vorrübergehend pleite. Er kann Hypotheken aufnehmen und Häuser verkaufen, um an genug Geld zu kommen. Wenn er danach genug geld hat, kann er bezahlen, sonst ist er raus.
     	else
     	{
-    		int neuGeld = pleite(alleSpieler, spielfeld, aktiverSpieler, schulden);
+    		int neuGeld = pleite(schulden);
     		//Wenn der Spieler seine Schulden begleichen kann, werden ihm seine schulden abgezogen und dem anderen Spieler gegeben
     		if(neuGeld >= schulden)
     		{
-    			subtractGeld(schulden, alleSpieler, spielfeld, aktiverSpieler);
+    			subtractGeld(schulden);
     			alleSpieler.get(welcherSpieler).addGeld(schulden);
     		}
     		//Wenn der Spieler aufgegeben hat, bekommt der andere Spieler den gesamten Besitz des Schuldners
@@ -113,7 +115,7 @@ public class Spieler
     			//Übergeben der Grundstücke
     			for(int i = 0; i < grundstuecke.size(); i++)
     			{
-    				alleSpieler.get(welcherSpieler).addGrundstück((Grundstueck)spielfeld[grundstuecke.get(i)]);
+    				alleSpieler.get(welcherSpieler).addGrundstück(i);
     			}
     			//Übergeben des restlichen geldes
     			alleSpieler.get(welcherSpieler).addGeld(geld);
@@ -226,172 +228,212 @@ public class Spieler
         }
         return ausgabe;
     }
-    public void addGrundstück(Grundstueck grundstueck)
+    public void addGrundstück(int position)
     {
-        grundstuecke.add(grundstueck.getPosition());
+        grundstuecke.add(position);
     }
     public void removeGrundstück(int position)
     {
         int i = 0;
-        while (i < grundstuecke.size() && grundstuecke.get(i).getPosition() != position)
+        while (i < grundstuecke.size() && ((Grundstueck)Main.spielfeld[grundstuecke.get(i)]).getPosition() != position)
             i++;
         
         grundstuecke.remove(i);
     }
+
+	// sagt, ob der Spieler alle Straße in der Farbe hat
+	public boolean sayIfAlleFarben(String farbe)
+	{
+		int strassenAnzahl = 1; // die Anzahl von Straßen mit gleichen Farben
+		for(int i : grundstuecke)
+		{
+			if (Main.spielfeld[i].getFeld() == "Strasse" && ((Strasse)((Grundstueck)Main.spielfeld[i])).getFarbe() == farbe)
+				strassenAnzahl += 1; // wenn eine Straße gefunden ist und ihre Farbe passend ist
+		}
+		
+		if ((farbe == "Lila" || farbe == "Blau") && strassenAnzahl == 2)
+			return true;
+		else if (strassenAnzahl == 3)
+			return true;
+
+		return false;
+	}
+
+	// überprufen, ob der Spieler genug Geld hat, mindestens ein Haus zu bauen
+	public boolean sayIfHatGenugGeld(int strassennummer) {
+		int minHausanzahl = 5;
+		for (int i : grundstuecke) // genug Geld für die Hausbauung (bauen dort, wo min Häuse stehen) 
+		{
+			if (((Strasse)Main.spielfeld[i]).getFarbe() == ((Strasse)Main.spielfeld[strassennummer]).getFarbe() && ((Strasse)Main.spielfeld[i]).getHausAnzahl() < minHausanzahl)
+				minHausanzahl = ((Strasse)Main.spielfeld[i]).getHausAnzahl();
+		}
+
+		if (minHausanzahl < 4) // genug Geld für ein Haus
+			if (((Strasse)Main.spielfeld[strassennummer]).getHausPreis() <= getGeld())
+				return true;
+		else // genug Geld für ein Hotel
+			if (((Strasse)Main.spielfeld[strassennummer]).getHausPreis() * 5 <= getGeld())
+				return true;
+		
+		return false;
+	}
+
+	// bauen ein Haus?
+	public boolean sayIfCanHaus()
+	{
+		ArrayList<String> farben = new ArrayList<String>(); // um dieselben Farben mehrmals nicht zu prüfen
+		for(int i : grundstuecke) // grundstuecke.size()-1, da das letzte Grundstück schon sinnlos zu prüfen ist
+		{
+			if (Main.spielfeld[i].getFeld() == "Strasse" && !farben.contains(((Strasse)Main.spielfeld[i]).getFarbe()))
+			// wenn das Grundstück eine Straße ist und die Farbe wir noch nicht geprüft haben
+			{
+				if (sayIfAlleFarben(((Strasse)Main.spielfeld[i]).getFarbe()))
+					if (sayIfHatGenugGeld(i)) // untersuchen auf dieser Weise alle Farben (Straßen, wo man Häuser bauen kann)
+						return true;
+				
+				farben.add(((Strasse)Main.spielfeld[i]).getFarbe());
+			}
+		}
+		
+		return false;
+	}
+
+
+	// gibt alle Straßen, wo ein Haus gebaut werden kann
+	public ArrayList<Integer> sayWhereCanHaus()
+	{
+		ArrayList<Integer> strassen = new ArrayList<Integer>();
+		String [] farben = {"Lila", "Türkis", "Violett", "Orange", "Rot", "Geld", "Grün", "Blau"};
+		boolean koennenWeiter = false; // sagt, ob für die Farbe alle Straße schon gefunden ist und wir weiter gehen können
+		int hausanzahl; // wie viele Häuser auf jeder Straße der Farbe stehen
+		int hauspreis; // Preis eines Hauses, das gebaut werden könnte
+		
+		for(String i : farben)
+		{
+			if(sayIfAlleFarben(i)) { // wenn ein Haus auf den Straßen dieser Farbe überhaupt möglich ist
+				koennenWeiter = false;
+				hausanzahl = 1; // wenn weniger als 1 Haus, dann können bauen usw für 2 Hдuser...
+				while(!koennenWeiter && hausanzahl < 6) // < 5? => ein Hotel gebaut werden kann!
+				{
+					for(int j : grundstuecke)
+					{
+						if(Main.spielfeld[j].getFeld() == "Strasse" && ((Strasse)Main.spielfeld[j]).getFarbe() == i)
+						{
+							if(((Strasse)Main.spielfeld[j]).getHausAnzahl() < hausanzahl)
+							{
+								koennenWeiter = true; // können hier ein Haus bauen
+
+								// aber hat der Spieler genug Geld dafür?
+								if(((Strasse)Main.spielfeld[j]).getHausAnzahl() == 4)
+									hauspreis = ((Strasse)Main.spielfeld[j]).getHausPreis() * 5;
+								else
+									hauspreis = ((Strasse)Main.spielfeld[j]).getHausPreis() * 4;
+									
+								if(hauspreis <= getGeld());
+									strassen.add(j);
+							}
+						}
+					}
+					
+					if (!koennenWeiter)
+						hausanzahl++;
+				}
+			}
+		}
+		
+		return strassen;
+	}
+
+	//Hat der Spieler mindestens ein Haus, welches er verkaufen kann?
+	public boolean sayIfCanHausVerkaufen()
+	{
+		for(int i : grundstuecke)
+		{
+			//Nur Strassen können häuser haben, weswegen hier nur die Elemente von grundstuecke betrachtet werden, die Strassen sind
+			if(Main.spielfeld[i].getFeld() == "Strasse")
+			{
+				//Ist auf einer Strasse des Spielers mindestens ein Haus?
+				if(((Strasse)Main.spielfeld[i]).getHausAnzahl() > 0)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public void hausKaufen(int strassennummer)
+	{
+		if (((Strasse)Main.spielfeld[strassennummer]).getHausAnzahl() == 4)
+			setGeld(getGeld() - (((Strasse)Main.spielfeld[strassennummer]).getHausPreis() * 5)); // Ein Hotel kostet 4 Häuser + 1 Haus
+		else
+			setGeld(getGeld() - ((Strasse)Main.spielfeld[strassennummer]).getHausPreis());
+	}
+
+	public void hausVerkaufen(int strassennummer)
+	{
+		if (((Strasse)Main.spielfeld[strassennummer]).getHausAnzahl() == 5)
+		{
+			setGeld(getGeld() + (((Strasse)Main.spielfeld[strassennummer]).getHausPreis() * 5 / 2)); // Ein Hotel kostet 4 Häuser + 1 Haus
+			System.out.println("Du hast ein Hotel auf " + Main.spielfeld[strassennummer].getFeldname() + " für " + ((Strasse)(Main.spielfeld[strassennummer])).getHausPreis() + " Geld verkauft.\nDu hast nun " + geld + " Geld");
+		}
+		else
+		{
+			setGeld(getGeld() + ((Strasse)Main.spielfeld[strassennummer]).getHausPreis() / 2);
+			System.out.println("Du hast ein Haus auf " + Main.spielfeld[strassennummer].getFeldname() + " für " + ((Strasse)(Main.spielfeld[strassennummer])).getHausPreis() + " Geld verkauft.\nDu hast nun " + geld + " Geld");
+		}
+	}
+
+	// gibt alle Straßen, die getascht werden können
+	public ArrayList<Integer> sayWhatCanTauschen() {
+		ArrayList<Integer> strassen = new ArrayList<Integer>();
+		for(int i : grundstuecke)
+			if(Main.spielfeld[i].getFeld() == "Strasse" && ((Strasse)Main.spielfeld[i]).getHausAnzahl() == 0)
+				strassen.add(i);
+		return strassen;
+	}
     
-        // sagt, ob der Spieler alle StraЯe in der Farbe hat
-        public boolean sayIfAlleFarben(String farbe)
-        {
-            int strassenAnzahl = 1; // die Anzahl von StraЯen mit gleichen Farben
-            for(int i = 0; i < grundstuecke.size(); i++)
-            {
-                if (grundstuecke.get(i).getFeld() == "Strasse" && ((Strasse)grundstuecke.get(i)).getFarbe() == farbe)
-                    strassenAnzahl += 1; // wenn eine StraЯe gefunden ist und ihre Farbe passend ist
-            }
-            
-            if ((farbe == "Lila" || farbe == "Blau") && strassenAnzahl == 2)
-                return true;
-            else if (strassenAnzahl == 3)
-                return true;
-    
-            return false;
-        }
-        
-        // bauen ein Haus?
-        public boolean sayIfCanHaus()
-        {
-            ArrayList<String> farben = new ArrayList<String>(); // um dieselben Farben mehrmals nicht zu prьfen
-            for(int i = 0; i < grundstuecke.size()-1; i++) // grundstuecke.size()-1, da das letzte Grundstьck schon sinnlos zu prьfen ist
-            {
-                if (grundstuecke.get(i).getFeld() == "Strasse" && !farben.contains(((Strasse)grundstuecke.get(i)).getFarbe()))
-                // wenn das Grundstьck eine StraЯe ist und die Farbe wir noch nicht geprьft haben
-                {
-                    if (sayIfAlleFarben(((Strasse)grundstuecke.get(i)).getFarbe()))
-                        return true;
-                    
-                    farben.add(((Strasse)grundstuecke.get(i)).getFarbe());
-                }
-            }
-            
-            return false;
-        } 
-        
-        
-        
-        // IN MAIN PRЬFEN, HOTEL ODER HAUS
-        
-        
-        // gibt alle StraЯen, wo ein Haus gebaut werden kann
-        public ArrayList<Integer> sayWhereCanHaus()
-        {
-            ArrayList<Integer> strassen = new ArrayList<Integer>();
-            String [] farben = {"Lila", "Tьrkis", "Violett", "Orange", "Rot", "Geld", "Grьn", "Blau"};
-            boolean koennenWeiter = false; // sagt, ob fьr die Farbe alle StraЯe schon gefunden ist und wir weiter gehen kцnnen
-            int hausanzahl; // wie viele Hдuser auf jeder StraЯe der Farbe stehen
-            
-            for(String i : farben)
-            {
-                if(sayIfAlleFarben(i)) { // wenn ein Haus auf den StraЯen dieser Farbe ьberhaupt mцglich ist
-                    koennenWeiter = false;
-                    hausanzahl = 1; // wenn weniger als 1 Haus, dann kцnnen bauen usw fьr 2 Hдuser...
-                    while(!koennenWeiter && hausanzahl < 6) // < 5? => ein Hotel gebaut werden kann!
-                    {
-                        for(int j = 0; j < grundstuecke.size(); j++)
-                        {
-                            if(grundstuecke.get(j).getFeld() == "Strasse" && ((Strasse)grundstuecke.get(j)).getFarbe() == i)
-                            {
-                                if(((Strasse)grundstuecke.get(j)).getHausAnzahl() < hausanzahl)
-                                {
-                                    koennenWeiter = true; // kцnnen hier ein Haus bauen
-                                    strassen.add(grundstuecke.get(j).getFeldnummer());
-                                }
-                            }
-                        }
-                        
-                        if (!koennenWeiter)
-                            hausanzahl++;
-                    }
-                }
-            }
-            
-            
-            return strassen;
-        }
-        
-        // gibt alle StraЯen, die getascht werden kцnnen
-        public ArrayList<Integer> sagWasKannTauschen() {
-            ArrayList<Integer> strassen = new ArrayList<Integer>();
-            for(int j = 0; j < grundstuecke.size(); j++)
-                if(grundstuecke.get(j).getFeld() == "Strasse" && ((Strasse)grundstuecke.get(j)).getHausAnzahl() == 0)
-                    strassen.add(grundstuecke.get(j).getFeldnummer());
-            return strassen;
-        }
-    }
-    
-    //Kann der Spieler auf ein Gundstück eine Hypothek aufnehmen?
-    public boolean sayIfCanHypothek(Feld[] spielfeld)
+    //Kann der Spieler auf ein Gundstück 
+    public boolean sayIfCanHypothek()
     {
-    	for(int i = 0; i < grundstuecke.size(); i++)
+    	for(int i : grundstuecke)
     	{
     		//Hat dieses Grundstück schon eine Hypothek aufgenommen? Falls ja, kann keine weitere aufgenommen und das nächste Element wird betrachtet
-    		if(!((Grundstueck) spielfeld[grundstuecke.get(i)]).getHypothek())
+    		if(!((Grundstueck)Main.spielfeld[i]).getHypothek())
     		{
     			//Für Strassen können nur Hypotheken aufgenommen werden, wenn kein Haus auf ihnen steht
-        		if(spielfeld[grundstuecke.get(i)].getFeld() == "Strasse")
+        		if(Main.spielfeld[i].getFeld() == "Strasse")
         		{
-        			if(((Strasse) spielfeld[grundstuecke.get(i)]).getHausAnzahl() == 0)
-            		{
+        			if(((Strasse)Main.spielfeld[i]).getHausAnzahl() == 0)
             			return true;
-            		}
         		}
         		//Falls das Grundstück keine Strasse ist, muss die Anzahl der Häuser nicht betrachtet werden. Solange nicht bereits eine Hypothek besteht, kann eine Hypothek aufgenommen werden
         		else
-        		{
         			return true;
-        		}
         		
     		}
-    	}
+		}
+		
     	return false;
-    }
+	}
+	
     //Kann der Spieler mindestens eine seiner Hypotheken abbezahlen? Falls ja, true, falls nein, false
-    public boolean sayIfCanHypothekAbbezahlen(Feld[] spielfeld)
+    public boolean sayIfCanHypothekAbbezahlen()
     {
-    	for(int i = 0; i < grundstuecke.size(); i++)
+    	for(int i : grundstuecke)
     	{
-    		if(((Grundstueck) spielfeld[grundstuecke.get(i)]).getHypothek())
+    		if(((Grundstueck)Main.spielfeld[i]).getHypothek())
     		{
-    			if(this.geld >= ((Grundstueck)spielfeld[grundstuecke.get(i)]).getHypothekPreis())
-    			{
+    			if(geld >= ((Grundstueck)Main.spielfeld[i]).getHypothekPreis())
     				return true;
-    			}
     		}
-    	}
+		}
+		
     	return false;
-    }
-    
-    //Hat der Spieler mindestens ein Haus, welches er verkaufen kann?
-    public boolean sayIfCanHausVerkaufen(Feld[] spielfeld)
-    {
-    	for(int i = 0; i < grundstuecke.size(); i++)
-    	{
-    		//Nur Strassen können häuser haben, weswegen hier nur die Elemente von grundstuecke betrachtet werden, die Strassen sind
-    		if(spielfeld[grundstuecke.get(i)].getFeld() == "Strasse")
-    		{
-    			//Ist auf einer Strasse des Spielers mindestens ein Haus?
-    			if(((Strasse) spielfeld[grundstuecke.get(i)]).getHausAnzahl() > 0)
-        		{
-        			return true;
-        		}
-    		}
-    	}
-    	return false;
-    }
-    
-    
+    }    
     
     //Gibt eine ArrayList mit allen möglichen Eingaben, die der Spieler gerade machen kann aus
-    public ArrayList<String> möglicheAktionen(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public ArrayList<String> möglicheAktionen()
     {
     	ArrayList<String> ausgabe = new ArrayList<String>();
     	
@@ -424,7 +466,7 @@ public class Spieler
     	}
     	
     	//Hat der Spieler mindestens ein Haus, welches er verkaufen kann?
-    	if(sayIfCanHausVerkaufen(spielfeld))
+    	if(sayIfCanHausVerkaufen())
     	{
     		ausgabe.add("Häuser verkaufen");
     	}
@@ -432,13 +474,13 @@ public class Spieler
     	ausgabe.add("Handeln");
     	
     	//Hat der Spieler mindestens ein Grundstück, auf das er eine Hypothek aufnehmen kann?
-    	if(sayIfCanHypothek(spielfeld))
+    	if(sayIfCanHypothek())
     	{
     		ausgabe.add("Hypothen auf ein Grundstück aufnehmen");
     	}
     	
     	//Hat der Spieler mindestens eine Hypothek und genug Geld um diese Abzubezahlen?
-    	if(sayIfCanHypothek(spielfeld)&& sayIfCanHypothekAbbezahlen(spielfeld))
+    	if(sayIfCanHypothek() && sayIfCanHypothekAbbezahlen())
     	{
     		ausgabe.add("Hypotheken abbezahlen");
     	}
@@ -447,19 +489,19 @@ public class Spieler
     }
     
     //Wenn der Spieler kein Geld mehr hat, kann er Hypotheken aufnehmen und Häuser verkaufen um Geld zu machen
-    public int pleite(ArrayList<Spieler> alleSpieler,Feld[] spielfeld, int aktiverSpieler, int schulden)
+    public int pleite(int schulden)
     {
     	System.out.println("Du hast Schulden, die du nicht abbezahlen kannst. Du kannst Hypotheken aufnehmen oder Häuser verkaufen um Geld zu machen.");
     	//Solange der Spieler seine Schulden nicht abbezahlen kann, wird dies Wiederholt
     	while(schulden - geld > 0)
     	{
-    		System.out.println("Du hast " + geld + " Geld, und du musst " + " Geld bezahlen. \nDir Fehlen also noch " + (schulden - geld) + " Geld.");
+    		System.out.println("Du hast " + geld + " Geld, und du musst " + schulden + " Geld bezahlen. \nDir Fehlen also noch " + (schulden - geld) + " Geld.");
         	ArrayList<String> ausgabe = new ArrayList<String>();
-        	if(sayIfCanHausVerkaufen(spielfeld))
+        	if(sayIfCanHausVerkaufen())
         	{
         		ausgabe.add("Haus verkaufen");
         	}
-        	if(sayIfCanHypothek(spielfeld))
+        	if(sayIfCanHypothek())
         	{
         		ausgabe.add("Hypothek aufnehmen");
         	}
@@ -504,31 +546,28 @@ public class Spieler
             switch(ausgabe.get(eingabe))
             {
             	case"Haus verkaufen":
-            		alleSpieler = hausVerkaufen(alleSpieler, spielfeld, aktiverSpieler);
+            		HausVerkaufenVerfahren();
             		break;
             	case"Hypothek aufnehmen": 
-            		alleSpieler = hypothekAufnehmen(alleSpieler, aktiverSpieler);
+            		hypothekAufnehmen();
             		break;
             	case"Aufgeben":
             		return geld;
-            		break;
-            }
-            
+            }  
     	}
     	return schulden;
     }
     
-    public ArrayList<Spieler> hypothekAbbezahlen(ArrayList<Spieler> alleSpieler, Feld[] spielfeld, int aktiverSpieler)
+    public void  hypothekAbbezahlen()
     { 
     	//ArrayList, welche den Index aller Grundstücke enthält, bei welchen hypothek = true ist 
     	ArrayList<Integer> alleHypotheken = new ArrayList<Integer>();
-    	int[] grundstuecke = alleSpieler.get(aktiverSpieler).getGrundstuecke();
-    	for(int i = 0; i < grundstuecke.length; i++)
+    	for(int i : grundstuecke)
     	{
     		//Wenn eines der Grundstücke des Arrays mit den Grundstücken des Spielers eine Hypothek hat, wird der Index dieses zu alleHypotheken hinzugefügt
-    		if(((Grundstueck)spielfeld[grundstuecke[i]]).getHypothek())
+    		if(((Grundstueck)Main.spielfeld[i]).getHypothek())
     		{
-    			alleHypotheken.add(grundstuecke[i]);
+    			alleHypotheken.add(i);
     		}
     	}
     	
@@ -537,15 +576,15 @@ public class Spieler
     	for(int i = 0; i < alleHypotheken.size(); i++)
     	{
     		//Entfernen von Indexen, deren Grundstücke einen Höheren Hypothekspreis haben, als der Spieler bezahlen könnte
-    		if(((Grundstueck)(spielfeld[alleHypotheken.get(i)])).getHypothekPreis() > alleSpieler.get(aktiverSpieler).getGeld())
+    		if(((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() > getGeld())
     		{
     			//Ausgeben vom Hypothekspreis und dem dazugehörigen Grundstücksnamen
-    			System.out.println("Für das Grundstück" + spielfeld[alleHypotheken.get(i)].getFeldname() + " kannst du dir die Hypothek von " + ((Grundstueck)(spielfeld[alleHypotheken.get(i)])).getHypothekPreis() + " Geld nicht leisten");
+    			System.out.println("Für das Grundstück" + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " kannst du dir die Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Geld nicht leisten");
     			alleHypotheken.remove(i);
     			//Da dieses Element nun entfernt wurde, ist alleHypotheken.get(i) ein anderes element als vorher. Daher wird der Loop für diesen Wert von i erneut ausgeführt
     			i--;
     		}
-    		System.out.println("Für das Grundstück" + spielfeld[alleHypotheken.get(i)].getFeldname() + " mit einer Hypothek von " + ((Grundstueck)(spielfeld[alleHypotheken.get(i)])).getHypothekPreis() + " Geld, gebe " + (i+1) + " ein.");
+    		System.out.println("Für das Grundstück" + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " mit einer Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Geld, gebe " + (i+1) + " ein.");
     	}
     	
     	
@@ -573,7 +612,7 @@ public class Spieler
         			System.out.println("Die Eingabe war nicht korrekt, versuch es noch einmal. Die möglichen Eingaben sind: ");
         			for(int i = 0; i < alleHypotheken.size(); i++)
                 	{
-                		System.out.println("Für das Grundstück" + spielfeld[alleHypotheken.get(i)].getFeldname() + " mit einer Hypothek von " + ((Grundstueck)(spielfeld[alleHypotheken.get(i)])).getHypothekPreis() + " Geld, gebe " + (i+1) + " ein.");
+                		System.out.println("Für das Grundstück" + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " mit einer Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Geld, gebe " + (i+1) + " ein.");
                 	}
         		}
     		}
@@ -582,29 +621,27 @@ public class Spieler
     			System.out.println("Die Eingabe war nicht korrekt, versuch es noch einmal. Die möglichen Eingaben sind: ");
     			for(int i = 0; i < alleHypotheken.size(); i++)
             	{
-            		System.out.println("Für das Grundstück" + spielfeld[alleHypotheken.get(i)].getFeldname() + " mit einer Hypothek von " + ((Grundstueck)(spielfeld[alleHypotheken.get(i)])).getHypothekPreis() + " Geld, gebe " + (i+1) + " ein.");
+            		System.out.println("Für das Grundstück" + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " mit einer Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Geld, gebe " + (i+1) + " ein.");
             	}
     		}
     	}
     	
     	//Abbezahlen der Hypothek, die der Spieler ausgewählt hat
-    	alleSpieler = ((Grundstueck)(spielfeld[alleHypotheken.get(eingabe)])).hypothekAbbezahlen(alleSpieler,spielfeld, aktiverSpieler);
-    	return alleSpieler;
+    	((Grundstueck)Main.spielfeld[alleHypotheken.get(eingabe)]).hypothekAbbezahlen();
     }
     
-    public ArrayList<Spieler> hypothekAufnehmen(ArrayList<Spieler> alleSpieler,Feld[] spielfeld, int aktiverSpieler)
+    public void hypothekAufnehmen()
     {
-    	int[] grundstuecke = alleSpieler.get(aktiverSpieler).getGrundstuecke();
     	ArrayList<Integer> erlaubteGrundstücke = new ArrayList<Integer>();
-    	for(int i = 0; i < grundstuecke.length; i++)
+    	for(int i : grundstuecke)
     	{
     		//Hat dieses Grundstück schon eine Hypothek aufgenommen? Falls ja, kann keine weitere aufgenommen und das nächste Element wird betrachtet
-    		if(!((Grundstueck) spielfeld[grundstuecke[i]]).getHypothek())
+    		if(!((Grundstueck)Main.spielfeld[i]).getHypothek())
     		{
     			//Für Strassen können nur Hypotheken aufgenommen werden, wenn kein Haus auf ihnen steht
-        		if(spielfeld[grundstuecke[i]].getFeld() == "Strasse")
+        		if(Main.spielfeld[i].getFeld() == "Strasse")
         		{
-        			if(((Strasse) spielfeld[grundstuecke[i]]).getHausAnzahl() == 0)
+        			if(((Strasse)Main.spielfeld[i]).getHausAnzahl() == 0)
             		{
         				erlaubteGrundstücke.add(i);
             		}
@@ -619,11 +656,11 @@ public class Spieler
     	}
     	
     	//Gibt die Grundstücke aus, auf die der Spieler eine Hypothek aufnehmen kann
-    	System.out.println("Für welches Grundstück möchtest du eine Hypothek aufnehmen?\nDu hast gerade " + alleSpieler.get(aktiverSpieler).getGeld() + " Geld");
+    	System.out.println("Für welches Grundstück möchtest du eine Hypothek aufnehmen?\nDu hast gerade " + getGeld() + " Geld");
     	for(int i = 0; i < erlaubteGrundstücke.size(); i++)
     	{
-    		System.out.println("Für " + ((Grundstueck) (spielfeld[erlaubteGrundstücke.get(i)])).getFeldname() + " gebe " + (i + 1) + " ein");
-    		System.out.println("Für dieses Grundstück bekommst du " + ((Grundstueck) (spielfeld[erlaubteGrundstücke.get(i)])).getPreis()*0.5 + " Geld");
+    		System.out.println("Für " + ((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(i)]).getFeldname() + " gebe " + (i + 1) + " ein");
+    		System.out.println("Für dieses Grundstück bekommst du " + ((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(i)]).getPreis()*0.5 + " Geld");
     	}
     	
     	Scanner sc = new Scanner(System.in);
@@ -639,7 +676,7 @@ public class Spieler
     			//Wenn die eingegebene Zahl innerhalb des Wertebereichs 1 - erlaubteGrundstücke.size() liegt, ist die Eingabe korrekt
     			for(int i = 0; i < erlaubteGrundstücke.size(); i++)
     			{
-    				if(eingabe -1 == i)
+    				if(eingabe-1 == i)
     				{
     					eingabeKorrekt = true;
     				}
@@ -650,9 +687,9 @@ public class Spieler
         			System.out.println("Die Eingabe war nicht korrekt, versuch es noch einmal. Die möglichen Eingaben sind: ");
         			for(int i = 0; i < erlaubteGrundstücke.size(); i++)
                 	{
-                		System.out.println("Für " + ((Grundstueck) (spielfeld[erlaubteGrundstücke.get(i)])).getFeldname() + " gebe " + (i + 1) + " ein");
-                		System.out.println("Für dieses Grundstück bekommst du " + ((Grundstueck) (spielfeld[erlaubteGrundstücke.get(i)])).getPreis()*0.5 + " Geld");
-                	}
+                		System.out.println("Für " + ((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(i)]).getFeldname() + " gebe " + (i + 1) + " ein");
+    					System.out.println("Für dieses Grundstück bekommst du " + ((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(i)]).getPreis()*0.5 + " Geld");
+    				}
         		}
     		}
     		else
@@ -660,43 +697,44 @@ public class Spieler
     			System.out.println("Die Eingabe war nicht korrekt, versuch es noch einmal. Die möglichen Eingaben sind: ");
     			for(int i = 0; i < erlaubteGrundstücke.size(); i++)
             	{
-            		System.out.println("Für " + ((Grundstueck) (spielfeld[erlaubteGrundstücke.get(i)])).getFeldname() + " gebe " + (i + 1) + " ein");
-            		System.out.println("Für dieses Grundstück bekommst du " + ((Grundstueck) (spielfeld[erlaubteGrundstücke.get(i)])).getPreis()*0.5 + " Geld");
-            	}
+            		System.out.println("Für " + ((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(i)]).getFeldname() + " gebe " + (i + 1) + " ein");
+    				System.out.println("Für dieses Grundstück bekommst du " + ((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(i)]).getPreis()*0.5 + " Geld");
+    			}
     		}
     	}
     	
-    	alleSpieler = ((Grundstueck)spielfeld[erlaubteGrundstücke.get(eingabe)]).hypothekAufnehmen(alleSpieler, aktiverSpieler);
-    	return alleSpieler;
+    	((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(eingabe)]).hypothekAufnehmen();
     }
-    
-    public ArrayList<Spieler> hausVerkaufen(ArrayList<Spieler> alleSpieler, Feld[] spielfeld, int aktiverSpieler)
+
+    public void HausVerkaufenVerfahren()
     {
     	ArrayList<Integer> grundstückeMitHaus = new ArrayList<Integer>();
     	//Hier werden die Grundstücke, welche Häuser haben zu der ArrayList hinzugefügt.
-    	for(int i = 0; i < grundstuecke.size(); i++)
+    	for(int i : grundstuecke)
     	{
     		//Wenn das Grundstück ein Haus hat, wird es zur grundstückMitHaus ArrayList hinzugefügt
-    		if(((Strasse)(spielfeld[grundstuecke.get(i)])).hasHaus())
+    		if(((Strasse)Main.spielfeld[grundstuecke.get(i)]).hasHaus())
     		{
     			grundstückeMitHaus.add(grundstuecke.get(i));
     		}
     	}
-    	
-    	//Häuser dürfen nur gleichmäßig verkauft werden. z.B. : Spieler Besitzt alle Gelben Grundstücke, Hat auf Lessingstaße und Schillerstraße ein Haus und auf der Goethestraße zwei Häuser. Er müsste erst das Haus auf der Goethestraße verkaufen, bevor er die von den anderen Straßen verkaufen kann.
+		
+		//Jetzt lassen wir nur diejenigen Straßen, wo die Häuser verkauft werden können
+
+    	//Häuser dürfen nur gleichmäßig verkauft werden. z.B. : Spieler Besitzt alle gelben Grundstücke, Hat auf Lessingstraße und Schillerstraße ein Haus und auf der Goethestraße zwei Häuser. Er müsste erst das Haus auf der Goethestraße verkaufen, bevor er die von den anderen Straßen verkaufen kann.
     	for(int i = 0; i < grundstückeMitHaus.size(); i++)
     	{
-    		for(int j = 0; j < grundstückeMitHaus.size(); j++)
+    		for(int j = i; j < grundstückeMitHaus.size(); j++)
     		{
     			//Hat der Spieler mehrere Grundstücke mit der selben Farbe und mindestens einem Haus? und: Ist die Anzahl der Häuser unterschiedlich?
-    			if(((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getFarbe() == ((Strasse)(spielfeld[grundstückeMitHaus.get(j)])).getFarbe() && ((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() != ((Strasse)(spielfeld[grundstückeMitHaus.get(j)])).getHausAnzahl())
+    			if(((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getFarbe() == ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(j)])).getFarbe() && ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() != ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(j)])).getHausAnzahl())
     			{
     				//Das Grundstück mit weniger Häusern wird aus der liste entfernt
-    				if(((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() > ((Strasse)(spielfeld[grundstückeMitHaus.get(j)])).getHausAnzahl())
+    				if(((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() > ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(j)])).getHausAnzahl())
     				{
     					grundstückeMitHaus.remove(j);
     				}
-    				if(((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() < ((Strasse)(spielfeld[grundstückeMitHaus.get(j)])).getHausAnzahl())
+    				else if(((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() < ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(j)])).getHausAnzahl())
     				{
     					grundstückeMitHaus.remove(i);
     				}
@@ -709,53 +747,13 @@ public class Spieler
     	//Ausgeben von allen Grundstücken die mindestens ein Haus haben, deren Farbe, deren Hausanzahl und wie viel Geld der Spieler für das verkaufen eines Hauses bekommt
     	for(int i = 0; i < grundstückeMitHaus.size(); i++)
     	{
-    		System.out.println("Für die Straße " + spielfeld[grundstückeMitHaus.get(i)].getFeldname() + " mit der Farbe " + ((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getFarbe() + " und " + ((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() + " Häusern mit dem Verkauspreis von " + ((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getHausPreis() + " Geld, gebe " + (i+1) + " ein." );
+    		System.out.println("Für die Straße " + Main.spielfeld[grundstückeMitHaus.get(i)].getFeldname() + " mit der Farbe " + ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getFarbe() + " und " + ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() + " Häusern mit dem Verkauspreis von " + ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getHausPreis() + " Geld, gebe " + (i+1) + " ein." );
     	}
     	
-    	Scanner sc = new Scanner(System.in);
-    	boolean eingabeKorrekt = false;
-    	int eingabe = -1;
-    	//Wenn die Eingabe nicht korrekt ist wird dieser Loop wiederholt. Er läuft immer mindestens einmal
-    	while(!eingabeKorrekt)
-    	{
-    		//Hat der Nutzer eine Zahl eingegeben? Falls ja, weiter, falls nein war die Eingabe fehlerhaft und muss wiederholt werden.
-    		if(sc.hasNextInt())
-    		{
-    			eingabe = sc.nextInt();
-    			//Wenn die eingegebene Zahl innerhalb des Wertebereichs 1 - erlaubteGrundstücke.size() liegt, ist die Eingabe korrekt
-    			for(int i = 0; i < grundstückeMitHaus.size(); i++)
-    			{
-    				if(eingabe -1 == i)
-    				{
-    					eingabeKorrekt = true;
-    				}
-    			}
-    			//Sollte eingabeKorrekt immer noch false sein, war die Eingabe nicht korrekt und muss wiederholt werden
-    			if(!eingabeKorrekt)
-        		{
-        			System.out.println("Die Eingabe war nicht korrekt, versuch es noch einmal. Die möglichen Eingaben sind: ");
-        			for(int i = 0; i < grundstückeMitHaus.size(); i++)
-        	    	{
-        	    		System.out.println("Für die Straße " + spielfeld[grundstückeMitHaus.get(i)].getFeldname() + " mit der Farbe " + ((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getFarbe() + " und " + ((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() + " Häusern mit dem Verkauspreis von " + ((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getHausPreis() + " Geld, gebe " + (i+1) + " ein." );
-        	    	}
-        		}
-    		}
-    		else
-    		{
-    			System.out.println("Die Eingabe war nicht korrekt, versuch es noch einmal. Die möglichen Eingaben sind: ");
-    			for(int i = 0; i < grundstückeMitHaus.size(); i++)
-    	    	{
-    	    		System.out.println("Für die Straße " + spielfeld[grundstückeMitHaus.get(i)].getFeldname() + " mit der Farbe " + ((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getFarbe() + " und " + ((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() + " Häusern mit dem Verkauspreis von " + ((Strasse)(spielfeld[grundstückeMitHaus.get(i)])).getHausPreis() + " Geld, gebe " + (i+1) + " ein." );
-    	    	}
-    		}
-    	}
+    	int eingabe = Main.checkCorrectNum(1, grundstückeMitHaus.size());
     	
     	//Tatsächliches Verkaufen von dem ausgewählten Haus
-    	((Strasse)(spielfeld[grundstückeMitHaus.get(eingabe)])).setHausAnzahl(((Strasse)(spielfeld[grundstückeMitHaus.get(eingabe)])).getHausAnzahl() - 1);
-    	addGeld(((Strasse)(spielfeld[grundstückeMitHaus.get(eingabe)])).getHausPreis());
-    	System.out.println("Du hast ein Haus auf " + spielfeld[grundstückeMitHaus.get(eingabe)].getFeldname() + " für " + ((Strasse)(spielfeld[grundstückeMitHaus.get(eingabe)])).getHausPreis() + " Geld verkauft.\nDu hast nun " + geld + " Geld");
-    	
-    	return alleSpieler;
-    }
-    
+    	((Strasse)(Main.spielfeld[grundstückeMitHaus.get(eingabe)])).setHausAnzahl(((Strasse)(Main.spielfeld[grundstückeMitHaus.get(eingabe)])).getHausAnzahl() - 1);
+		hausVerkaufen(grundstückeMitHaus.get(eingabe));
+	}   
 }
