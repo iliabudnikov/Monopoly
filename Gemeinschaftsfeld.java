@@ -9,7 +9,7 @@ public class Gemeinschaftsfeld extends Aktionsfelder
     	super(Feldnummer, false, "Gemeinschaftsfeld", "Gemeinschaftsfeld");
     }
     
-    public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld, int gewürfelteZahl)
     {
         //Erstellen eines Random objektes, um ein Ereignis auszwählen
         Random rnd = new Random();
@@ -27,7 +27,7 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         	//Schulgeld. Zahlen Sie M 50.
         	case 1:
         		System.out.println("Schulgeld. Zahlen Sie M 50.");
-        		alleSpieler.get(aktiverSpieler).subtractGeld(50, alleSpieler, spielfeld, aktiverSpieler);
+        		alleSpieler.get(aktiverSpieler).subtractGeld(50);
         		break;
         	//Urlaubsgeld! Sie erhalten M 100.
         	case 2:
@@ -42,7 +42,7 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         	//Arzt-Kosten. Zahlen Sie M 50.
         	case 4:
         		System.out.println("Arzt-Kosten. Zahlen Sie M 50.");
-        		alleSpieler.get(aktiverSpieler).subtractGeld(50, alleSpieler, spielfeld, aktiverSpieler);
+        		alleSpieler.get(aktiverSpieler).subtractGeld(50);
         		break;
         	//Einkommenssteuerrückerstattung. Sie erhalten M 20.
         	case 5:
@@ -51,7 +51,7 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         		break;
         	//Krankenhausgebühren. Zahlen Sie M 100.
         	case 6:
-        		alleSpieler.get(aktiverSpieler).subtractGeld(100, alleSpieler, spielfeld, aktiverSpieler);
+        		alleSpieler.get(aktiverSpieler).subtractGeld(100);
         		System.out.println("Krankenhausgebühren. Zahlen Sie M 100.");
         		break;
         	//Gehen Sie in das Gefängnis. Begeben Sie sich direkt dorthin. Gehen Sie nicht über Los. Ziehen Sie nicht M 200 ein.
@@ -67,17 +67,14 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         	//Sie haben Geburtstag. Jeder Spieler schenkt Ihnen M 10.
         	case 9:
         		System.out.println("Sie haben Geburtstag. Jeder Spieler schenkt Ihnen M 10.");
-        		int geschenkGeld = 0;
-        		//Zieht jedem Spieler der nicht der aktive Spieler ist, 10 Geld ab und gibt dem aktiven Spieler die Summe des aktiven Spielers
+        		//Zieht jedem Spieler der nicht der aktive Spieler ist, 10 Geld ab und gibt dem aktiven Spieler das Abgezogene geld
         		for(int i = 0; i < alleSpieler.size(); i++)
         		{
         			if(i != aktiverSpieler)
         			{
-        				alleSpieler.get(i).subtractGeld(10, alleSpieler, spielfeld, aktiverSpieler);
-        				geschenkGeld += 10;
+        				alleSpieler.get(i).paySpieler(aktiverSpieler, 10);
         			}
         		}
-        		alleSpieler.get(aktiverSpieler).addGeld(geschenkGeld);
         		break;
         	//Sie erben M 100.
         	case 10:
@@ -95,9 +92,34 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         		alleSpieler.get(aktiverSpieler).addGeld(10);
         		break;
         	//Sie werden zu Straßenausbesserungsarbeiten herangezogen. Zahlen Sie M 40 je Haus und M 115 je Hotel an die Bank.
-        	//Noch nicht Implementiert
         	case 13:
         		System.out.println("Sie werden zu Straßenausbesserungsarbeiten herangezogen. Zahlen Sie M 40 je Haus und M 115 je Hotel an die Bank.");
+        		int kosten = 0;
+        		int[] grundstuecke = alleSpieler.get(aktiverSpieler).getGrundstuecke();
+        		for(int i = 0; i < grundstuecke.length; i++)
+        		{
+        			if(spielfeld[grundstuecke[i]].getFeld().equalsIgnoreCase("Strasse"))
+        			{
+        				if(((Strasse)spielfeld[grundstuecke[i]]).getHausAnzahl() >= 5)
+        				{
+        					kosten += (115);
+        				}
+        				else
+        				{
+        					kosten += (40 * ((Strasse)spielfeld[grundstuecke[i]]).getHausAnzahl());
+        				}
+        			}
+        		}
+        		
+        		if(kosten == 0)
+        		{
+        			System.out.println("Da du keine Grundstücke hast, musst du nichts bezahlen.");
+        		}
+        		else
+        		{
+        			System.out.println("Du musst insgesammt " + kosten + " Geld bezahlen.");
+        			alleSpieler.get(aktiverSpieler).subtractGeld(kosten);
+        		}
         		break;
         	//Rücken Sie vor bis auf Los. (Ziehe M 200 ein).
         	case 14:
@@ -115,9 +137,9 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         return alleSpieler;
     }
     
-    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld, int gewürfelteZahl)
     {
         System.out.println("Du hast ein " + getFeld() + " betreten");
-        return Ereignis(alleSpieler, aktiverSpieler, spielfeld);
+        return Ereignis(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
     }
 }

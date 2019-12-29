@@ -1,12 +1,14 @@
+import java.util.ArrayList;
+
 public class Strasse extends Grundstueck
 {
     private String farbe;
     private int hausAnzahl; // 5 Häuse => Hotel
     private int hausPreis;
     
-    public Strasse (int feldnummer, String feldname, Spieler besitzer, int preis, String farbe, int hausAnzahl, int hausPreis)
+    public Strasse (int feldnummer, String feldname, Spieler besitzer, int preis, String farbe, int hausAnzahl, int hausPreis, int[] miete)
     {
-        super(feldnummer, "Straße", feldname, preis);
+        super(feldnummer, "Straße", feldname, preis, miete);
         this.farbe = farbe;
         this.hausAnzahl = hausAnzahl;
         this.hausPreis = hausPreis;
@@ -45,6 +47,31 @@ public class Strasse extends Grundstueck
     		return true;
     	}
     	return false;
+    }
+    
+    public int getMietpreis()
+    {
+    	return miete[hausAnzahl];
+    }
+    public ArrayList<Spieler> miete(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    {
+    	System.out.println("Zahle Miete von " + getMietpreis() +" Geld an den Spieler mit der Figur " + getBesitzer().getFigur());
+    	alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), getMietpreis());
+    	return alleSpieler;
+    }
+    
+    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld) 
+    {
+    	System.out.println("Du hast die Straße " + getFeldname() + " betreten.\nSie hat die Farbe " + getFarbe());
+    	if(getBesitzer() == null)
+    	{
+    		askKaufentscheidung(aktiverSpieler);
+    	}
+    	else
+    	{
+    		alleSpieler = miete(alleSpieler, aktiverSpieler, spielfeld);
+    	}
+    	return alleSpieler;
     }
     
     // zeigt Straßeninfos mit (True) oder ohne (False) Immobilieninfos

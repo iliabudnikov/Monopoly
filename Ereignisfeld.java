@@ -9,14 +9,13 @@ public class Ereignisfeld extends Aktionsfelder
     	super(Feldnummer, false, "Ereignisfeld", "Ereignisfeld");
     }
     
-    public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld, int gewürfelteZahl)
     {
-        feldBetreten();
         //Erstellen eines Random objektes, um ein Ereignis auszwählen
         Random rnd = new Random();
         //Setzt den Seed abhängig von der Systemzeit, damit bei jedem Spieldurchlauf die Reihenfolge der Ereigniskarten variiert
         rnd.setSeed(System.currentTimeMillis());
-        
+        int kosten = 0;
         //Generiert eine Zahl zwischen 0 und 15, um eine der 16 Ereigniskarten auszuwählen
         switch(rnd.nextInt(16))
         {
@@ -25,7 +24,7 @@ public class Ereignisfeld extends Aktionsfelder
         		System.out.println("Rücken Sie vor bis zur Schlossallee.");
         		alleSpieler.get(aktiverSpieler).setPosition(39);
         		//Dieser Teil des Programms ist noch nicht Implementiert.
-        		spielfeld[39].aktion oder so
+        		alleSpieler = ((Strasse)spielfeld[39]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
         		break;
         	//Machen Sie einen Ausflug zum Südbahnhof. Wenn Sie über Los kommen, ziehen Sie M 200 ein.
         	case 1:
@@ -37,7 +36,7 @@ public class Ereignisfeld extends Aktionsfelder
         		}
         		alleSpieler.get(aktiverSpieler).setPosition(5);
         		//Dieser Teil des Programms ist noch nicht Implementiert.
-        		spielfeld[39].aktion oder so
+        		alleSpieler = ((Bahnhof)spielfeld[5]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
         		break;
         	//Ihr Bausparvertrag wird fällig. Sie erhalten M 200.
         	case 2:
@@ -52,8 +51,7 @@ public class Ereignisfeld extends Aktionsfelder
         			alleSpieler.get(aktiverSpieler).addGeld(200);
         		}
         		alleSpieler.get(aktiverSpieler).setPosition(24);
-        		//Dieser Teil des Programms ist noch nicht Implementiert.
-        		spielfeld[39].aktion oder so
+        		alleSpieler = ((Strasse)spielfeld[24]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
         		break;
         	//Rücken Sie vor bis zum nächsten Versorgungswerk. Werfen Sie die Würfel und zahlen dem Eigentümer den zehnfachen Betrag Ihres Wurfergebnisses. Wenn das Werk noch niemandem gehört, können Sie es von der Bank kaufen
         	case 4:
@@ -62,12 +60,14 @@ public class Ereignisfeld extends Aktionsfelder
         		//Elektrizitätswerk
         		if(alleSpieler.get(aktiverSpieler).getPosition() > 12)
         		{
-        			//Funktion noch nicht Implementiert
+        			alleSpieler.get(aktiverSpieler).setPosition(12);
+        			alleSpieler = ((Stromwerk)spielfeld[12]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
         		}
         		//Wasserwerk
         		else
         		{
-        			//Funktion noch nicht Implementiert
+        			alleSpieler.get(aktiverSpieler).setPosition(28);
+        			alleSpieler = ((Wasserwerk)spielfeld[28]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
         		}
         		break;
         	//Gehen Sie in das Gefängnis. Begeben Sie sich direkt dorthin. Gehen Sie nicht über Los. Ziehen Sie nicht M 200 ein
@@ -80,6 +80,8 @@ public class Ereignisfeld extends Aktionsfelder
         		System.out.println("Rücken Sie vor bis auf Los. (Ziehe M 200 ein).");
         		alleSpieler.get(aktiverSpieler).setPosition(0);
         		alleSpieler.get(aktiverSpieler).addGeld(200);
+        		alleSpieler.get(aktiverSpieler).setPosition(12);
+    			alleSpieler = ((Start)spielfeld[0]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
         		break;
         	//Die Bank zahlt Ihnen eine Dividende von M 50.
         	case 7:
@@ -89,7 +91,31 @@ public class Ereignisfeld extends Aktionsfelder
         	//Sie lassen Ihre Häuser renovieren. Zahlen Sie: M 25 pro Haus, M 100 pro Hotel.
         	case 8:
         		System.out.println("Sie lassen Ihre Häuser renovieren. Zahlen Sie: M 25 pro Haus, M 100 pro Hotel.");
-        		//Funktion noch nicht implementiert
+        		int[] grundstuecke = alleSpieler.get(aktiverSpieler).getGrundstuecke();
+        		for(int i = 0; i < grundstuecke.length; i++)
+        		{
+        			if(spielfeld[grundstuecke[i]].getFeld().equalsIgnoreCase("Strasse"))
+        			{
+        				if(((Strasse)spielfeld[grundstuecke[i]]).getHausAnzahl() >= 5)
+        				{
+        					kosten += (100);
+        				}
+        				else
+        				{
+        					kosten += (25 * ((Strasse)spielfeld[grundstuecke[i]]).getHausAnzahl());
+        				}
+        			}
+        		}
+        		
+        		if(kosten == 0)
+        		{
+        			System.out.println("Da du keine Grundstücke hast, musst du nichts bezahlen.");
+        		}
+        		else
+        		{
+        			System.out.println("Du musst insgesammt " + kosten + " Geld bezahlen.");
+        			alleSpieler.get(aktiverSpieler).subtractGeld(kosten);
+        		}
         		break;
         	//Sie kommen aus dem Gefängnis frei! Behalten Sie diese Karte, bis Sie sie benötigen oder verkaufen.
         	case 9:
@@ -104,11 +130,11 @@ public class Ereignisfeld extends Aktionsfelder
         			alleSpieler.get(aktiverSpieler).addGeld(200);
         		}
         		alleSpieler.get(aktiverSpieler).setPosition(11);
+        		alleSpieler = ((Strasse)spielfeld[11]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
         		break;
         	//Sie sind zum Vorstand gewählt worden. Zahlen Sie jedem Spieler M 50.
         	case 11:
         		System.out.println("Sie sind zum Vorstand gewählt worden. Zahlen Sie jedem Spieler M 50.");
-        		int kosten = 0;
         		for(int i = 0; i < alleSpieler.size(); i++)
         		{
         			if(i != aktiverSpieler)
@@ -117,7 +143,7 @@ public class Ereignisfeld extends Aktionsfelder
         				alleSpieler.get(i).addGeld(50);
         			}
         		}
-        		alleSpieler.get(aktiverSpieler).subtractGeld(kosten, alleSpieler, spielfeld, aktiverSpieler);
+        		alleSpieler.get(aktiverSpieler).subtractGeld(kosten);
         		break;
         	//Ihr Bausparvertrag wird fällig. Sie erhalten M 200.
         	case 12:
@@ -128,13 +154,46 @@ public class Ereignisfeld extends Aktionsfelder
         	case 13:
         		System.out.println("Gehen Sie 3 Felder zurück.");
         		alleSpieler.get(aktiverSpieler).setPosition(alleSpieler.get(aktiverSpieler).getPosition() - 3);
-        		//Diese Funktion ist noch nicht Implementiert
-        		spielfeld[alleSpieler.get(aktiverSpieler).getPosition()].aktion oder so
+        		//triggern der Feldeffekte
+        		switch(spielfeld[alleSpieler.get(aktiverSpieler).getPosition()].getFeld())
+                {
+                case"Strasse":
+                	alleSpieler = ((Strasse)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                case"Bahnhof":
+                	alleSpieler = ((Bahnhof)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                case"Ereignisfeld":
+                	alleSpieler = ((Ereignisfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
+                	break;
+                case"Gemeinschaftsfeld":
+                	alleSpieler = ((Gemeinschaftsfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
+                	break;
+                case"Wasserwerk":
+                	alleSpieler = ((Wasserwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
+                	break;
+                case"Stromwerk":
+                	alleSpieler = ((Stromwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
+                	break;
+                case"Los":
+                	alleSpieler = ((Start)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                case"Steuern":
+                	alleSpieler = ((Steuern)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                case"Frei Parken":
+                	alleSpieler = ((FreiParken)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                case"Ins Gefängnis":
+                	alleSpieler = ((InsGefängnis)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                	break;
+                }
+        		
         		break;
         	//Strafzettel! Zahlen Sie M 15.
         	case 14:
         		System.out.println("Strafzettel! Zahlen Sie M 15.");
-        		alleSpieler.get(aktiverSpieler).subtractGeld(15, alleSpieler, spielfeld, aktiverSpieler);
+        		alleSpieler.get(aktiverSpieler).subtractGeld(15);
         		break;
         	//Rücken Sie vor bis zum nächsten Verkehrsfeld. Der Eigentümer erhält das Doppelte der normalen Miete. Wenn das Verkehrsfeld noch niemandem gehört, können Sie es von der Bank kaufen.
         	case 15:
@@ -148,13 +207,12 @@ public class Ereignisfeld extends Aktionsfelder
         		{
         			alleSpieler.get(aktiverSpieler).addGeld(200);
         			alleSpieler.get(aktiverSpieler).setPosition(5);
-        			//Diese Funktion ist noch nicht implementiert
-        			spielfeld[5],aktion oder so
+        			alleSpieler = ((Bahnhof)spielfeld[5]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
         		}
         		else
         		{
         			//Das element von abstand das > 0 ist und am kleiner als alle anderen die > 0 sind
-        			int kleinsterAbstand;
+        			int kleinsterAbstand = 0;
         			//Ob in dem For loop schon ein abstand gefunden wurde, der > 0 ist
         			boolean wertGrößer0 = false;
         			for(int i = 0; i < 4; i++)
@@ -185,26 +243,22 @@ public class Ereignisfeld extends Aktionsfelder
         				case 0:
         					alleSpieler.get(aktiverSpieler).setPosition(5);
         					System.out.println("Du rückst auf den Bahnhof auf");
-        					//Diese Funktion ist noch nicht Implementiert
-        					spielfeld[5].aktion oder so
+        					alleSpieler = ((Bahnhof)spielfeld[5]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
         					break;
         				case 1:
         					alleSpieler.get(aktiverSpieler).setPosition(15);
         					System.out.println("Du rückst auf den Bahnhof auf");
-        					//Diese Funktion ist noch nicht Implementiert
-        					spielfeld[15].aktion oder so
+        					alleSpieler = ((Bahnhof)spielfeld[15]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
         					break;
         				case 2:
         					alleSpieler.get(aktiverSpieler).setPosition(25);
         					System.out.println("Du rückst auf den Bahnhof auf");
-        					//Diese Funktion ist noch nicht Implementiert
-        					spielfeld[25].aktion oder so
+        					alleSpieler = ((Bahnhof)spielfeld[25]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
         					break;
         				case 3:
         					alleSpieler.get(aktiverSpieler).setPosition(35);
         					System.out.println("Du rückst auf den Bahnhof auf");
-        					//Diese Funktion ist noch nicht Implementiert
-        					spielfeld[35].aktion oder so
+        					alleSpieler = ((Bahnhof)spielfeld[35]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
         					break;
         			}
         		}
@@ -213,10 +267,10 @@ public class Ereignisfeld extends Aktionsfelder
         return alleSpieler;
     }
     
-    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld, int gewürfelteZahl)
     {
         System.out.println("Du hast ein " + getFeld() + " betreten");
-        return Ereignis(alleSpieler, aktiverSpieler, spielfeld);
+        return Ereignis(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
     }
 
 }

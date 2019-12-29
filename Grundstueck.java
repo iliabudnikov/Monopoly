@@ -14,15 +14,16 @@ public abstract class Grundstueck extends Feld
     private boolean hypothek;
     //Wie viel Geld es kostet, eine Hypothek auf dieses Grundstück abzubezahlen
     private int hypotheksPreis;
+    int[] miete;
     
-    
-	Grundstueck (int feldnummer, String feld, String feldname, int preis)
+	Grundstueck (int feldnummer, String feld, String feldname, int preis, int[] miete)
     {
         super(feldnummer, true, feld, feldname);
         this.besitzer = null;
         this.preis = preis;
         this.hypothek = false;
         this.hypotheksPreis = (int)((preis * 0.5) + ((preis *0.5)* 0.1));
+        this.miete = miete;
     }
     
     
@@ -56,6 +57,11 @@ public abstract class Grundstueck extends Feld
     public int getHypothekPreis()
     {
     	return hypotheksPreis;
+    }
+    
+    public int[] getMiete()
+    {
+    	return miete;
     }
     
     //Ändert den Status von hypothek auf True und gibt dem Spieler der die Hypothek aufnimmt den Geldwert der Hypothek
@@ -153,12 +159,12 @@ public abstract class Grundstueck extends Feld
     {
         if(Main.alleSpieler.get(aktiverSpieler).getGeld() >= getPreis())
         {
-            System.out.println("\nMöchten Sie dieses Grundstück kaufen? (ja - 1, nein - sonstiges)"
+            System.out.println("\nMöchten Sie dieses Grundstück kaufen? Es kostet " + getPreis() + " Geld. \nDu hast " + Main.alleSpieler.get(aktiverSpieler).getGeld() + " Geld.\n(ja - 1, nein - sonstiges)"
         + "\n-> ");
         
             String entscheidung = sc.next();
 
-            if (entscheidung == "1")
+            if (entscheidung.equals("1"))
             {
                 besitzer = Main.alleSpieler.get(aktiverSpieler);
                 Main.alleSpieler.get(aktiverSpieler).addGrundstück(this.getPosition());
