@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public abstract class Feld
 {
     //Nummer des Feldes in der Reihenfolge des Gesammten Spielfeldes
@@ -16,7 +18,6 @@ public abstract class Feld
         this. feld = feld;
         this.feldname = feldname;
     }
-    
     
     public int getFeldnummer()
     {

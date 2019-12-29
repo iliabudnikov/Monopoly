@@ -15,13 +15,13 @@ public class Steuern extends Aktionsfelder
         if(welchesFeld)
         {
             System.out.println("Du musst die Zusatzsteuer von 100 Geld bezahlen!");
-            alleSpieler.get(aktiverSpieler).subtractGeld(100, alleSpieler, spielfeld, aktiverSpieler);
+            alleSpieler.get(aktiverSpieler).subtractGeld(100);
         }
         //Einkommenssteuer
         else
         {
             System.out.println("Du musst die Einkommenssteuer von 200 Geld bezahlen!");
-            alleSpieler.get(aktiverSpieler).subtractGeld(200, alleSpieler, spielfeld, aktiverSpieler);
+            alleSpieler.get(aktiverSpieler).subtractGeld(200);
         }
         return alleSpieler;
     }

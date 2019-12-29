@@ -169,6 +169,7 @@ public class Spieler
     public void ausGefängnis()
     {
     	imGefängnis = false;
+    	rundenImGefängnis = 0;
     }
     
     public int getRundenImGefängnis()
@@ -472,18 +473,22 @@ public class Spieler
     {
     	for(int i : grundstuecke)
     	{
-    		//Hat dieses Grundstück schon eine Hypothek aufgenommen? Falls ja, kann keine weitere aufgenommen und das nächste Element wird betrachtet
-    		if(!((Grundstueck)Main.spielfeld[i]).getHypothek())
+    		if(grundstuecke.get(i) != 0)
     		{
-    			//Für Strassen können nur Hypotheken aufgenommen werden, wenn kein Haus auf ihnen steht
-        		if(Main.spielfeld[i].getFeld() == "Strasse")
+    			System.out.println(Main.spielfeld[grundstuecke.get(i)].getFeldname());
+        		//Hat dieses Grundstück schon eine Hypothek aufgenommen? Falls ja, kann keine weitere aufgenommen und das nächste Element wird betrachtet
+        		if(!((Grundstueck)Main.spielfeld[grundstuecke.get(i)]).getHypothek())
         		{
-        			if(((Strasse)Main.spielfeld[i]).getHausAnzahl() == 0)
+        			//Für Strassen können nur Hypotheken aufgenommen werden, wenn kein Haus auf ihnen steht
+            		if(Main.spielfeld[i].getFeld() == "Strasse")
+            		{
+            			if(((Strasse)Main.spielfeld[i]).getHausAnzahl() == 0)
+                			return true;
+            		}
+            		//Falls das Grundstück keine Strasse ist, muss die Anzahl der Häuser nicht betrachtet werden. Solange nicht bereits eine Hypothek besteht, kann eine Hypothek aufgenommen werden
+            		else
             			return true;
         		}
-        		//Falls das Grundstück keine Strasse ist, muss die Anzahl der Häuser nicht betrachtet werden. Solange nicht bereits eine Hypothek besteht, kann eine Hypothek aufgenommen werden
-        		else
-        			return true;
     		}
 		}
 		
@@ -584,37 +589,47 @@ public class Spieler
     	ArrayList<String> ausgabe = new ArrayList<String>();
     	
     	//Wenn der Spieler noch nicht gewürfelt hat, kann er würfeln
-    	if(!hatGewürfelt)
+    	if(!hatGewürfelt && rundenImGefängnis < 3)
     	{
     		ausgabe.add("Würfeln");
     	}
     	//Wenn der Spieler gewürftelt hat, kann er seinen Zug beenden
     	if(hatGewürfelt)
     	{
-    		ausgabe.add("Zugbeenden");
+    		ausgabe.add("Zug beenden");
     	}
     	
     	//Wenn der Spieler im Gefängis ist, kann der Spieler sich aus dem Gefängis freikaufen
     	if(imGefängnis)
     	{
-    		ausgabe.add("Aus dem Gefängnis Freikaufen (dies kostet 50 Mark)");
-    		//Wenn der Spieler im Gefängnis ist und mindestens eine "Komme aus dem Gefängnis frei" karte besitzt, wird diese zu benutzen als Aktion hinzugefügt.
-    		if(getGefängnisKarte() > 0)
+    		if(!hatGewürfelt)
     		{
-    			ausgabe.add("„Du kommst aus dem Gefängnis frei“-Karte verwenden");
+    			if(geld >= 50)
+    			{
+    				if(rundenImGefängnis == 3)
+    				{
+    					System.out.println("Du bist bereits 3 Runden im Gefängnis, du musst 50 Geld bezahlen");
+    				}
+    				ausgabe.add("Aus dem Gefängnis Freikaufen (dies kostet 50 Geld)");
+    			}
+        		//Wenn der Spieler im Gefängnis ist und mindestens eine "Komme aus dem Gefängnis frei" karte besitzt, wird diese zu benutzen als Aktion hinzugefügt.
+        		if(getGefängnisKarte() > 0 && !(rundenImGefängnis == 3))
+        		{
+        			ausgabe.add("„Du kommst aus dem Gefängnis frei“-Karte verwenden");
+        		}
     		}
     	}
     	
     	//Der Spieler kann wenn er am Zug ist jederzeit Häuser bauen. Er kann jedoch nur Häuser bauen, wenn er alle Straßen einer Farbe besitzt, und genug Geld hat.
     	if(sayIfCanHaus())
     	{
-    		ausgabe.add("Hausbauen");
+    		ausgabe.add("Haus bauen");
     	}
     	
     	//Hat der Spieler mindestens ein Haus, welches er verkaufen kann?
     	if(sayIfCanHausVerkaufen())
     	{
-    		ausgabe.add("Hausverkaufen");
+    		ausgabe.add("Häuser verkaufen");
     	}
     	//Der Spieler kann wenn er am Zug ist jederzeit handeln. Hier gibt es keine Beschränkung, weswegen dies Immmer in der Liste ist.
     	ausgabe.add("Handeln");
@@ -628,7 +643,7 @@ public class Spieler
     	//Hat der Spieler mindestens eine Hypothek und genug Geld um diese Abzubezahlen?
     	if(sayIfCanHypothek() && sayIfCanHypothekAbbezahlen())
     	{
-    		ausgabe.add("Hypothekenabbezahlen");
+    		ausgabe.add("Hypotheken abbezahlen");
     	}
     	
     	return ausgabe;

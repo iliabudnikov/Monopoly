@@ -15,11 +15,11 @@ public class Wasserwerk extends Stadtwerk
     	//Ist der Besitzer des Wasserrwerks auch der Besitzer des Stromwerks?
     	if(getBesitzer() ==  ((Stadtwerk)(spielfeld[12])).getBesitzer())
     	{
-    		alleSpieler.get(aktiverSpieler).paySpieler(alleSpieler, getBesitzer(), (gewürfelteZahl * 10), spielfeld, aktiverSpieler);
+    		alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), (gewürfelteZahl * 10));
     	}
     	else
     	{
-    		alleSpieler.get(aktiverSpieler).paySpieler(alleSpieler, getBesitzer(), (gewürfelteZahl * 4), spielfeld, aktiverSpieler);
+    		alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), (gewürfelteZahl * 4));
     	}
     	return alleSpieler;
     }
@@ -27,9 +27,9 @@ public class Wasserwerk extends Stadtwerk
     public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld, int gewürfelteZahl)
     {
     	//Gehört dieses Wasserwerk schon jemandem? Falls nein, kann es gekauft werden, falls ja, muss miete bezahlt werden
-    	if(getBesitzer() == -1)
+    	if(getBesitzer() == null)
     	{
-    		
+    		askKaufentscheidung(aktiverSpieler);
     	}
     	else
     	{
@@ -37,9 +37,5 @@ public class Wasserwerk extends Stadtwerk
     	}
     	
     	return alleSpieler;
-    }
-    public void toString()
-    {
-        
     }
 }
