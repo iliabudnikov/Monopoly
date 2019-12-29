@@ -1,17 +1,17 @@
-import java.util.ArrayList;
 public class FreiParken extends Aktionsfelder
 {
     public FreiParken(int Feldnummer)
     {
     	super(Feldnummer, false, "Frei Parken", "Frei Parken");
     }
-    public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+
+    public void Ereignis(int aktiverSpieler)
     {
-        return alleSpieler;
+        System.out.println("\nEntspann dich!");
     }
-    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+
+    public void feldBetreten(int aktiverSpieler)
     {
-        System.out.println("Du hast ein " + getFeld() + " Feld betreten");
-        return alleSpieler;
+        System.out.println("Du hast ein " + getFeld() + " Feld betreten.");
     }
 }

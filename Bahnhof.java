@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Bahnhof extends Grundstueck
 {
     public Bahnhof(int Feldnummer, String Feldname)
@@ -7,33 +5,31 @@ public class Bahnhof extends Grundstueck
     	super(Feldnummer, "Bahnhof", Feldname, 200, null);
     }
     
-    public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public void Ereignis(int aktiverSpieler)
     {
     	//Kaufentscheidung/ Miete
     	if(getBesitzer() == null)
     	{
     		askKaufentscheidung(aktiverSpieler);
     	}
-    	else
+    	else if(!getHypothek()) // mit Hypothek = keine Miete = Frei Parken
     	{
-    		alleSpieler = miete(alleSpieler, aktiverSpieler, spielfeld);
+    		miete(aktiverSpieler);
     	}
-    	
-    	return alleSpieler;
     }
     
-    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public void feldBetreten(int aktiverSpieler)
     {
-    	System.out.println("Du hast den " + getFeldname() +" betreten.");
-    	return Ereignis(alleSpieler, aktiverSpieler, spielfeld);
+    	System.out.println("\nDu hast den " + getFeldname() +" betreten.");
+    	Ereignis(aktiverSpieler);
     }
     
-    public ArrayList<Spieler> miete(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public void miete(int aktiverSpieler)
     {
     	int bahnhöfeBesitzer = 0;
-    	for(int i = 0; i < spielfeld.length; i++)
+    	for(int i = 0; i < Main.alleSpieler.get(aktiverSpieler).getGrundstuecke().length; i++)
     	{
-    		if(spielfeld[i].getFeld().equals("Bahnhof"))
+    		if(Main.spielfeld[i].getFeld() == "Bahnhof")
     		{
     			bahnhöfeBesitzer++;
     		}
@@ -41,19 +37,18 @@ public class Bahnhof extends Grundstueck
     	
     	switch(bahnhöfeBesitzer)
     	{
-    	case(1):
-    		alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), 25);
-    		break;
-    	case(2):
-    		alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), 50);
-    		break;
-    	case(3):
-    		alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), 100);
-    		break;
-    	case(4):
-    		alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), 200);
-    		break;
+			case 1:
+				Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), 25);
+				break;
+			case 2:
+				Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), 50);
+				break;
+			case 3:
+				Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), 100);
+				break;
+			case 4:
+				Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), 200);
+				break;
     	}
-    	return alleSpieler;
     }
 }

@@ -1,8 +1,10 @@
-1. Bei den: leere Straßen Kaufen, sayIfHaus, sayWhereHaus und wahrscheinlich noch irgendwo wurde die "Genug Geld"-Kontrolle ergänzt
-2. Code-Korrekturen
-3. Hausbauen im Menü
-4. Eingabenkontrolle-Methode (ich habe nicht überall (nur in Main) geändert)
 5. Höchstwahrscheinlich, dass etwas bis zum Ende nicht gemacht habe (habe mich ungünstig verteilt)
 6. Viele Änderungen:
 6.1 Mietpreise für verschiedene Hausanzahl
 6.2 Miete für die Versorgungswerke
+
+7. Straße -> Hypothek beim Betretten, Mietpreisbedingungen wurden geändert, bzw. ergänzt
+8. Bahnhof -> Hypothek beim Betretten, Miete-Methode wurde subjektivgemäß optimiert (i < Grundstücke(nicht alle Felder).lengh)
+9. -//- für Werke
+10. Main -> Methodenvereinfachungen (weniger Parameter), Nachaktionen
+11. sonstige subjektivistische Änderungen (Mini=Refactoring)

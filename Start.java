@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 public class Start extends Aktionsfelder
 {
     
@@ -8,13 +7,13 @@ public class Start extends Aktionsfelder
         super(Feldnummer, false, "Los", "Los");
     	
     }
-    public ArrayList<Spieler> Ereignis(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public void Ereignis(int aktiverSpieler)
     {
-        return alleSpieler;
+        Main.alleSpieler.get(aktiverSpieler).addGeld(200);
     }
-    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public void feldBetreten(int aktiverSpieler)
     {
         System.out.println("Du hast das " + getFeld() + " Feld betreten");
-        return alleSpieler;
+        Ereignis(aktiverSpieler);
     }
 }

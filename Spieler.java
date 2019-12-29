@@ -592,13 +592,14 @@ public class Spieler
     	if(!hatGewürfelt && rundenImGefängnis < 3)
     	{
     		ausgabe.add("Würfeln");
-    	}
+		}
+		
     	//Wenn der Spieler gewürftelt hat, kann er seinen Zug beenden
     	if(hatGewürfelt)
     	{
     		ausgabe.add("Zug beenden");
-    	}
-    	
+		}
+		
     	//Wenn der Spieler im Gefängis ist, kann der Spieler sich aus dem Gefängis freikaufen
     	if(imGefängnis)
     	{
@@ -632,12 +633,66 @@ public class Spieler
     		ausgabe.add("Häuser verkaufen");
     	}
     	//Der Spieler kann wenn er am Zug ist jederzeit handeln. Hier gibt es keine Beschränkung, weswegen dies Immmer in der Liste ist.
-    	ausgabe.add("Handeln");
+    	if(sayIfCanHausVerkaufen())
+    	{
+    		ausgabe.add("Häuser verkaufen");
+		}
     	
     	//Hat der Spieler mindestens ein Grundstück, auf das er eine Hypothek aufnehmen kann?
     	if(sayIfCanHypothek())
     	{
     		ausgabe.add("Hypotheken auf ein Grundstück Aufnehmen");
+    	}
+    	
+    	//Hat der Spieler mindestens eine Hypothek und genug Geld um diese Abzubezahlen?
+    	if(sayIfCanHypothek() && sayIfCanHypothekAbbezahlen())
+    	{
+    		ausgabe.add("Hypotheken abbezahlen");
+    	}
+    	
+    	return ausgabe;
+	}
+	
+	// ein Spieler darf während der Züge der Anderen (nach dem Zug seines Mitspielers) einige Aktionen ausführen
+	// die Methode gibt also eine ArrayList mit allen möglichen Eingaben, die der Spieler NICHT während seines Zugs machen kann aus
+    public ArrayList<String> möglicheNachaktionen()
+    {
+    	ArrayList<String> ausgabe = new ArrayList<String>();
+    	
+    	ausgabe.add("Zug beenden");
+    	
+    	//Eigentlich kann man so nicht während seines Zugs machen, aber ob es irgendeinen Sinn hat...
+    	if(imGefängnis)
+    	{
+    		if(geld >= 50)
+    		{
+    			if(getGefängnisKarte() > 0)
+        		{
+        			ausgabe.add("„Du kommst aus dem Gefängnis frei“-Karte verwenden");
+        		}
+    		}
+    	}
+    	
+		//Der Spieler kann, wenn er nicht an seinem Zug ist, Häuser bauen.
+		if(sayIfCanHaus())
+    	{
+    		ausgabe.add("Haus bauen");
+    	}
+    	
+    	//Hat der Spieler mindestens ein Haus, welches er verkaufen kann?
+    	if(sayIfCanHausVerkaufen())
+    	{
+    		ausgabe.add("Häuser verkaufen");
+		}
+		
+		if (sayIfCanHandeln())
+		{
+			ausgabe.add("Handeln");
+		}
+			
+		if(sayIfCanHypothek())
+    	{
+    		ausgabe.add("Hypotheken auf ein Grundstück aufnehmen");
     	}
     	
     	//Hat der Spieler mindestens eine Hypothek und genug Geld um diese Abzubezahlen?

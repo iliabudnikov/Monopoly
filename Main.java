@@ -47,7 +47,7 @@ public class Main
         //Erstellen der Benötigten Spieler
         alleSpieler = new ArrayList<Spieler>();
         //Arraylist die alle Figuren enthält.
-        ArrayList figuren = new ArrayList<String>();
+        ArrayList<String> figuren = new ArrayList<String>();
         //Das erstellen einer Liste welche alle Mögliche Figuren enthält ermöglicht es, diese auf einmal zu der Arraylist hinzuzufügen
         List<String> figurNamen = Arrays.asList("Hund", "Schuh", "Auto", "Schiff", "Hut", "Fingerhut", "Schubkarre", "Bügeleisen");
         figuren.addAll(figurNamen);
@@ -97,7 +97,7 @@ public class Main
         	{
         		reihenfolge.add(temp[i]);
         	}
-        	
+			
         	while(true)
         	{
         		//Spielbeginn
@@ -123,7 +123,27 @@ public class Main
         				reihenfolge.remove(i);
         				i--;
         			}
-        			
+					
+					System.out.println("\nSpieler " + aktiverSpieler + " hat seinen Zug beendet.");
+					
+					// die anderen Spieler können auch bestimmte Aktionen nicht während seines Zugs ausführen
+					String eingabe;
+					ArrayList<String> nachaktionen;
+					int j = (aktiverSpieler + 1) % alleSpieler.size(); // um nicht überzulaufen
+					
+					while(j != aktiverSpieler)
+					{
+						nachaktionen = alleSpieler.get(j).möglicheNachaktionen();
+						if (nachaktionen.size() > 1) // d.h. nicht nur "Zug beenden"
+						{
+							System.out.println("\nSpieler " + (j+1) + ", möchtest du jetzt etwas tun? (ja - 1, nein - sonstiges)");
+							eingabe = sc.next();
+							if (eingabe == "1")
+								spielerAktiv = nachaktionenAusführen(j, nachaktionen);
+						}
+
+						j = ++j % alleSpieler.size(); // j läuft im Kreis, vom aktiven Spieler bin zum aktiven Spieler
+					}
         		}
         	}
         	
@@ -157,42 +177,8 @@ public class Main
             	{
             		System.out.println("Zum " + aktionen.get(i) + "gebe " + (i + 1) + " ein.");
             	}
-            	
-            	//Eingabe der Zahl durch den Nutzer
-            	Scanner sc = new Scanner(System.in);
-            	
-            	boolean eingabeKorrekt = false;
-            	int eingabe = -1;
-            	//Wenn die Eingabe nicht korrekt ist wird dieser Loop wiederholt. Er läuft immer mindestens einmal
-            	while(!eingabeKorrekt)
-            	{
-            		//Hat der Nutzer eine Zahl eingegeben? Falls ja, weiter, falls nein war die Eingabe fehlerhaft und muss wiederholt werden.
-            		if(sc.hasNextInt())
-            		{
-            			eingabe = sc.nextInt();
-            			//Wenn die Eingabe innerhalb von 1 - aktionen.size() liegt, ist die Eingabe korrekt. Wenn dies nicht der Fall ist, wird die Eingabe wiederholt
-            			if(eingabe > 0 && eingabe <= aktionen.size())
-            			{
-            				eingabeKorrekt = true;
-            			}
-            			else
-                		{
-                			System.out.println("Die Eingabe war nicht korrekt, versuch es noch einmal. Die möglichen Eingaben sind: ");
-                			for(int i = 0; i < aktionen.size(); i++)
-                        	{
-                        		System.out.println("Zum " + aktionen.get(i) + "gebe " + (i + 1) + " ein.");
-                        	}
-                		}
-            		}
-            		else
-            		{
-            			System.out.println("Die Eingabe war nicht korrekt, versuch es noch einmal. Die möglichen Eingaben sind: ");
-            			for(int i = 0; i < aktionen.size(); i++)
-                    	{
-                    		System.out.println("Zum " + aktionen.get(i) + "gebe " + (i + 1) + " ein.");
-                    	}
-            		}
-            	}
+				
+				int eingabe = Main.checkCorrectNum(1, aktionen.size());
             	
             	//Hier kann nun die ausgewählte Aktion ausgeführt werden
             	switch(aktionen.get(eingabe  - 1))
@@ -201,17 +187,17 @@ public class Main
             			Würfeln();
             			break;
             		case"Zug beenden":
-            			//Setzt die boolean hatGewürfelt zurrück, damit der Spieler in der nächsten Runde Würfeln kann
+            			//Setzt die boolean hatGewürfelt zurrück, damit der Spieler in der nächsten Runde würfeln kann
             			alleSpieler.get(aktiverSpieler).setHatGewürfelt(false);
             			return false;
-            		case"Aus dem Gefängnis freikaufen (Dies kostet 50 Geld)":
+            		case"Aus dem Gefängnis freikaufen (Dies kostet 50 Mark)":
             			alleSpieler.get(aktiverSpieler).subtractGeld(50);
             			alleSpieler.get(aktiverSpieler).ausGefängnis();
-            			System.out.println("Du hast 50 Geld bezahlt und bist nun nicht mehr eingesperrt.");
+            			System.out.println("Du hast 50 Mark bezahlt und bist nun nicht mehr eingesperrt.");
             			break;
-            		case"\"Komme aus dem Gefängnis Frei\" Karte verwenden":
+            		case"„Du kommst aus dem Gefängnis frei“-Karte verwenden":
             			alleSpieler.get(aktiverSpieler).ausGefängnis();
-            			System.out.println("Du hast eine 'Komme aus dem Gefängnis Frei' verwendet und bist nun nicht mehr eingesperrt.");
+            			System.out.println("Du hast eine „Du kommst aus dem Gefängnis frei“-Karte verwendet und bist nun nicht mehr eingesperrt.");
             			break;
             		case"Haus bauen":
 						alleSpieler.get(aktiverSpieler).HausKaufenVerfahren();
@@ -235,6 +221,62 @@ public class Main
 			
         	//Der Loop kann nur verlassen werden, wenn der Spieler verloren hat. Sollte diese Funktion also false returnen, wird der Aktive Spieler entfernt
         	return true;
+		}
+		
+		//Ermöglicht dem Spieler mägliche Aktionen NICHT während seinem Zug durchführen
+		// true, wenn der "während"-Zug beendet ist, sonst false
+        public static boolean nachaktionenAusführen(int welcherSpieler, ArrayList<String> nachaktionen)
+        {
+        	while(!alleSpieler.get(welcherSpieler).getHatVerloren())
+        	{
+        		System.out.println("\nWas möchtest du tun?\n");
+            	//Gibt aus, welche aktionen der Spieler ausführen kann und welche Zahl er dafür eingeben soll
+            	for(int i = 0; i < nachaktionen.size(); i++)
+            	{
+            		System.out.println("Zum " + nachaktionen.get(i) + "gebe " + (i + 1) + " ein.");
+            	}
+				
+				int eingabe = Main.checkCorrectNum(1, nachaktionen.size());
+            	
+            	//Hier kann nun die ausgewählte Aktion ausgeführt werden
+            	switch(nachaktionen.get(eingabe  - 1))
+            	{
+            		case"Würfeln":
+            			Würfeln();
+            			break;
+            		case"Zug beenden":
+            			//Setzt die boolean hatGewürfelt zurrück, damit der Spieler in der nächsten Runde würfeln kann
+            			alleSpieler.get(aktiverSpieler).setHatGewürfelt(false);
+            			return false;
+            		case"Aus dem Gefängnis freikaufen (Dies kostet 50 Mark)":
+            			alleSpieler.get(aktiverSpieler).subtractGeld(50);
+            			alleSpieler.get(aktiverSpieler).ausGefängnis();
+            			System.out.println("Du hast 50 Mark bezahlt und bist nun nicht mehr eingesperrt.");
+            			break;
+            		case"„Du kommst aus dem Gefängnis frei“-Karte verwenden":
+            			alleSpieler.get(aktiverSpieler).ausGefängnis();
+            			System.out.println("Du hast eine „Du kommst aus dem Gefängnis frei“-Karte verwendet und bist nun nicht mehr eingesperrt.");
+            			break;
+            		case"Haus bauen":
+						alleSpieler.get(aktiverSpieler).HausKaufenVerfahren();
+						break;
+					case"Häuser verkaufen":
+            			alleSpieler.get(aktiverSpieler).HausVerkaufenVerfahren();
+            			break;
+            		case"Handeln":
+						alleSpieler.get(aktiverSpieler).HandelnVerfahren();
+            			break;
+            		case"Hypothen auf ein Grundstück aufnehmen":
+            			alleSpieler.get(aktiverSpieler).hypothekAufnehmen();
+            			break;
+            		case"Hypotheken abbezahlen":
+            			alleSpieler.get(aktiverSpieler).hypothekAbbezahlen();
+            			break;
+            	}
+			}
+			
+        	//Der Loop kann nur verlassen werden, wenn der Spieler verloren hat. Sollte diese Funktion also false returnen, wird der Aktive Spieler entfernt
+        	return true;
         }
         
         public static void Würfeln()
@@ -253,13 +295,13 @@ public class Main
             	//ist der Spieler im Gefängnis? Wenn ja, muss er einen Pasch würfeln, um das Gefängnis verlassen zu können
                 if(alleSpieler.get(aktiverSpieler).getImGefängnis())
                 {
-                   //Gefängnis event  triggern. Alles andere Passiert jetzt ersmal da.
+                   //Gefängnis event triggern. Alles andere passiert jetzt erstmal da.
                 	if(rndInt1 == rndInt2)
                     {
                         i--;
-                      //Wenn der Spieler durch würfeln eines Pasches aus dem Gefängnis freigekommen ist, wird der Paschcounter erhöht.
+                      //Wenn der Spieler durch Würfeln eines Pasches aus dem Gefängnis freigekommen ist, wird der Paschcounter erhöht.
                         paschAnzahl++;
-                        System.out.println("Du hast einen Pasch gewürfel., du kommst aus dem Gefängnis frei.");
+                        System.out.println("Das ist ein Pasch, du kommst aus dem Gefängnis frei!");
                         alleSpieler.get(aktiverSpieler).ausGefängnis();
                     }
                 }
@@ -271,10 +313,17 @@ public class Main
                     {
                         i--;
                         paschAnzahl++;
-                        System.out.println("Du hast einen Pasch gewürfelt.");
+                        System.out.println("Das ist ein Pasch!");
                     } 
-                    
-                }
+				}
+				
+				if (paschAnzahl == 3)
+				{
+					i++; // Ins Gefängnis! und das war es dann für den Spieler
+					System.out.println("\nDiesmal muss du aber ins Gefängnis gehen!\nDreimal in der gleichen Runde, das ist ungesetzlich!");
+					
+				}
+
                 if(!alleSpieler.get(aktiverSpieler).getImGefängnis())
                 {
                 	alleSpieler.get(aktiverSpieler).setPosition(alleSpieler.get(aktiverSpieler).getPosition() + rndInt1 + rndInt2);
@@ -283,38 +332,39 @@ public class Main
                 	switch(spielfeld[alleSpieler.get(aktiverSpieler).getPosition()].getFeld())
                     {
                     case"Straße":
-                    	alleSpieler = ((Strasse)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                    	((Strasse)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
                     	break;
                     case"Bahnhof":
-                    	alleSpieler = ((Bahnhof)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                    	((Bahnhof)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
                     	break;
                     case"Ereignisfeld":
-                    	alleSpieler = ((Ereignisfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
+                    	((Ereignisfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
                     	break;
                     case"Gemeinschaftsfeld":
-                    	alleSpieler = ((Gemeinschaftsfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
+                    	((Gemeinschaftsfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
                     	break;
                     case"Wasserwerk":
-                    	alleSpieler = ((Wasserwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
+                    	((Wasserwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
                     	break;
                     case"Stromwerk":
-                    	alleSpieler = ((Stromwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
+                    	((Stromwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
                     	break;
                     case"Los":
-                    	alleSpieler = ((Start)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                    	((Start)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
                     	break;
                     case"Steuern":
-                    	alleSpieler = ((Steuern)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                    	((Steuern)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
                     	break;
                     case"Frei Parken":
-                    	alleSpieler = ((FreiParken)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                    	((FreiParken)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
                     	break;
-                    case"Ins Gefängnis":
-                    	alleSpieler = ((InsGefängnis)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+                    case"Gefängnis":
+                    	((Gefängnis)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
                     	break;
                     }
-                }
-                alleSpieler.get(aktiverSpieler).setHatGewürfelt(true);
+				}
+				
+				alleSpieler.get(aktiverSpieler).setHatGewürfelt(true);
             }
         }
         
