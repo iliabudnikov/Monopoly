@@ -56,13 +56,13 @@ public class Strasse extends Grundstueck
     }
     public void miete(int aktiverSpieler)
     {
-    	System.out.println("Zahle Miete von " + getMietpreis(aktiverSpieler) +" Geld an den Spieler mit der Figur " + getBesitzer().getFigur());
+    	System.out.println("\nZahle Miete von " + getMietpreis(aktiverSpieler) +" Geld an den Spieler mit der Figur " + getBesitzer().getFigur());
     	Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), getMietpreis(aktiverSpieler));
     }
     
     public void feldBetreten(int aktiverSpieler) 
     {
-    	System.out.println("\nDu hast die Straße " + getFeldname() + " betreten. Sie hat die Farbe " + getFarbe());
+    	System.out.println("\nDu hast die " + getFeldname() + " betreten. Sie hat die Farbe " + getFarbe() + ".");
     	if(getBesitzer() == null)
     	{
     		askKaufentscheidung(aktiverSpieler);
@@ -76,7 +76,7 @@ public class Strasse extends Grundstueck
     // zeigt Straßeninfos mit (True) oder ohne (False) Immobilieninfos
     public String toString(boolean mitImmobilien)
     {
-        String ergebnis = "Die " + getFeldname() + " Straße in der Farbe " + farbe;
+        String ergebnis = "\nDie " + getFeldname() + " Straße in der Farbe " + farbe;
 
         if (mitImmobilien)
         {

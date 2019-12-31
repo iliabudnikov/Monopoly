@@ -29,7 +29,7 @@ public class Bahnhof extends Grundstueck
     	int bahnhöfeBesitzer = 0;
     	for(int i = 0; i < Main.alleSpieler.get(aktiverSpieler).getGrundstuecke().length; i++)
     	{
-    		if(Main.spielfeld[i].getFeld() == "Bahnhof")
+    		if(Main.spielfeld[i].getFeld().equals("Bahnhof"))
     		{
     			bahnhöfeBesitzer++;
     		}

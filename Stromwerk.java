@@ -2,7 +2,7 @@ public class Stromwerk extends Stadtwerk
 {
     public Stromwerk(int feldnummer)
     {
-    	super(feldnummer, "Elektrizitätswerk", "Elektrizitätswerk", 150);
+    	super(feldnummer, "Stromwerk", "Stromwerk", 150);
     }
     
     //Bei Stadtwerken, wird die Miete anders berechnet als bei anderen Feldern. 

@@ -12,7 +12,7 @@ public class InsGefängnis extends Aktionsfelder
     
     public void feldBetreten(int aktiverSpieler)
     {
-    	System.out.println("Du hast das „Gehen sie in das Gefängnis“ Feld betreten.");
+    	System.out.println("\nDu hast das „Gehen sie in das Gefängnis“ Feld betreten.");
     	Ereignis(aktiverSpieler);
     }
 }

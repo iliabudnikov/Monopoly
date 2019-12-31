@@ -132,7 +132,7 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         		break;
         	//Bank-Irrtum zu Ihren Gunsten. Ziehen Sie M 200 ein.
         	case 15:
-        		System.out.println("Bank-Irrtum zu Ihren Gunsten! Ziehe 200 Mark ein.");
+        		System.out.println("\nBank-Irrtum zu Ihren Gunsten! Ziehe 200 Mark ein.");
         		Main.alleSpieler.get(aktiverSpieler).addGeld(200);
         		break;
         }

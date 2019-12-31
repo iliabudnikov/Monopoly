@@ -236,7 +236,7 @@ public class Spieler
     public void removeGrundstück(int position)
     {
         int i = 0;
-        while (i < grundstuecke.size() && ((Grundstueck)Main.spielfeld[grundstuecke.get(i)]).getPosition() != position)
+        while (i < grundstuecke.size() && grundstuecke.get(i) != position)
             i++;
         
         grundstuecke.remove(i);
@@ -384,12 +384,12 @@ public class Spieler
 		if (((Strasse)Main.spielfeld[strassennummer]).getHausAnzahl() == 5)
 		{
 			setGeld(getGeld() + (((Strasse)Main.spielfeld[strassennummer]).getHausPreis() * 5 / 2)); // Ein Hotel kostet 4 Häuser + 1 Haus
-			System.out.println("Du hast ein Hotel auf " + Main.spielfeld[strassennummer].getFeldname() + " für " + ((Strasse)(Main.spielfeld[strassennummer])).getHausPreis() + " Mark verkauft.\nDu hast nun " + geld + " Mark");
+			System.out.println("\nDu hast ein Hotel auf " + Main.spielfeld[strassennummer].getFeldname() + " für " + ((Strasse)(Main.spielfeld[strassennummer])).getHausPreis() + " Mark verkauft.\nDu hast nun " + geld + " Mark");
 		}
 		else
 		{
 			setGeld(getGeld() + ((Strasse)Main.spielfeld[strassennummer]).getHausPreis() / 2);
-			System.out.println("Du hast ein Haus auf " + Main.spielfeld[strassennummer].getFeldname() + " für " + ((Strasse)(Main.spielfeld[strassennummer])).getHausPreis() + " Mark verkauft.\nDu hast nun " + geld + " Mark");
+			System.out.println("\nDu hast ein Haus auf " + Main.spielfeld[strassennummer].getFeldname() + " für " + ((Strasse)(Main.spielfeld[strassennummer])).getHausPreis() + " Mark verkauft.\nDu hast nun " + geld + " Mark");
 		}
 	}
 
@@ -452,11 +452,11 @@ public class Spieler
     	}
     	
     	
-    	System.out.println("Du hast " + geld + " Mark.");
+    	System.out.println("\nDu hast " + geld + " Mark.");
     	//Ausgeben von allen Grundstücken die mindestens ein Haus haben, deren Farbe, deren Hausanzahl und wie viel Geld der Spieler für das verkaufen eines Hauses bekommt
     	for(int i = 0; i < grundstückeMitHaus.size(); i++)
     	{
-    		System.out.println("Für die Straße " + Main.spielfeld[grundstückeMitHaus.get(i)].getFeldname() + " mit der Farbe " + ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getFarbe() + " und " + ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() + " Häusern mit dem Verkauspreis von " + ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getHausPreis() + " Mark, gebe " + (i+1) + " ein." );
+    		System.out.println("\nFür die Straße " + Main.spielfeld[grundstückeMitHaus.get(i)].getFeldname() + " mit der Farbe " + ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getFarbe() + " und " + ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getHausAnzahl() + " Häusern mit dem Verkauspreis von " + ((Strasse)(Main.spielfeld[grundstückeMitHaus.get(i)])).getHausPreis() + " Mark, gebe " + (i+1) + " ein." );
     	}
     	
     	int eingabe = Main.checkCorrectNum(1, grundstückeMitHaus.size());
@@ -523,7 +523,7 @@ public class Spieler
     		}
     	}
     	
-    	System.out.println("Welche deiner Hypotheken willst du abbezahlen?\nWenn du dir das Abbezahlen einer Hypothek nicht leisten kannst, steht sie nicht zur Auswahl.\nDu hast gerade " + getGeld() + " Mark");
+    	System.out.println("\nWelche deiner Hypotheken willst du abbezahlen?\nWenn du dir das Abbezahlen einer Hypothek nicht leisten kannst, steht sie nicht zur Auswahl.\nDu hast gerade " + getGeld() + " Mark");
     	
     	for(int i = 0; i < alleHypotheken.size(); i++)
     	{
@@ -531,12 +531,12 @@ public class Spieler
     		if(((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() > getGeld())
     		{
     			//Ausgeben vom Hypothekspreis und dem dazugehörigen Grundstücksnamen
-    			System.out.println("Für das Grundstück" + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " kannst du dir die Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Mark nicht leisten");
+    			System.out.println("\nFür das Grundstück" + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " kannst du dir die Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Mark nicht leisten");
     			alleHypotheken.remove(i);
     			//Da dieses Element nun entfernt wurde, ist alleHypotheken.get(i) ein anderes element als vorher. Daher wird der Loop für diesen Wert von i erneut ausgeführt
     			i--;
     		}
-    		System.out.println("Für das Grundstück" + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " mit einer Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Mark, gebe " + (i+1) + " ein.");
+    		System.out.println("\nFür das Grundstück" + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " mit einer Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Mark, gebe " + (i+1) + " ein.");
     	}
     	
     	int eingabe = Main.checkCorrectNum(1, alleHypotheken.size());
@@ -570,11 +570,11 @@ public class Spieler
     	}
     	
     	//Gibt die Grundstücke aus, auf die der Spieler eine Hypothek aufnehmen kann
-    	System.out.println("Für welches Grundstück möchtest du eine Hypothek aufnehmen?\nDu hast gerade " + getGeld() + " Mark");
+    	System.out.println("\nFür welches Grundstück möchtest du eine Hypothek aufnehmen?\nDu hast gerade " + getGeld() + " Mark");
     	for(int i = 0; i < erlaubteGrundstücke.size(); i++)
     	{
-    		System.out.println("Für " + ((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(i)]).getFeldname() + " gebe " + (i + 1) + " ein");
-    		System.out.println("Für dieses Grundstück bekommst du " + ((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(i)]).getPreis()*0.5 + " Mark");
+    		System.out.println("\nFür " + ((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(i)]).getFeldname() + " gebe " + (i + 1) + " ein");
+    		System.out.println("\nFür dieses Grundstück bekommst du " + ((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(i)]).getPreis()*0.5 + " Mark");
     	}
 		
 		int eingabe = Main.checkCorrectNum(1, erlaubteGrundstücke.size());
@@ -609,9 +609,9 @@ public class Spieler
     			{
     				if(rundenImGefängnis == 3)
     				{
-    					System.out.println("Du bist bereits 3 Runden im Gefängnis, du musst 50 Geld bezahlen");
+    					System.out.println("\nDu bist bereits 3 Runden im Gefängnis, du musst 50 Geld bezahlen");
     				}
-    				ausgabe.add("Aus dem Gefängnis Freikaufen (dies kostet 50 Geld)");
+    				ausgabe.add("Aus dem Gefängnis Freikaufen (dies kostet 50 Mark)");
     			}
         		//Wenn der Spieler im Gefängnis ist und mindestens eine "Komme aus dem Gefängnis frei" karte besitzt, wird diese zu benutzen als Aktion hinzugefügt.
         		if(getGefängnisKarte() > 0 && !(rundenImGefängnis == 3))
@@ -707,11 +707,11 @@ public class Spieler
     //Wenn der Spieler kein Geld mehr hat, kann er Hypotheken aufnehmen und Häuser verkaufen um Geld zu machen
     public int pleite(int schulden)
     {
-    	System.out.println("Du hast Schulden, die du nicht abbezahlen kannst. Du kannst Hypotheken aufnehmen oder Häuser verkaufen um Geld zu machen.");
+    	System.out.println("\nDu hast Schulden, die du nicht abbezahlen kannst. Du kannst Hypotheken aufnehmen oder Häuser verkaufen um Geld zu machen.");
     	//Solange der Spieler seine Schulden nicht abbezahlen kann, wird dies Wiederholt
     	while(schulden - geld > 0)
     	{
-    		System.out.println("Du hast " + geld + " Mark, und du musst " + schulden + " Mark bezahlen. \nDir Fehlen also noch " + (schulden - geld) + " Mark.");
+    		System.out.println("\nDu hast " + geld + " Mark, und du musst " + schulden + " Mark bezahlen. \nDir Fehlen also noch " + (schulden - geld) + " Mark.");
         	ArrayList<String> ausgabe = new ArrayList<String>();
         	if(sayIfCanHausVerkaufen())
         	{
@@ -827,7 +827,7 @@ public class Spieler
 			
 		if (variableGrundstueck == 2)
 		{	
-			System.out.println("\nWas willst du dem Spieler anbieten?");
+			System.out.println("\nWas willst du dem Spieler anbieten?\n");
 			System.out.println("1. „Du kommst aus dem Gefängnis frei“-Karten");
 			System.out.println("2. Grundstücke");
 			System.out.println("3. nichts");
@@ -842,15 +842,15 @@ public class Spieler
 		else if(variableGrundstueck == 1)
 		{
 			System.out.println("\nDu kannst nur Grundstücke verkaufen.");
-			System.out.println("Möchtest du? (ja - 1, nein - sonstiges)");
+			System.out.println("\nMöchtest du?\n(ja - 1, nein - sonstiges)\n\n-> ");
 			String eingabe = sc.next();
-			if(eingabe == "1")
+			if(eingabe.equals("1"))
 				grundstueckVerkaufen(Main.alleSpieler.get(spielernummer));
 		}
 		else // nur variableFreiKarten = 1
 		{
 			System.out.println("\nDu kannst nur „Du kommst aus dem Gefängnis frei“-Karten verkaufen.");
-			System.out.println("Möchtest du? (ja - 1, nein - sonstiges)");
+			System.out.println("\nMöchtest du?\n(ja - 1, nein - sonstiges)\n\n-> ");
 			String eingabe = sc.next();
 			if(eingabe == "1")
 				gefaengnisFreiVerkaufen(Main.alleSpieler.get(spielernummer));

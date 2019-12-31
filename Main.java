@@ -17,16 +17,22 @@ public class Main
 	{
 		int eingabe;
 		boolean eingabeKorrekt = false;
-		do {
-			System.out.print("\nGib eine Ganzzahl von " + 1 + " bis " + 10 + " ein.\n\n-> ");
-			while (!sc.hasNextInt()) {
+		do
+		{
+			if (grenzeLinks != grenzeRechts)
+				System.out.print("\nGib eine Ganzzahl von " + grenzeLinks + " bis " + grenzeRechts + " ein.\n\n-> ");
+			else
+				System.out.print("\n-> ");
+
+			while (!sc.hasNextInt())
+			{
 				System.out.println("\nDas ist keine Zahl. Versuch noch einmal.");
 				sc.next();
-				System.out.print("\nGib eine Ganzzahl von " + 1 + " bis " + 10 + " ein.\n\n-> ");
+				System.out.print("\nGib eine Ganzzahl von " + grenzeLinks + " bis " + grenzeRechts + " ein.\n\n-> ");
 			}
 
 			eingabe = sc.nextInt();
-			if (eingabe < 1 || eingabe > 10)
+			if (eingabe < grenzeLinks || eingabe > grenzeRechts)
 				System.out.println("\nDie Zahl liegt außerhalb des zugelassenen Bereichs. Versuch noch einmal.");
 			else
 				eingabeKorrekt = true;
@@ -106,8 +112,8 @@ public class Main
         			//Setzen des aktiven Spielers nach der Reihenfolge, welche vorher festgelegt wurde
         			aktiverSpieler = reihenfolge.get(i);
         			//Ausgeben welcher Spieler am zug ist
-        			System.out.println("Der Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + " ist am Zug.");
-        			System.out.println("Du hast " + alleSpieler.get(aktiverSpieler).getGeld() + " Geld.");
+        			System.out.println("\nDer Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + " ist am Zug.");
+        			System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGeld() + " Geld.");
         			if(alleSpieler.get(aktiverSpieler).getImGefängnis())
         			{
         				alleSpieler.get(aktiverSpieler).increaseRundenImGefängnis();
@@ -124,7 +130,7 @@ public class Main
         				i--;
         			}
 					
-					System.out.println("\nSpieler " + aktiverSpieler + " hat seinen Zug beendet.");
+					System.out.println("\nSpieler " + (aktiverSpieler+1) + " hat seinen Zug beendet.\n");
 					
 					// die anderen Spieler können auch bestimmte Aktionen nicht während seines Zugs ausführen
 					String eingabe;
@@ -136,9 +142,9 @@ public class Main
 						nachaktionen = alleSpieler.get(j).möglicheNachaktionen();
 						if (nachaktionen.size() > 1) // d.h. nicht nur "Zug beenden"
 						{
-							System.out.println("\nSpieler " + (j+1) + ", möchtest du jetzt etwas tun? (ja - 1, nein - sonstiges)");
+							System.out.println("\n\nSpieler " + (j+1) + ", möchtest du jetzt etwas tun?\n(ja - 1, nein - sonstiges)\n\n-> ");
 							eingabe = sc.next();
-							if (eingabe == "1")
+							if (eingabe.equals("1"))
 								spielerAktiv = nachaktionenAusführen(j, nachaktionen);
 						}
 
@@ -167,21 +173,26 @@ public class Main
 		// true, wenn Zug beenden, sonst false
         public static boolean aktionenAusführen(int aktiverSpieler)
         {
+			boolean ersteWahl = true; // um den aktuellen Zustand des Zugs deutlicher zu machen, unterscheiden wir die erste Wahl des Zugs und die Weiteren
         	while(!alleSpieler.get(aktiverSpieler).getHatVerloren())
         	{
+				
         		//Beinhaltet alle möglichen Aktionen die der Spieler ausführen kann
-            	ArrayList<String> aktionen = alleSpieler.get(aktiverSpieler).möglicheAktionen();
-            	System.out.println("\nWas möchtest du tun?\n");
-            	//Gibt aus, welche aktionen der Spieler ausführen kann und welche Zahl er dafür eingeben soll
+				ArrayList<String> aktionen = alleSpieler.get(aktiverSpieler).möglicheAktionen();
+				if (ersteWahl)
+            		System.out.println("\nWas möchtest du tun?\n");
+				else
+					System.out.println("\nWas möchtest du noch tun?\n");
+				//Gibt aus, welche aktionen der Spieler ausführen kann und welche Zahl er dafür eingeben soll
             	for(int i = 0; i < aktionen.size(); i++)
             	{
-            		System.out.println("Zum " + aktionen.get(i) + "gebe " + (i + 1) + " ein.");
+            		System.out.println("Zum " + aktionen.get(i) + " gebe " + (i + 1) + " ein.");
             	}
 				
 				int eingabe = Main.checkCorrectNum(1, aktionen.size());
             	
             	//Hier kann nun die ausgewählte Aktion ausgeführt werden
-            	switch(aktionen.get(eingabe  - 1))
+            	switch(aktionen.get(eingabe - 1))
             	{
             		case"Würfeln":
             			Würfeln();
@@ -216,7 +227,9 @@ public class Main
             			break;
             			
             		//Man sollte warscheinich auch eine Art inventar hinzufügen, wo der Spieler ansehen kann was er alles so hat(Grundstücke, komm aus dem Gefängnis frei Karten, All sein Geld, ob seine Grundstücke Hypotheken haben, usw)
-            	}
+				}
+				
+				ersteWahl = false;
 			}
 			
         	//Der Loop kann nur verlassen werden, wenn der Spieler verloren hat. Sollte diese Funktion also false returnen, wird der Aktive Spieler entfernt
@@ -251,11 +264,11 @@ public class Main
             		case"Aus dem Gefängnis freikaufen (Dies kostet 50 Mark)":
             			alleSpieler.get(aktiverSpieler).subtractGeld(50);
             			alleSpieler.get(aktiverSpieler).ausGefängnis();
-            			System.out.println("Du hast 50 Mark bezahlt und bist nun nicht mehr eingesperrt.");
+            			System.out.println("\nDu hast 50 Mark bezahlt und bist nun nicht mehr eingesperrt.");
             			break;
             		case"„Du kommst aus dem Gefängnis frei“-Karte verwenden":
             			alleSpieler.get(aktiverSpieler).ausGefängnis();
-            			System.out.println("Du hast eine „Du kommst aus dem Gefängnis frei“-Karte verwendet und bist nun nicht mehr eingesperrt.");
+            			System.out.println("\nDu hast eine „Du kommst aus dem Gefängnis frei“-Karte verwendet und bist nun nicht mehr eingesperrt.");
             			break;
             		case"Haus bauen":
 						alleSpieler.get(aktiverSpieler).HausKaufenVerfahren();
@@ -289,9 +302,11 @@ public class Main
             {
             	int rndInt1 = rnd.nextInt(5) + 1;
                 int rndInt2 = rnd.nextInt(5) + 1;
-                
-                System.out.println("Du hast eine " + rndInt1 + " und eine " + rndInt2 + " gewürfelt.");
-                
+				
+				if (paschAnzahl > 0)
+					System.out.println("\nDa du einen Pasch gewürfelt hast, würfelst du noch einmal.");
+				System.out.println("\nDu hast eine " + rndInt1 + " und eine " + rndInt2 + " gewürfelt.");
+
             	//ist der Spieler im Gefängnis? Wenn ja, muss er einen Pasch würfeln, um das Gefängnis verlassen zu können
                 if(alleSpieler.get(aktiverSpieler).getImGefängnis())
                 {
@@ -301,7 +316,7 @@ public class Main
                         i--;
                       //Wenn der Spieler durch Würfeln eines Pasches aus dem Gefängnis freigekommen ist, wird der Paschcounter erhöht.
                         paschAnzahl++;
-                        System.out.println("Das ist ein Pasch, du kommst aus dem Gefängnis frei!");
+                        System.out.println("\nDas ist ein Pasch, du kommst aus dem Gefängnis frei!");
                         alleSpieler.get(aktiverSpieler).ausGefängnis();
                     }
                 }
@@ -313,7 +328,7 @@ public class Main
                     {
                         i--;
                         paschAnzahl++;
-                        System.out.println("Das ist ein Pasch!");
+                        System.out.println("\nDas ist ein Pasch!");
                     } 
 				}
 				
@@ -327,7 +342,6 @@ public class Main
                 if(!alleSpieler.get(aktiverSpieler).getImGefängnis())
                 {
                 	alleSpieler.get(aktiverSpieler).setPosition(alleSpieler.get(aktiverSpieler).getPosition() + rndInt1 + rndInt2);
-                	System.out.println(spielfeld[alleSpieler.get(aktiverSpieler).getPosition()].getFeld());
                 	//Triggern der Aktion des Feldes
                 	switch(spielfeld[alleSpieler.get(aktiverSpieler).getPosition()].getFeld())
                     {
@@ -392,10 +406,10 @@ public class Main
         		}
         	}
         	
-        	System.out.println("Die Reihenfolge wurde festgelegt.");
+        	System.out.println("\nDie Reihenfolge wurde festgelegt.\n");
         	for(int i = 0; i < alleSpieler.size(); i++)
         	{
-        		System.out.println("Spieler " + (i+1) + " ist der Spieler mit der Figur: " + alleSpieler.get(reihenfolge[i]).getFigur());
+        		System.out.println("Spieler " + (i+1) + " ist der Spieler mit der Figur " + alleSpieler.get(reihenfolge[i]).getFigur() + ".");
         	}
         	
         	return reihenfolge;
