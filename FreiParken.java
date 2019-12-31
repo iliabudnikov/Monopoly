@@ -13,5 +13,6 @@ public class FreiParken extends Aktionsfelder
     public void feldBetreten(int aktiverSpieler)
     {
         System.out.println("\nDu hast ein " + getFeld() + " Feld betreten.");
+        Ereignis(aktiverSpieler);
     }
 }

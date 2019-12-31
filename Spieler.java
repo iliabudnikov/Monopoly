@@ -659,19 +659,8 @@ public class Spieler
     {
     	ArrayList<String> ausgabe = new ArrayList<String>();
     	
-    	ausgabe.add("Zug beenden");
-    	
-    	//Eigentlich kann man so nicht während seines Zugs machen, aber ob es irgendeinen Sinn hat...
-    	if(imGefängnis)
-    	{
-    		if(geld >= 50)
-    		{
-    			if(getGefängnisKarte() > 0)
-        		{
-        			ausgabe.add("„Du kommst aus dem Gefängnis frei“-Karte verwenden");
-        		}
-    		}
-    	}
+		ausgabe.add("Zug beenden");
+		ausgabe.add("Abgeben");
     	
 		//Der Spieler kann, wenn er nicht an seinem Zug ist, Häuser bauen.
 		if(sayIfCanHaus())
