@@ -401,18 +401,17 @@ public class Spieler
 		{
 			strassen[i] = sayWhereCanHaus().get(i);
 		}
-		int zaehler = 1;
 
-		for (int i : strassen)
+		for (int i = 0; i <  strassen.length; i++)
 		{	// Zählen alle erlaubten Straßen auf
-			System.out.println(zaehler + ". ");
-			((Strasse)Main.spielfeld[i]).toString(true);
-			zaehler++;
+			System.out.println((i+1) + ". ");
+			((Strasse)Main.spielfeld[strassen[i]]).toString(true);
 		}
 						
-		int eingabe = Main.checkCorrectNum(1, zaehler-1);
+		System.out.println("\nWähle eine Straße aus der Liste.");
+		int eingabe = Main.checkCorrectNum(1, strassen.length); // zähler erhöht sich noch mal vor dem Ausgang
 
-		hausKaufen(eingabe);
+		hausKaufen(strassen[eingabe-1]);
 	}
 
 	public void HausVerkaufenVerfahren()
@@ -422,9 +421,9 @@ public class Spieler
     	for(int i : grundstuecke)
     	{
     		//Wenn das Grundstück ein Haus hat, wird es zur grundstückMitHaus ArrayList hinzugefügt
-    		if(((Strasse)Main.spielfeld[grundstuecke.get(i)]).hasHaus())
+    		if(((Strasse)Main.spielfeld[i]).hasHaus())
     		{
-    			grundstückeMitHaus.add(grundstuecke.get(i));
+    			grundstückeMitHaus.add(i);
     		}
     	}
 		
@@ -462,8 +461,8 @@ public class Spieler
     	int eingabe = Main.checkCorrectNum(1, grundstückeMitHaus.size());
     	
     	//Tatsächliches Verkaufen von dem ausgewählten Haus
-    	((Strasse)(Main.spielfeld[grundstückeMitHaus.get(eingabe)])).setHausAnzahl(((Strasse)(Main.spielfeld[grundstückeMitHaus.get(eingabe)])).getHausAnzahl() - 1);
-		hausVerkaufen(grundstückeMitHaus.get(eingabe));
+    	((Strasse)(Main.spielfeld[grundstückeMitHaus.get(eingabe-1)])).setHausAnzahl(((Strasse)(Main.spielfeld[grundstückeMitHaus.get(eingabe-1)])).getHausAnzahl() - 1);
+		hausVerkaufen(grundstückeMitHaus.get(eingabe-1));
 	}
 	// -- Verfahren mit Häusern --
 	
@@ -473,11 +472,10 @@ public class Spieler
     {
     	for(int i : grundstuecke)
     	{
-    		if(grundstuecke.get(i) != 0)
+    		if(i != 0)
     		{
-    			System.out.println(Main.spielfeld[grundstuecke.get(i)].getFeldname());
         		//Hat dieses Grundstück schon eine Hypothek aufgenommen? Falls ja, kann keine weitere aufgenommen und das nächste Element wird betrachtet
-        		if(!((Grundstueck)Main.spielfeld[grundstuecke.get(i)]).getHypothek())
+        		if(!((Grundstueck)Main.spielfeld[i]).getHypothek())
         		{
         			//Für Strassen können nur Hypotheken aufgenommen werden, wenn kein Haus auf ihnen steht
             		if(Main.spielfeld[i].getFeld() == "Strasse")
@@ -542,7 +540,7 @@ public class Spieler
     	int eingabe = Main.checkCorrectNum(1, alleHypotheken.size());
     	
     	//Abbezahlen der Hypothek, die der Spieler ausgewählt hat
-    	((Grundstueck)Main.spielfeld[alleHypotheken.get(eingabe)]).hypothekAbbezahlen();
+    	((Grundstueck)Main.spielfeld[alleHypotheken.get(eingabe-1)]).hypothekAbbezahlen();
     }
     
     public void hypothekAufnehmen()
@@ -579,7 +577,7 @@ public class Spieler
 		
 		int eingabe = Main.checkCorrectNum(1, erlaubteGrundstücke.size());
     	
-    	((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(eingabe)]).hypothekAufnehmen();
+    	((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(eingabe-1)]).hypothekAufnehmen();
 	}
 	// -- Hypotheke --
     
@@ -587,7 +585,7 @@ public class Spieler
     public ArrayList<String> möglicheAktionen()
     {
     	ArrayList<String> ausgabe = new ArrayList<String>();
-    	
+
     	//Wenn der Spieler noch nicht gewürfelt hat, kann er würfeln
     	if(!hatGewürfelt && rundenImGefängnis < 3)
     	{
@@ -641,7 +639,7 @@ public class Spieler
     	//Hat der Spieler mindestens ein Grundstück, auf das er eine Hypothek aufnehmen kann?
     	if(sayIfCanHypothek())
     	{
-    		ausgabe.add("Hypotheken auf ein Grundstück Aufnehmen");
+    		ausgabe.add("Hypotheken auf ein Grundstück aufnehmen");
     	}
     	
     	//Hat der Spieler mindestens eine Hypothek und genug Geld um diese Abzubezahlen?
@@ -649,7 +647,9 @@ public class Spieler
     	{
     		ausgabe.add("Hypotheken abbezahlen");
     	}
-    	
+		
+		ausgabe.add("Abgeben");
+
     	return ausgabe;
 	}
 	
@@ -659,8 +659,7 @@ public class Spieler
     {
     	ArrayList<String> ausgabe = new ArrayList<String>();
     	
-		ausgabe.add("Zug beenden");
-		ausgabe.add("Abgeben");
+		ausgabe.add("Zwischenzug beenden");
     	
 		//Der Spieler kann, wenn er nicht an seinem Zug ist, Häuser bauen.
 		if(sayIfCanHaus())
@@ -689,7 +688,9 @@ public class Spieler
     	{
     		ausgabe.add("Hypotheken abbezahlen");
     	}
-    	
+		
+		ausgabe.add("Abgeben");
+
     	return ausgabe;
     }
     
@@ -718,8 +719,7 @@ public class Spieler
         	}
         	
 			int eingabe = Main.checkCorrectNum(1, ausgabe.size());
-            
-            switch(ausgabe.get(eingabe))
+            switch(ausgabe.get(eingabe-1))
             {
             	case"Haus verkaufen":
             		HausVerkaufenVerfahren();
@@ -831,7 +831,7 @@ public class Spieler
 		else if(variableGrundstueck == 1)
 		{
 			System.out.println("\nDu kannst nur Grundstücke verkaufen.");
-			System.out.println("\nMöchtest du?\n(ja - 1, nein - sonstiges)\n\n-> ");
+			System.out.print("\nMöchtest du?\n(ja - 1, nein - sonstiges)\n\n-> ");
 			String eingabe = sc.next();
 			if(eingabe.equals("1"))
 				grundstueckVerkaufen(Main.alleSpieler.get(spielernummer));
@@ -839,7 +839,7 @@ public class Spieler
 		else // nur variableFreiKarten = 1
 		{
 			System.out.println("\nDu kannst nur „Du kommst aus dem Gefängnis frei“-Karten verkaufen.");
-			System.out.println("\nMöchtest du?\n(ja - 1, nein - sonstiges)\n\n-> ");
+			System.out.print("\nMöchtest du?\n(ja - 1, nein - sonstiges)\n\n-> ");
 			String eingabe = sc.next();
 			if(eingabe == "1")
 				gefaengnisFreiVerkaufen(Main.alleSpieler.get(spielernummer));

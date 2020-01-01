@@ -13,10 +13,12 @@ public class Stromwerk extends Stadtwerk
     	//Ist der Besitzer des Stromwerks auch der Besitzer des Wasserwerks?
     	if(getBesitzer() == ((Stadtwerk)(Main.spielfeld[28])).getBesitzer())
     	{
+			System.out.println("\nJetzt zahlst du dem Eigentümer den zehnfachen Betrag deines Wurfergebnisses.");
     		Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), (gewürfelteZahl * 10));
     	}
     	else
     	{
+			System.out.println("\nJetzt zahlst du dem Eigentümer den vierfachen Betrag deines Wurfergebnisses.");
     		Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), (gewürfelteZahl * 4));
     	}
     }
@@ -30,7 +32,7 @@ public class Stromwerk extends Stadtwerk
     	}
     	else if(!getHypothek()) // mit Hypothek = keine Miete = Frei Parken
     	{
-    		miete(aktiverSpieler, gewürfelteZahl);
+			miete(aktiverSpieler, gewürfelteZahl);
     	}
     }
 }

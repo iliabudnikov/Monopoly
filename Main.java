@@ -7,10 +7,6 @@ import java.util.Scanner;
 public class Main
 {
 
-
-	// ------------- der Spieler soll abgeben können --------------
-
-	
     public static ArrayList<Spieler> alleSpieler;
     public static Feld [] spielfeld;
 	private static int aktiverSpieler;
@@ -25,7 +21,17 @@ public class Main
 		do
 		{
 			if (grenzeLinks != grenzeRechts)
-				System.out.print("\nGib eine Ganzzahl von " + grenzeLinks + " bis " + grenzeRechts + " ein.\n\n-> ");
+			{
+				if(grenzeLinks != -1)
+				{
+					if(grenzeRechts != -1)
+						System.out.print("\nGib eine Ganzzahl von " + grenzeLinks + " bis " + grenzeRechts + " ein.\n\n-> ");
+					else
+						System.out.print("\nGib eine Ganzzahl, die größer/gleich " + grenzeLinks + " ist, ein.\n\n-> ");
+				}
+				else
+					System.out.print("\nGib eine Ganzzahl, die kleiner/gleich als " + grenzeRechts + " ist, ein.\n\n-> ");
+			}
 			else
 				System.out.print("\n-> ");
 
@@ -33,14 +39,62 @@ public class Main
 			{
 				System.out.println("\nDas ist keine Zahl. Versuch noch einmal.");
 				sc.next();
-				System.out.print("\nGib eine Ganzzahl von " + grenzeLinks + " bis " + grenzeRechts + " ein.\n\n-> ");
+				if (grenzeLinks != grenzeRechts)
+				{
+					if(grenzeLinks != -1)
+					{
+						if(grenzeRechts != -1)
+							System.out.print("\nGib eine Ganzzahl von " + grenzeLinks + " bis " + grenzeRechts + " ein.\n\n-> ");
+						else
+							System.out.print("\nGib eine Ganzzahl, die größer/gleich als " + grenzeLinks + " ist, ein.\n\n-> ");
+					}
+					else
+						System.out.print("\nGib eine Ganzzahl, die kleiner/gleich als " + grenzeRechts + " ist, ein.\n\n-> ");
+				}
+				else
+					System.out.print("Gib eine Ganzzahl ein.\n\n-> ");
 			}
 
 			eingabe = sc.nextInt();
-			if (eingabe < grenzeLinks || eingabe > grenzeRechts)
-				System.out.println("\nDie Zahl liegt außerhalb des zugelassenen Bereichs. Versuch noch einmal.");
+			if (grenzeLinks != grenzeRechts)
+			{
+				if(grenzeLinks != -1)
+				{
+					if(grenzeRechts != -1)
+					{
+						if(eingabe >= grenzeLinks && eingabe <= grenzeRechts)
+							eingabeKorrekt = true;
+						else
+							System.out.println("\nDie Zahl liegt außerhalb des zugelassenen Bereichs. Versuch noch einmal.");
+					}
+					else
+					{
+						if(eingabe >= grenzeLinks)
+							eingabeKorrekt = true;
+						else
+							System.out.println("\nDie Zahl liegt außerhalb des zugelassenen Bereichs. Versuch noch einmal.");
+					}
+				}
+				else
+				{
+					if(eingabe <= grenzeRechts)
+						eingabeKorrekt = true;
+					else
+						System.out.println("\nDie Zahl liegt außerhalb des zugelassenen Bereichs. Versuch noch einmal.");
+				}
+			}
 			else
-				eingabeKorrekt = true;
+			{
+				if(grenzeRechts != -1) // grenzeLinks = grenzeRechts = -1 
+				{
+					if (eingabe != grenzeRechts)
+						System.out.println("\nDu kannst nur die Zahl " + grenzeRechts + " eingeben.");
+					else
+						eingabeKorrekt = true;
+				}
+				else
+					eingabeKorrekt = true;
+			}
 		} while (!eingabeKorrekt);
 		
 		return eingabe;
@@ -53,7 +107,7 @@ public class Main
         //Begrüßung der Spieler. Frage nach der Spieleranzahl
         System.out.println("Willkommen zu Monopoly!\n\nWie viele Spieler sind an dem Spiel beteiligt?");
 		//Eingabe der Spieleranzahl
-		int spielerAnzahl = checkCorrectNum(2, 4);
+		int spielerAnzahl = checkCorrectNum(2, -1);
         
         //Erstellen der Benötigten Spieler
         alleSpieler = new ArrayList<Spieler>();
@@ -75,12 +129,12 @@ public class Main
             		System.out.println("Für die Figur \"" + figuren.get(j) + "\" gebe " + (j+1) + " ein.");
 			}
 			
-			welcheFigur = checkCorrectNum(1, figuren.size()) - 1;
+			welcheFigur = checkCorrectNum(1, figuren.size());
 			
         	//Erstellen des Spielers mit der Figur, die gewählt wurde
-        	alleSpieler.add(new Spieler(figuren.get(welcheFigur).toString(), i));
+        	alleSpieler.add(new Spieler(figuren.get(welcheFigur-1).toString(), i));
         	//Entfernen der Figur aus der Arraylist, damit kein anderer Spieler diese auswählen kann
-        	figuren.remove(welcheFigur);
+        	figuren.remove(welcheFigur-1);
         }
         	
       //Erstellen des Spielfelds
@@ -109,7 +163,7 @@ public class Main
 			reihenfolge.add(temp[i]);
 		}
 		
-		while(true)
+		while(alleSpieler.size() > 1)
 		{
 			//Spielbeginn
 			for(int i = 0; i < alleSpieler.size(); i++)
@@ -128,41 +182,59 @@ public class Main
 				
 				//Sollte diese Methode false returnen, hat der aktive Spieler verloren und wird aus der Spieler arrayList entfernt (nach der Nachaktionenausführung).
 				boolean spielerAktiv = aktionenAusführen(aktiverSpieler);
+				ArrayList<Spieler> verliererImZug = new ArrayList<Spieler>(); // welche Spieler haben in diesem Zug verloren?
+				if(!spielerAktiv)
+					verliererImZug.add(alleSpieler.get(aktiverSpieler)); // der Aktive hat verloren
 				
 				// die anderen Spieler können bestimmte Aktionen nicht während ihrer Züge ausführen
 				// da wir den aktiven Spieler (wenn er verloren hat) noch nicht entfernt haben, können wir diesen folgenden Code-Abschnitt in den beiden Fällen verwenden
-				if(alleSpieler.size() > 1) // unnötig, wenn ein Gewinner schon festgelegt ist 
+				if(alleSpieler.size() - verliererImZug.size() > 1) // unnötig, wenn ein Gewinner schon festgelegt ist 
 				{
 					String eingabe;
 					ArrayList<String> nachaktionen;
 					int j = (aktiverSpieler + 1) % alleSpieler.size(); // um nicht überzulaufen (der nächste Spieler);
 
 					if(spielerAktiv)
-						System.out.println("\n\nDer Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + " hat seinen Zug beendet.\n");
+						System.out.println("\nDer Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + " hat seinen Zug beendet.\n");
 					else
-						System.out.println("\n\nDer Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + " ist nicht mehr am Spiel beteiligt.");
-					
+					{
+						System.out.println("\nDer Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + " ist nicht mehr am Spiel beteiligt.");
+					}
+
 					while(j != aktiverSpieler)
 					{
 						nachaktionen = alleSpieler.get(j).möglicheNachaktionen();
 						if (nachaktionen.size() > 1) // d.h., nicht nur "Zug beenden" ist vorhanden
 						{
-							System.out.println("\nDer Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + ", möchtest du jetzt etwas tun?\n(ja - 1, nein - sonstiges)\n\n-> ");
+							System.out.print("\nDer Spieler mit der Figur " + alleSpieler.get(j).getFigur() + ", möchtest du jetzt etwas tun?\n(ja - 1, nein - sonstiges)\n\n-> ");
 							eingabe = sc.next();
 							if (eingabe.equals("1"))
-								nachaktionenAusführen(j, nachaktionen);
+								spielerAktiv = nachaktionenAusführen(j, nachaktionen);
+						}
+						if(!spielerAktiv) // wenn der Spieler abgegeben hat
+						{
+							verliererImZug.add(alleSpieler.get(j));
+							System.out.println("\nDer Spieler mit der Figur " + alleSpieler.get(j).getFigur() + " ist nicht mehr am Spiel beteiligt.");
 						}
 
 						j = ++j % alleSpieler.size(); // j läuft im Kreis, vom aktiven Spieler bin zum aktiven Spieler nicht einschließlich
 					}
 				}
 
-				// entfernt den ungültigen Spieler, der seinen Zug eben beendet hat
-				if(!spielerAktiv)
+				// entfernen die Verlierer
+				for(Spieler s : verliererImZug)
 				{
-					alleSpieler.remove(aktiverSpieler);
-					reihenfolge.remove(i);
-					i--; // da das nächste element in der ArrayList nun den Index dieses Elementes hat, muss außerdem i um 1 verringert werden
+					Integer integer = Integer.valueOf(alleSpieler.indexOf(s)); // Krücken (remove() removt nicht int Objekt, sondern einen Index, wenn eine reine Zahl übergeben wird)
+					reihenfolge.remove(integer); // in der reihenfolge liegen die Indizes der Spieler im alleSpieler-Array ლ(¯ロ¯"ლ)
+					alleSpieler.remove(s); 
+
+					i--; // da das nächste Element in der ArrayList nun den Index dieses Elementes hat, muss außerdem i um 1 verringert werden
+				}
+
+				if(alleSpieler.size() == 1)
+				{
+					System.out.println("\n\nHerzlichen Glückwunsch an den Spiler mit der Figur " + alleSpieler.get(0).getFigur() + "!!!\n");
+					break;
 				}
 			}
 		}
@@ -187,7 +259,7 @@ public class Main
 	// true, wenn Zug beenden, sonst false
 	public static boolean aktionenAusführen(int aktiverSpieler)
 	{
-		boolean ersteWahl = true; // um den aktuellen Zustand des Zugs deutlicher zu machen, unterscheiden wir die erste Wahl des Zugs und die Weiteren
+		boolean ersteWahl = true; // um den aktuellen Zustand des Zugs dem Nutzer deutlicher zu machen, unterscheiden wir die erste Wahl des Zugs und die Weiteren
 		while(!alleSpieler.get(aktiverSpieler).getHatVerloren())
 		{
 			
@@ -206,7 +278,7 @@ public class Main
 			int eingabe = Main.checkCorrectNum(1, aktionen.size());
 			
 			//Hier kann nun die ausgewählte Aktion ausgeführt werden
-			switch(aktionen.get(eingabe - 1))
+			switch(aktionen.get(eingabe-1))
 			{
 				case"Würfeln":
 					Würfeln();
@@ -233,12 +305,17 @@ public class Main
 				case"Handeln":
 					alleSpieler.get(aktiverSpieler).HandelnVerfahren();
 					break;
-				case"Hypothen auf ein Grundstück aufnehmen":
+				case"Hypotheken auf ein Grundstück aufnehmen":
 					alleSpieler.get(aktiverSpieler).hypothekAufnehmen();
 					break;
 				case"Hypotheken abbezahlen":
 					alleSpieler.get(aktiverSpieler).hypothekAbbezahlen();
 					break;
+				case"Abgeben":
+					System.out.print("\nBist du sicher?\n(ja - 1, nein - sonstiges)\n\n-> ");
+					String eingabeAbgeben = sc.next();
+					if (eingabeAbgeben.equals("1"))
+						return false; // d.h., der Spieler ist nicht mehr aktiv;
 					
 				//Man sollte warscheinich auch eine Art inventar hinzufügen, wo der Spieler ansehen kann was er alles so hat(Grundstücke, komm aus dem Gefängnis frei Karten, All sein Geld, ob seine Grundstücke Hypotheken haben, usw)
 			}
@@ -251,25 +328,24 @@ public class Main
 	}
 	
 	//Ermöglicht dem Spieler mägliche Aktionen NICHT während seinem Zug durchführen
-	public static void nachaktionenAusführen(int welcherSpieler, ArrayList<String> nachaktionen)
+	//false - der Spieler nimmt am Spiel nicht mehr teil
+	public static boolean nachaktionenAusführen(int welcherSpieler, ArrayList<String> nachaktionen)
 	{
 		System.out.println("\nWas möchtest du tun?\n");
 
 		for(int i = 0; i < nachaktionen.size(); i++)
 		{
-			System.out.println("Zum " + nachaktionen.get(i) + "gebe " + (i + 1) + " ein.");
+			System.out.println("Zum " + nachaktionen.get(i) + " gebe " + (i + 1) + " ein.");
 		}
 		
 		int eingabe = Main.checkCorrectNum(1, nachaktionen.size());
 		
-		boolean Flag = true; // zeigt, ob der Zug vom Spieler beendet ist
-		while(Flag)
+		while(true)
 		{
-			switch(nachaktionen.get(eingabe - 1))
+			switch(nachaktionen.get(eingabe-1))
 			{
-				case"Zug beenden":
-					Flag = false;
-					break;
+				case"Zwischenzug beenden":
+					return true;
 				case"Haus bauen":
 					alleSpieler.get(aktiverSpieler).HausKaufenVerfahren();
 					break;
@@ -286,7 +362,10 @@ public class Main
 					alleSpieler.get(aktiverSpieler).hypothekAbbezahlen();
 					break;
 				case"Abgeben":
-					// noch nicht implementiert
+					System.out.print("\nBist du sicher?\n(ja - 1, nein - sonstiges)\n\n-> ");
+					String eingabeAbgeben = sc.next();
+					if (eingabeAbgeben.equals("1"))
+						return false; // d.h., der Spieler ist nicht mehr aktiv;
 					break;
 			}
 		}

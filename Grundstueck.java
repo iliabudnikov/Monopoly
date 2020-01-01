@@ -107,7 +107,7 @@ public abstract class Grundstueck extends Feld
                 System.out.println();
                 
                 if (dreckigesGebot != -1) { // == -1? => will nicht mehr in der Auktion teilnehmen
-                    System.out.println("\nGib bitte ein Gebot, das größer als das Aktuelle ist, aber dein Budget nicht überschreitet:\n(Eine Ganzzahl!)\n\n-> ");
+                    System.out.print("\nGib bitte ein Gebot, das größer als das Aktuelle ist, aber dein Budget nicht überschreitet:\n(Eine Ganzzahl!)\n\n-> ");
                     dreckigesGebot = Main.checkCorrectNum(gebot+1, Main.alleSpieler.get(i).getGeld());
                     System.out.println();
                     

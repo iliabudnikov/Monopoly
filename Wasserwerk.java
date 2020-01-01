@@ -13,10 +13,12 @@ public class Wasserwerk extends Stadtwerk
     	//Ist der Besitzer des Wasserrwerks auch der Besitzer des Stromwerks?
     	if(getBesitzer() == ((Stadtwerk)(Main.spielfeld[12])).getBesitzer())
     	{
+			System.out.println("\nJetzt zahlst du dem Eigentümer den zehnfachen Betrag deines Wurfergebnisses.");
     		Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), (gewürfelteZahl * 10));
     	}
     	else
     	{
+			System.out.println("\nJetzt zahlst du dem Eigentümer den vierfachen Betrag deines Wurfergebnisses.");
     		Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), (gewürfelteZahl * 4));
     	}
     }

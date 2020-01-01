@@ -44,7 +44,7 @@ public class Ereignisfeld extends Aktionsfelder
         		break;
         	//Rücken Sie vor bis zum Opernplatz. Wenn Sie über Los kommen, ziehen Sie M 200 ein.
         	case 3:
-        		System.out.println("\nRücke vor bis zum Opernplatz.Kommst du über Los, ziehst du 200 Mark ein.");
+        		System.out.println("\nRücke vor bis zum Opernplatz. Kommst du über Los, ziehst du 200 Mark ein.");
         		if(Main.alleSpieler.get(aktiverSpieler).getPosition() > 24)
         		{
         			Main.alleSpieler.get(aktiverSpieler).addGeld(200);
@@ -54,7 +54,7 @@ public class Ereignisfeld extends Aktionsfelder
         		break;
         	//Rücken Sie vor bis zum nächsten Versorgungswerk. Werfen Sie die Würfel und zahlen dem Eigentümer den zehnfachen Betrag Ihres Wurfergebnisses. Wenn das Werk noch niemandem gehört, können Sie es von der Bank kaufen
         	case 4:
-        		System.out.println("\nRücke vor bis zum nächsten Versorgungswerk.\nJetzt würfelst du und zahlst dem Eigentümer den zehnfachen Betrag deines Wurfergebnisses. Wenn das Werk noch niemandem gehört, kannst du es von der Bank kaufen!");
+        		System.out.println("\nRücke vor bis zum nächsten Versorgungswerk.");
         		//Entscheiden, welches der Werke näher liegt
         		//Stromwerk
         		if(Main.alleSpieler.get(aktiverSpieler).getPosition() > 12)
@@ -195,7 +195,7 @@ public class Ereignisfeld extends Aktionsfelder
         		break;
         	//Rücken Sie vor bis zum nächsten Verkehrsfeld. Der Eigentümer erhält das Doppelte der normalen Miete. Wenn das Verkehrsfeld noch niemandem gehört, können Sie es von der Bank kaufen.
         	case 15:
-        		System.out.println("\nRücke vor bis zum nächsten Verkehrsfeld. Der Eigentümer erhält das Doppelte der normalen Miete. Wenn das Verkehrsfeld noch niemandem gehört, können Sie es von der Bank kaufen.");
+        		System.out.println("\nRücke vor bis zum nächsten Verkehrsfeld.");
         		//Hiermit sind Bahnhöfe gemeint
         		//Herrausfinden welcher Bahnhof am nächsten am Spieler ist
         		//Der Abstand des Spielers zu jedem Bahnhof als Array
