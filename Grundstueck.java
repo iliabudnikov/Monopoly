@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 public abstract class Grundstueck extends Feld
 {
@@ -8,8 +7,6 @@ public abstract class Grundstueck extends Feld
     private Spieler besitzer;
     // Preis des Grundstückes
     private int preis;
-    // Position des Grundstücks auf dem Feld
-    private int position;
     //Hat dieses Grundstück eine Hypothek?
     private boolean hypothek;
     //Wie viel Geld es kostet, eine Hypothek auf dieses Grundstück abzubezahlen
@@ -45,11 +42,6 @@ public abstract class Grundstueck extends Feld
         this.preis = preis;
     }
     
-    public int getPosition()
-    {
-        return position;
-    }
-    
     public boolean getHypothek() 
     {
 		return hypothek;
@@ -69,7 +61,7 @@ public abstract class Grundstueck extends Feld
 	{
 		hypothek = true;
 		getBesitzer().addGeld((int)(preis*0.5));
-		System.out.println("Du hast eine Hypothek auf das Grundstück " + getFeldname() + " aufgenommen und " + (preis*0.5) + " Geld bekommen.");
+		System.out.println("\nDu hast eine Hypothek auf das Grundstück " + getFeldname() + " aufgenommen und " + (preis*0.5) + " Geld bekommen.");
     }
     
     //Ändert den Status von hypothek auf false und zieht die kosten der Hypothek von dem Geld des Aktiven Spielers ab
@@ -109,20 +101,15 @@ public abstract class Grundstueck extends Feld
         {
             if (teilnehmer[i] != -1 && Main.alleSpieler.get(i).getGeld() >= gebot) // will noch immer teilnehmen und Budget >= Gebot
             {
-                System.out.print("\nSpieler " + (i+1) + ", wie viel bieten Sie? (geben Sie eine Ganzzahl ein)"
-                + "\nGeben Sie die Zahl \"-1\" (ohne Klammern), wenn Sie die Auktion verlassen möchten."
-                + "\n-> ");
+                System.out.print("\nSpieler " + (i+1) + ", wie viel bietest du? (gib eine Ganzzahl ein)"
+                + "\nGib die Zahl \"-1\" (ohne Klammern), wenn du die Auktion verlassen möchtest.\n\n-> ");
                 dreckigesGebot = sc.nextInt();
                 System.out.println();
                 
                 if (dreckigesGebot != -1) { // == -1? => will nicht mehr in der Auktion teilnehmen
-                    while ((dreckigesGebot <= gebot) || (dreckigesGebot > Main.alleSpieler.get(i).getGeld()))
-                    {
-                        System.out.println("\nGeben Sie bitte ein Gebot, das größer als das Aktuelle ist, aber ihr Budget nicht überschreitet:"
-                        + "\n-> ");
-                        dreckigesGebot = sc.nextInt();
-                        System.out.println();
-                    }
+                    System.out.print("\nGib bitte ein Gebot, das größer als das Aktuelle ist, aber dein Budget nicht überschreitet:\n(Eine Ganzzahl!)\n\n-> ");
+                    dreckigesGebot = Main.checkCorrectNum(gebot+1, Main.alleSpieler.get(i).getGeld());
+                    System.out.println();
                     
                     gebot = dreckigesGebot;
                     spitzenreiter = i;
@@ -134,8 +121,7 @@ public abstract class Grundstueck extends Feld
             }
             else if (Main.alleSpieler.get(i).getGeld() < gebot) // vertreiben den Spieler, deren Budget < als Gebot der Auktion ist
             {
-                System.out.println("\nSpieler " + (i+1) + ", leider haben Sie nicht genug Geld."
-                + "Sie können in der Auktion nicht mehr teilnehmen.");
+                System.out.println("\nSpieler " + (i+1) + ", leider hast du nicht genug Geld.\nDu kannst in der Auktion nicht mehr teilnehmen.");
                 teilnehmer[i] = -1;
             }
             i = ++i % Main.alleSpieler.size(); // läuft im Spielerkreis von 0 bis Spielerarraygröße-1
@@ -144,8 +130,8 @@ public abstract class Grundstueck extends Feld
         if (spitzenreiter != -1) // wenn irgendjemand ein Spitzenreiter war
         {
             besitzer = Main.alleSpieler.get(spitzenreiter);
-            Main.alleSpieler.get(spitzenreiter).addGrundstück(position);
-            Main.alleSpieler.get(spitzenreiter).subtractGeld(this.getPreis());
+            Main.alleSpieler.get(spitzenreiter).addGrundstück(getFeldnummer());
+            Main.alleSpieler.get(spitzenreiter).subtractGeld(getPreis());
         }
         else
         {
@@ -159,25 +145,24 @@ public abstract class Grundstueck extends Feld
     {
         if(Main.alleSpieler.get(aktiverSpieler).getGeld() >= getPreis())
         {
-            System.out.println("\nMöchten Sie dieses Grundstück kaufen? Es kostet " + getPreis() + " Geld. \nDu hast " + Main.alleSpieler.get(aktiverSpieler).getGeld() + " Geld.\n(ja - 1, nein - sonstiges)"
-        + "\n-> ");
+            System.out.print("\nMöchtest du dieses Grundstück kaufen? Es kostet " + getPreis() + " Mark.\n(ja - 1, nein - sonstiges)\n\n-> ");
         
             String entscheidung = sc.next();
 
             if (entscheidung.equals("1"))
             {
                 besitzer = Main.alleSpieler.get(aktiverSpieler);
-                Main.alleSpieler.get(aktiverSpieler).addGrundstück(this.getPosition());
-                Main.alleSpieler.get(aktiverSpieler).subtractGeld(this.getPreis());
+                Main.alleSpieler.get(aktiverSpieler).addGrundstück(getFeldnummer());
+                Main.alleSpieler.get(aktiverSpieler).subtractGeld(getPreis());
             }
             else
             {
-                this.versteigGrundstück();
+                versteigGrundstück();
             }
         }
         else
         {
-            this.versteigGrundstück();
+            versteigGrundstück();
         }
     }
 }
