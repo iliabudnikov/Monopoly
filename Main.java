@@ -318,6 +318,7 @@ public class Main
 						return false; // d.h., der Spieler ist nicht mehr aktiv;
 				case"Besitz anzeigen":
 					alleSpieler.get(aktiverSpieler).inventar(spielfeld);
+					break;
 				case"Spielfeld ausgeben":
 					feldAusgeben();
 					break;
