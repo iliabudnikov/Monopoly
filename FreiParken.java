@@ -15,4 +15,10 @@ public class FreiParken extends Aktionsfelder
         System.out.println("\nDu hast ein " + getFeld() + " Feld betreten.");
         Ereignis(aktiverSpieler);
     }
+    
+    public String toString()
+    {
+    	String ergebnis = "Das " + getFeldname() + " Feld.";
+    	return ergebnis;
+    }
 }

@@ -269,4 +269,10 @@ public class Ereignisfeld extends Aktionsfelder
         System.out.println("\nDu hast ein " + getFeld() + " betreten");
         Ereignis(aktiverSpieler, gewürfelteZahl);
     }
+    
+    public String toString()
+    {
+    	String ergebnis = "Ein " + getFeldname() + ".";
+    	return ergebnis;
+    } 
 }

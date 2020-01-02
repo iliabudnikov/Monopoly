@@ -105,7 +105,7 @@ public class Main
     {
         alleSpieler = new ArrayList<Spieler>();
         //Begrüßung der Spieler. Frage nach der Spieleranzahl
-        System.out.println("Willkommen zu Monopoly!\n\nWie viele Spieler sind an dem Spiel beteiligt?");
+        System.out.println("\nWillkommen zu Monopoly!\n\nWie viele Spieler sind an dem Spiel beteiligt?");
 		//Eingabe der Spieleranzahl
 		int spielerAnzahl = checkCorrectNum(2, -1);
         
@@ -148,7 +148,6 @@ public class Main
         
     public static void main(String[] args)
 	{
-		// --!-- Nur ein Spieler? Ist ein Gewinner automatisch!
 		// Alle Regeln von dieser Website: https://monopoly-regeln.de/monopoly-spielregeln/
 		// Spieler Erstellen
 		
@@ -287,6 +286,12 @@ public class Main
 					//Setzt die boolean hatGewürfelt zurrück, damit der Spieler in der nächsten Runde würfeln kann
 					alleSpieler.get(aktiverSpieler).setHatGewürfelt(false);
 					return true;
+				case"Geld anzeigen":
+					System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGeld() + " Mark.");
+					break;
+				case"Grundstücke anzeigen":
+					alleSpieler.get(aktiverSpieler).printBesitzt();
+					break;
 				case"Aus dem Gefängnis freikaufen (Dies kostet 50 Mark)":
 					alleSpieler.get(aktiverSpieler).subtractGeld(50);
 					alleSpieler.get(aktiverSpieler).ausGefängnis();
@@ -311,11 +316,21 @@ public class Main
 				case"Hypotheken abbezahlen":
 					alleSpieler.get(aktiverSpieler).hypothekAbbezahlen();
 					break;
+				case"aufgenommene Hypotheken anzeigen":
+					alleSpieler.get(aktiverSpieler).hypothekenAnzeigen();
+					break;
+				case"„Du kommst aus dem Gefängnis frei“-Kartenanzahl anzeigen":
+					System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGefängnisKarte() + " „Du kommst aus dem Gefängnis frei“-Karten.");
+					break;
+				case"Spielfeld überblicken":
+					feldAusgeben();
+					break;
 				case"Abgeben":
 					System.out.print("\nBist du sicher?\n(ja - 1, nein - sonstiges)\n\n-> ");
 					String eingabeAbgeben = sc.next();
 					if (eingabeAbgeben.equals("1"))
 						return false; // d.h., der Spieler ist nicht mehr aktiv;
+					break;
 					
 				//Man sollte warscheinich auch eine Art inventar hinzufügen, wo der Spieler ansehen kann was er alles so hat(Grundstücke, komm aus dem Gefängnis frei Karten, All sein Geld, ob seine Grundstücke Hypotheken haben, usw)
 			}
@@ -346,6 +361,12 @@ public class Main
 			{
 				case"Zwischenzug beenden":
 					return true;
+				case"Geld anzeigen":
+					System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGeld() + " Mark.");
+					break;
+				case"Grundstücke anzeigen":
+					alleSpieler.get(aktiverSpieler).printBesitzt();
+					break;	
 				case"Haus bauen":
 					alleSpieler.get(aktiverSpieler).HausKaufenVerfahren();
 					break;
@@ -361,12 +382,22 @@ public class Main
 				case"Hypotheken abbezahlen":
 					alleSpieler.get(aktiverSpieler).hypothekAbbezahlen();
 					break;
+				case"aufgenommene Hypotheken anzeigen":
+					alleSpieler.get(aktiverSpieler).hypothekenAnzeigen();
+					break;
+				case"„Du kommst aus dem Gefängnis frei“-Kartenanzahl anzeigen":
+					System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGefängnisKarte() + " „Du kommst aus dem Gefängnis frei“-Karten.");
+					break;
+				case"Spielfeld überblicken":
+					feldAusgeben();
+					break;
 				case"Abgeben":
 					System.out.print("\nBist du sicher?\n(ja - 1, nein - sonstiges)\n\n-> ");
 					String eingabeAbgeben = sc.next();
 					if (eingabeAbgeben.equals("1"))
 						return false; // d.h., der Spieler ist nicht mehr aktiv;
 					break;
+				
 			}
 		}
 	}
@@ -492,5 +523,85 @@ public class Main
 		}
 		
 		return reihenfolge;
+	}
+	
+	public static void feldAusgeben()
+	{
+		//Erstellen eines Arrays der Feldnummern die durch ein mal Würfeln ohne Pasch von der jetzigen Position des Aktiven Spielers erreicht werden können:
+		ArrayList<Integer> einMalWürfelnFelder = new ArrayList<Integer>();
+		for(int i = 1; i < 19; i ++)
+		{
+			if((alleSpieler.get(aktiverSpieler).getPosition() + i) > 39)
+			{
+				einMalWürfelnFelder.add((alleSpieler.get(aktiverSpieler).getPosition() + i) - 39);
+			}
+			else
+			{
+				einMalWürfelnFelder.add(alleSpieler.get(aktiverSpieler).getPosition() + i);
+			}
+		}
+		//Ausgeben der Felder die durch einmaliges Würfeln erreicht werden können
+		for(int i = 0; i < spielfeld.length; i++)
+		{
+			for(int j = 0; j < einMalWürfelnFelder.size(); j++)
+			{
+				//Ist die Feldnummer bei einem Mal würfeln erreichbar?
+				if(i == einMalWürfelnFelder.get(j) +1)
+				{
+					//Bestimmen der Zahl, welche gewürfelt werden muss, um dieses Feld zu erreichen
+					int zahl = 0; 
+					if(alleSpieler.get(aktiverSpieler).getPosition() < einMalWürfelnFelder.get(j))
+					{
+						zahl =  einMalWürfelnFelder.get(j) - alleSpieler.get(aktiverSpieler).getPosition();
+					}
+					else
+					{
+						zahl = (alleSpieler.get(aktiverSpieler).getPosition() - 39) + einMalWürfelnFelder.get(j);
+					}
+					System.out.println("Um dieses Feld zu erreichen musst du eine " + (zahl) + " Würfeln.");
+				}
+			}
+			switch(spielfeld[i].getFeld())
+			{
+			case"Straße":
+				System.out.println(((Strasse)spielfeld[i]).toString(true));
+				break;
+			case"Bahnhof":
+				System.out.println(((Bahnhof)spielfeld[i]).toString());
+				break;
+			case"Ereignisfeld":
+				System.out.println(((Ereignisfeld)spielfeld[i]).toString());
+				break;
+			case"Gemeinschaftsfeld":
+				System.out.println(((Gemeinschaftsfeld)spielfeld[i]).toString());
+				break;
+			case"Wasserwerk":
+				System.out.println(((Wasserwerk)spielfeld[i]).toString());
+				break;
+			case"Stromwerk":
+				System.out.println(((Stromwerk)spielfeld[i]).toString());
+				break;
+			case"Los":
+				System.out.println(((Start)spielfeld[i]).toString());
+				break;
+			case"Steuern":
+				System.out.println(((Steuern)spielfeld[i]).toString());
+				break;
+			case"Frei Parken":
+				System.out.println(((FreiParken)spielfeld[i]).toString());
+				break;
+			case"Gefängnis":
+				System.out.println(((Gefängnis)spielfeld[i]).toString());
+				break;
+			}
+
+			for(int j = 0; j <  alleSpieler.size(); j++)
+			{
+				if(alleSpieler.get(j).getPosition() == i && j != aktiverSpieler)
+				{
+					System.out.println("Auf diesem Feld befindet sich der Spieler mit der Figur: " + alleSpieler.get(j).getFigur());
+				}
+			}
+		}    
 	}
 }

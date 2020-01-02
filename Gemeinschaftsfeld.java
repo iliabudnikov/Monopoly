@@ -7,10 +7,6 @@ public class Gemeinschaftsfeld extends Aktionsfelder
     {
     	super(Feldnummer, false, "Gemeinschaftsfeld", "Gemeinschaftsfeld");
     }
-	
-	
-	// -------- Wenn der Spieler nicht genud Geld hat? ----------
-
 
     public void Ereignis(int aktiverSpieler, int gewürfelteZahl)
     {
@@ -143,4 +139,10 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         System.out.println("\nDu hast ein " + getFeld() + " betreten.");
         Ereignis(aktiverSpieler, gewürfelteZahl);
     }
+    
+    public String toString()
+    {
+    	String ergebnis = "Ein " + getFeldname() + ".";
+    	return ergebnis;
+    } 
 }

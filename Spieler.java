@@ -242,6 +242,33 @@ public class Spieler
         grundstuecke.remove(i);
     }
 
+    //Gibt alles aus, was der Spieler besitzt
+    public void printBesitzt()
+    {
+		
+    	System.out.println("\nDu besitzt folgende Grundstücke:\n");
+    	for(int i = 0; i < grundstuecke.size(); i++)
+    	{
+    		System.out.println(i + ". " + Main.spielfeld[grundstuecke.get(i)].getFeldname() + ". ");
+    		if(Main.spielfeld[grundstuecke.get(i)].getFeld().equals("Straße"))
+    		{
+    			if(!(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHypothek()))
+    			{
+					if(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() == 0)
+						System.out.println("Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und keine Häuser.");
+					else if(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() != 4)
+    					System.out.println("Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() + " Häusern.");
+					else
+						System.out.println("Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und ein Hotel.");
+				}
+    			else
+    			{
+    				System.out.println("Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und auf sie ist eine Hypothek angemeldet.");
+    			}
+			}
+		}
+    }
+
 	// -- Verfahren mit Häusern --
 	// sagt, ob der Spieler alle Straße in der Farbe hat
 	public boolean sayIfAlleFarben(String farbe)
@@ -374,7 +401,6 @@ public class Spieler
 		}
 		else
 		{
-			subtractGeld(((Strasse)Main.spielfeld[strassennummer]).getHausPreis());
 			System.out.println("\nDu hast jetzt " + ((Strasse)Main.spielfeld[strassennummer]).getHausAnzahl() + " Häuser auf der " + ((Strasse)Main.spielfeld[strassennummer]).getFeldname() + ".");	
 		}
 	}
@@ -493,6 +519,21 @@ public class Spieler
     	return false;
 	}
 	
+
+	//Hat der Spieler ein Grundstück mit einer aufgenommenen Hypothek?
+	public boolean sayIfHatHypothek()
+	{
+		for(int i : grundstuecke)
+    	{
+    		if(((Grundstueck)Main.spielfeld[i]).getHypothek())
+    		{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
     //Kann der Spieler mindestens eine seiner Hypotheken abbezahlen? Falls ja, true, falls nein, false
     public boolean sayIfCanHypothekAbbezahlen()
     {
@@ -565,7 +606,7 @@ public class Spieler
         			erlaubteGrundstücke.add(i);
         		}
     		}
-    	}
+		}
     	
     	//Gibt die Grundstücke aus, auf die der Spieler eine Hypothek aufnehmen kann
     	System.out.println("\nFür welches Grundstück möchtest du eine Hypothek aufnehmen?\nDu hast gerade " + getGeld() + " Mark");
@@ -578,6 +619,28 @@ public class Spieler
 		int eingabe = Main.checkCorrectNum(1, erlaubteGrundstücke.size());
     	
     	((Grundstueck)Main.spielfeld[erlaubteGrundstücke.get(eingabe-1)]).hypothekAufnehmen();
+	}
+
+	public void hypothekenAnzeigen()
+	{
+		//ArrayList, welche den Index aller Grundstücke enthält, bei welchen hypothek = true ist 
+		ArrayList<Integer> alleHypotheken = new ArrayList<Integer>();
+		for(int i : grundstuecke)
+		{
+			//Wenn eines der Grundstücke des Arrays mit den Grundstücken des Spielers eine Hypothek hat, wird der Index dieses zu alleHypotheken hinzugefügt
+			if(((Grundstueck)Main.spielfeld[i]).getHypothek())
+			{
+				alleHypotheken.add(i);
+			}
+		}
+
+		System.out.println("\nInsgesamt hast du jetzt " + alleHypotheken.size() + " unabberzahlene Hypotheken.");
+
+		System.out.println("\nHier sind die Grundstücke mit den Hypotheken:\n");
+		for(int i = 0; i < alleHypotheken.size(); i++)
+		{
+			System.out.println(i + ". " + Main.spielfeld[grundstuecke.get(i)].getFeldname());
+		}
 	}
 	// -- Hypotheke --
     
@@ -618,7 +681,15 @@ public class Spieler
         		}
     		}
     	}
-    	
+		
+		ausgabe.add("Geld anzeigen");
+
+		//Hat der Spieler schon Grundstücke?
+		if(!grundstuecke.isEmpty())
+		{
+			ausgabe.add("Grundstücke anzeigen");
+		}
+
     	//Der Spieler kann wenn er am Zug ist jederzeit Häuser bauen. Er kann jedoch nur Häuser bauen, wenn er alle Straßen einer Farbe besitzt, und genug Geld hat.
     	if(sayIfCanHaus())
     	{
@@ -635,7 +706,13 @@ public class Spieler
     	{
     		ausgabe.add("Häuser verkaufen");
 		}
-    	
+
+		// Hat der Speiler eine Hypothek?
+    	if(sayIfHatHypothek())
+		{
+			ausgabe.add("aufgenommene Hypotheken anzeigen");
+		}
+
     	//Hat der Spieler mindestens ein Grundstück, auf das er eine Hypothek aufnehmen kann?
     	if(sayIfCanHypothek())
     	{
@@ -643,11 +720,17 @@ public class Spieler
     	}
     	
     	//Hat der Spieler mindestens eine Hypothek und genug Geld um diese Abzubezahlen?
-    	if(sayIfCanHypothek() && sayIfCanHypothekAbbezahlen())
+    	if(sayIfCanHypothekAbbezahlen())
     	{
     		ausgabe.add("Hypotheken abbezahlen");
+		}
+
+		if(getGefängnisKarte() > 0)
+    	{
+    		ausgabe.add("„Du kommst aus dem Gefängnis frei“-Kartenanzahl anzeigen");
     	}
 		
+    	ausgabe.add("Spielfeld überblicken");
 		ausgabe.add("Abgeben");
 
     	return ausgabe;
@@ -660,13 +743,21 @@ public class Spieler
     	ArrayList<String> ausgabe = new ArrayList<String>();
     	
 		ausgabe.add("Zwischenzug beenden");
-    	
+		
+		ausgabe.add("Geld anzeigen");
+
+		//Hat der Spieler schon Grundstücke?
+		if(!grundstuecke.isEmpty())
+		{
+			ausgabe.add("Grundstücke anzeigen");
+		}
+
 		//Der Spieler kann, wenn er nicht an seinem Zug ist, Häuser bauen.
 		if(sayIfCanHaus())
     	{
     		ausgabe.add("Haus bauen");
     	}
-    	
+    	ausgabe.add("Besitz anzeigen");
     	//Hat der Spieler mindestens ein Haus, welches er verkaufen kann?
     	if(sayIfCanHausVerkaufen())
     	{
@@ -677,7 +768,13 @@ public class Spieler
 		{
 			ausgabe.add("Handeln");
 		}
-			
+
+		// Hat der Speiler eine Hypothek?
+    	if(sayIfHatHypothek())
+		{
+			ausgabe.add("aufgenommene Hypotheken anzeigen");
+		}
+
 		if(sayIfCanHypothek())
     	{
     		ausgabe.add("Hypotheken auf ein Grundstück aufnehmen");
@@ -689,6 +786,12 @@ public class Spieler
     		ausgabe.add("Hypotheken abbezahlen");
     	}
 		
+		if(getGefängnisKarte() > 0)
+    	{
+    		ausgabe.add("„Du kommst aus dem Gefängnis frei“-Kartenanzahl anzeigen");
+    	}
+		
+    	ausgabe.add("Spielfeld überblicken");
 		ausgabe.add("Abgeben");
 
     	return ausgabe;

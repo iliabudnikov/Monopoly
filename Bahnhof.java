@@ -51,4 +51,21 @@ public class Bahnhof extends Grundstueck
 				break;
     	}
     }
+    
+    public String toString()
+    {
+    	String ergebnis = "Der " + getFeldname();
+    	//Falls dieses Feld keinem Gehört, wird dies Ausgegeben
+    	if(getBesitzer() == null)
+    	{
+    		ergebnis = ergebnis + "\nDieser " + getFeldname() + " gehört keinem.";
+    	}
+    	//Ausgeben vom Besitzer des Feldes
+    	else
+    	{
+    		ergebnis = ergebnis + "\nDieses " + getFeldname() + " gehört dem Spieler mit der Figur :" + getBesitzer().getFigur() + ".";
+    	}
+    	
+    	return ergebnis;
+    }
 }

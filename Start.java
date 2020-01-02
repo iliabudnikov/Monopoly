@@ -16,4 +16,9 @@ public class Start extends Aktionsfelder
         System.out.println("\nDu hast das " + getFeld() + " Feld betreten");
         Ereignis(aktiverSpieler);
     }
+    public String toString()
+    {
+    	String ergebnis = "Das " + getFeldname() + " Feld.";
+    	return ergebnis;
+    } 
 }

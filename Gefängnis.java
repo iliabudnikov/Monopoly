@@ -11,4 +11,9 @@ public class Gefängnis extends Aktionsfelder
     	System.out.println("\nDu hast das " + getFeld() + " betreten.");
         System.out.println("\nDu bist nur zu Besuch!");
     }
+	public String toString()
+	{
+		String ergebnis = "Das " + getFeldname() +".";
+		return ergebnis;
+	}
 }
