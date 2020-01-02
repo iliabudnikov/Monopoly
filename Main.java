@@ -316,6 +316,8 @@ public class Main
 					String eingabeAbgeben = sc.next();
 					if (eingabeAbgeben.equals("1"))
 						return false; // d.h., der Spieler ist nicht mehr aktiv;
+				case"Besitz anzeigen":
+					alleSpieler.get(aktiverSpieler).inventar(spielfeld);
 					
 				//Man sollte warscheinich auch eine Art inventar hinzufügen, wo der Spieler ansehen kann was er alles so hat(Grundstücke, komm aus dem Gefängnis frei Karten, All sein Geld, ob seine Grundstücke Hypotheken haben, usw)
 			}
@@ -425,31 +427,31 @@ public class Main
 				switch(spielfeld[alleSpieler.get(aktiverSpieler).getPosition()].getFeld())
 				{
 				case"Straße":
-					((Strasse)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
+					((Strasse)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
 					break;
 				case"Bahnhof":
-					((Bahnhof)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
+					((Bahnhof)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
 					break;
 				case"Ereignisfeld":
-					((Ereignisfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
+					((Ereignisfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
 					break;
 				case"Gemeinschaftsfeld":
-					((Gemeinschaftsfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
+					((Gemeinschaftsfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
 					break;
 				case"Wasserwerk":
 					((Wasserwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
 					break;
 				case"Stromwerk":
-					((Stromwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
+					((Stromwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
 					break;
 				case"Los":
-					((Start)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
+					((Start)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
 					break;
 				case"Steuern":
-					((Steuern)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
+					((Steuern)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
 					break;
 				case"Frei Parken":
-					((FreiParken)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
+					((FreiParken)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
 					break;
 				case"Gefängnis":
 					((Gefängnis)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
