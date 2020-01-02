@@ -1193,5 +1193,7 @@ public class Spieler
 			Main.alleSpieler.get(welcherSpieler).removeGrundstück(erhaltendeGrundstücke.get(i));
 		}
 		
+		
+		
 	}
 }
