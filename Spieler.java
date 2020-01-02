@@ -1194,6 +1194,5 @@ public class Spieler
 		}
 		
 		
-		
 	}
 }
