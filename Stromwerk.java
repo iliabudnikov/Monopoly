@@ -38,4 +38,21 @@ public class Stromwerk extends Stadtwerk
     	
     	return alleSpieler;
     }
+    
+    public String toString()
+    {
+    	String ergebnis = "Das " + getFeldname();
+    	//Falls dieses Feld keinem Gehört, wird dies Ausgegeben
+    	if(getBesitzer() == null)
+    	{
+    		ergebnis = ergebnis + "\nDieses " + getFeldname() + " gehört keinem.";
+    	}
+    	//Ausgeben vom Besitzer des Feldes
+    	else
+    	{
+    		ergebnis = ergebnis + "\nDieses " + getFeldname() + " gehört dem Spieler mit der Figur :" + getBesitzer().getFigur() + ".";
+    	}
+    	
+    	return ergebnis;
+    }
 }

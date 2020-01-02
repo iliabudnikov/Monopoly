@@ -142,4 +142,10 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         System.out.println("Du hast ein " + getFeld() + " betreten");
         return Ereignis(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
     }
+    
+    public String toString()
+    {
+    	String ergebnis = "Ein " + getFeldname() + ".";
+    	return ergebnis;
+    } 
 }

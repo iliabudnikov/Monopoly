@@ -673,6 +673,7 @@ public class Spieler
     		ausgabe.add("Hypotheken abbezahlen");
     	}
     	ausgabe.add("Besitz anzeigen");
+    	ausgabe.add("Spielfeld ausgeben");
 		ausgabe.add("Abgeben");
 
     	return ausgabe;

@@ -18,4 +18,10 @@ public class InsGefängnis extends Aktionsfelder
     	System.out.println("Du hast das 'Gehen sie in das Gefängnis' Feld betreten.");
     	return Ereignis(alleSpieler, aktiverSpieler, spielfeld);
     }
+    
+    public String toString()
+    {
+    	String ergebnis = "Das Gehe ins Gefängnis Feld";
+    	return ergebnis;
+    }
 }

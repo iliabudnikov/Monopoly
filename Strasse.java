@@ -78,22 +78,34 @@ public class Strasse extends Grundstueck
     public String toString(boolean mitImmobilien)
     {
         String ergebnis = "Die " + getFeldname() + " Straße in der Farbe " + farbe;
-
+        
+        //Falls dieses Feld keinem Gehört, wird dies Ausgegeben
+    	if(getBesitzer() == null)
+    	{
+    		ergebnis = ergebnis + "\nDieses " + getFeldname() + " gehört keinem.";
+    	}
+    	//Ausgeben vom Besitzer des Feldes
+    	else
+    	{
+    		ergebnis = ergebnis + "\nDieses " + getFeldname() + " gehört dem Spieler mit der Figur :" + getBesitzer().getFigur() + ".";
+    	}
+    	
+    	
         if (mitImmobilien)
         {
             switch (hausAnzahl)
             {
                 case 0:
-                    ergebnis += ". Auf der Straße gibt es keine Immobilien.";
+                    ergebnis += " Auf der Straße gibt es keine Immobilien.";
                     break;
                 case 1:
-                    ergebnis += ". Auf der Straße gibt es ein Haus.";
+                    ergebnis += " Auf der Straße gibt es ein Haus.";
                     break;
                 case 5:
-                    ergebnis += ". Auf der Straße ist ein Hotel";
+                    ergebnis += " Auf der Straße ist ein Hotel";
                     break;
                 default:
-                    ergebnis += ". Auf der Straße gibt es " + hausAnzahl + " Häuse.";
+                    ergebnis += " Auf der Straße gibt es " + hausAnzahl + " Häuse.";
             }
         }
 
