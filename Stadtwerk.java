@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public abstract class Stadtwerk extends Grundstueck
 {
 	public Stadtwerk(int feldnummer, String feld, String feldname, int preis)
@@ -7,16 +5,15 @@ public abstract class Stadtwerk extends Grundstueck
     	super(feldnummer, feld, feldname, preis, null);
     }
 	
-	public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld, int gewürfelteZahl)
+	public void feldBetreten(int aktiverSpieler, int gewürfelteZahl)
 	{
-		if(this.getFeld().equals("Wasserwerk"))
+		if(getFeld().equals("Wasserwerk"))
 		{
-			return ((Wasserwerk)spielfeld[28]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
+			((Wasserwerk)Main.spielfeld[28]).feldBetreten(aktiverSpieler, gewürfelteZahl);
 		}
 		else
 		{
-			return ((Stromwerk)spielfeld[18]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
+			((Stromwerk)Main.spielfeld[18]).feldBetreten(aktiverSpieler, gewürfelteZahl);
 		}
 	}
-    
 }

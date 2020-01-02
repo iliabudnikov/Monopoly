@@ -105,7 +105,7 @@ public class Main
     {
         alleSpieler = new ArrayList<Spieler>();
         //Begrüßung der Spieler. Frage nach der Spieleranzahl
-        System.out.println("Willkommen zu Monopoly!\n\nWie viele Spieler sind an dem Spiel beteiligt?");
+        System.out.println("\nWillkommen zu Monopoly!\n\nWie viele Spieler sind an dem Spiel beteiligt?");
 		//Eingabe der Spieleranzahl
 		int spielerAnzahl = checkCorrectNum(2, -1);
         
@@ -148,7 +148,6 @@ public class Main
         
     public static void main(String[] args)
 	{
-		// --!-- Nur ein Spieler? Ist ein Gewinner automatisch!
 		// Alle Regeln von dieser Website: https://monopoly-regeln.de/monopoly-spielregeln/
 		// Spieler Erstellen
 		
@@ -287,6 +286,12 @@ public class Main
 					//Setzt die boolean hatGewürfelt zurrück, damit der Spieler in der nächsten Runde würfeln kann
 					alleSpieler.get(aktiverSpieler).setHatGewürfelt(false);
 					return true;
+				case"Geld anzeigen":
+					System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGeld() + " Mark.");
+					break;
+				case"Grundstücke anzeigen":
+					alleSpieler.get(aktiverSpieler).printBesitzt();
+					break;
 				case"Aus dem Gefängnis freikaufen (Dies kostet 50 Mark)":
 					alleSpieler.get(aktiverSpieler).subtractGeld(50);
 					alleSpieler.get(aktiverSpieler).ausGefängnis();
@@ -311,16 +316,20 @@ public class Main
 				case"Hypotheken abbezahlen":
 					alleSpieler.get(aktiverSpieler).hypothekAbbezahlen();
 					break;
+				case"aufgenommene Hypotheken anzeigen":
+					alleSpieler.get(aktiverSpieler).hypothekenAnzeigen();
+					break;
+				case"„Du kommst aus dem Gefängnis frei“-Kartenanzahl anzeigen":
+					System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGefängnisKarte() + " „Du kommst aus dem Gefängnis frei“-Karten.");
+					break;
+				case"Spielfeld überblicken":
+					feldAusgeben();
+					break;
 				case"Abgeben":
 					System.out.print("\nBist du sicher?\n(ja - 1, nein - sonstiges)\n\n-> ");
 					String eingabeAbgeben = sc.next();
 					if (eingabeAbgeben.equals("1"))
 						return false; // d.h., der Spieler ist nicht mehr aktiv;
-				case"Besitz anzeigen":
-					alleSpieler.get(aktiverSpieler).inventar(spielfeld);
-					break;
-				case"Spielfeld ausgeben":
-					feldAusgeben();
 					break;
 					
 				//Man sollte warscheinich auch eine Art inventar hinzufügen, wo der Spieler ansehen kann was er alles so hat(Grundstücke, komm aus dem Gefängnis frei Karten, All sein Geld, ob seine Grundstücke Hypotheken haben, usw)
@@ -352,6 +361,12 @@ public class Main
 			{
 				case"Zwischenzug beenden":
 					return true;
+				case"Geld anzeigen":
+					System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGeld() + " Mark.");
+					break;
+				case"Grundstücke anzeigen":
+					alleSpieler.get(aktiverSpieler).printBesitzt();
+					break;	
 				case"Haus bauen":
 					alleSpieler.get(aktiverSpieler).HausKaufenVerfahren();
 					break;
@@ -367,12 +382,22 @@ public class Main
 				case"Hypotheken abbezahlen":
 					alleSpieler.get(aktiverSpieler).hypothekAbbezahlen();
 					break;
+				case"aufgenommene Hypotheken anzeigen":
+					alleSpieler.get(aktiverSpieler).hypothekenAnzeigen();
+					break;
+				case"„Du kommst aus dem Gefängnis frei“-Kartenanzahl anzeigen":
+					System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGefängnisKarte() + " „Du kommst aus dem Gefängnis frei“-Karten.");
+					break;
+				case"Spielfeld überblicken":
+					feldAusgeben();
+					break;
 				case"Abgeben":
 					System.out.print("\nBist du sicher?\n(ja - 1, nein - sonstiges)\n\n-> ");
 					String eingabeAbgeben = sc.next();
 					if (eingabeAbgeben.equals("1"))
 						return false; // d.h., der Spieler ist nicht mehr aktiv;
 					break;
+				
 			}
 		}
 	}
@@ -431,31 +456,31 @@ public class Main
 				switch(spielfeld[alleSpieler.get(aktiverSpieler).getPosition()].getFeld())
 				{
 				case"Straße":
-					((Strasse)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+					((Strasse)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
 					break;
 				case"Bahnhof":
-					((Bahnhof)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+					((Bahnhof)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
 					break;
 				case"Ereignisfeld":
-					((Ereignisfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
+					((Ereignisfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
 					break;
 				case"Gemeinschaftsfeld":
-					((Gemeinschaftsfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
+					((Gemeinschaftsfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
 					break;
 				case"Wasserwerk":
 					((Wasserwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
 					break;
 				case"Stromwerk":
-					((Stromwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld, (rndInt1 + rndInt2));
+					((Stromwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
 					break;
 				case"Los":
-					((Start)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+					((Start)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
 					break;
 				case"Steuern":
-					((Steuern)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+					((Steuern)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
 					break;
 				case"Frei Parken":
-					((FreiParken)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(alleSpieler, aktiverSpieler, spielfeld);
+					((FreiParken)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
 					break;
 				case"Gefängnis":
 					((Gefängnis)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
@@ -569,7 +594,7 @@ public class Main
 				System.out.println(((Gefängnis)spielfeld[i]).toString());
 				break;
 			}
-			
+
 			for(int j = 0; j <  alleSpieler.size(); j++)
 			{
 				if(alleSpieler.get(j).getPosition() == i && j != aktiverSpieler)

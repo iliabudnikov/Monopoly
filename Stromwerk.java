@@ -1,42 +1,39 @@
-import java.util.ArrayList;
-
 public class Stromwerk extends Stadtwerk
 {
     public Stromwerk(int feldnummer)
     {
-    	super(feldnummer, "Elektrizitätswerk", "Elektrizitätswerk", 150);
+    	super(feldnummer, "Stromwerk", "Stromwerk", 150);
     }
     
     //Bei Stadtwerken, wird die Miete anders berechnet als bei anderen Feldern. 
     //Wenn der Besitzer dieses Stadtwerkes das andere nicht besitzt, ist die Miete = (Die gewürfelte Zahl des Aktiven Spielers * 4)
     //Wenn der Besitzer das andere Stadtwerk auch besitzt, ist die Miete = (Die gewürfelte Zahl des Aktiven Spielers * 4)
-    public ArrayList<Spieler> miete(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld, int gewürfelteZahl)
+    public void miete(int aktiverSpieler, int gewürfelteZahl)
     {
     	//Ist der Besitzer des Stromwerks auch der Besitzer des Wasserwerks?
-    	if(getBesitzer() ==  ((Stadtwerk)(spielfeld[28])).getBesitzer())
+    	if(getBesitzer() == ((Stadtwerk)(Main.spielfeld[28])).getBesitzer())
     	{
-    		alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), (gewürfelteZahl * 10));
+			System.out.println("\nJetzt zahlst du dem Eigentümer den zehnfachen Betrag deines Wurfergebnisses.");
+    		Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), (gewürfelteZahl * 10));
     	}
     	else
     	{
-    		alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), (gewürfelteZahl * 4));
+			System.out.println("\nJetzt zahlst du dem Eigentümer den vierfachen Betrag deines Wurfergebnisses.");
+    		Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), (gewürfelteZahl * 4));
     	}
-    	return alleSpieler;
     }
     
-    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld, int gewürfelteZahl)
+    public void feldBetreten(int aktiverSpieler, int gewürfelteZahl)
     {
     	//Gehört dieses Stromwerk schon jemandem? Falls nein, kann es gekauft werden, falls ja, muss miete bezahlt werden
     	if(getBesitzer() == null)
     	{
     		askKaufentscheidung(aktiverSpieler);
     	}
-    	else
+    	else if(!getHypothek()) // mit Hypothek = keine Miete = Frei Parken
     	{
-    		alleSpieler = miete(alleSpieler, aktiverSpieler, spielfeld, gewürfelteZahl);
+			miete(aktiverSpieler, gewürfelteZahl);
     	}
-    	
-    	return alleSpieler;
     }
     
     public String toString()

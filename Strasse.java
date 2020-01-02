@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Strasse extends Grundstueck
 {
     private String farbe;
@@ -49,29 +47,30 @@ public class Strasse extends Grundstueck
     	return false;
     }
     
-    public int getMietpreis()
+    public int getMietpreis(int aktiverSpieler)
     {
-    	return miete[hausAnzahl];
+        if(Main.alleSpieler.get(aktiverSpieler).sayIfAlleFarben(getFarbe()) && hausAnzahl == 0)
+            return miete[0]*2; // wenn gleiche Farben vorhanden sind, aber die aktuelle Straße keine Häuser besitzt,
+                              // wird die Miete zweimal höher
+        return miete[hausAnzahl];
     }
-    public ArrayList<Spieler> miete(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld)
+    public void miete(int aktiverSpieler)
     {
-    	System.out.println("Zahle Miete von " + getMietpreis() +" Geld an den Spieler mit der Figur " + getBesitzer().getFigur());
-    	alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), getMietpreis());
-    	return alleSpieler;
+    	System.out.println("\nZahle Miete von " + getMietpreis(aktiverSpieler) +" Geld an den Spieler mit der Figur " + getBesitzer().getFigur());
+    	Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), getMietpreis(aktiverSpieler));
     }
     
-    public ArrayList<Spieler> feldBetreten(ArrayList<Spieler> alleSpieler, int aktiverSpieler, Feld[] spielfeld) 
+    public void feldBetreten(int aktiverSpieler) 
     {
-    	System.out.println("Du hast die Straße " + getFeldname() + " betreten.\nSie hat die Farbe " + getFarbe());
+    	System.out.println("\nDu hast die " + getFeldname() + " betreten. Sie hat die Farbe " + getFarbe() + ".");
     	if(getBesitzer() == null)
     	{
     		askKaufentscheidung(aktiverSpieler);
-    	}
-    	else
-    	{
-    		alleSpieler = miete(alleSpieler, aktiverSpieler, spielfeld);
-    	}
-    	return alleSpieler;
+        }
+        else if(!getHypothek()) // mit Hypothek = keine Miete = Frei Parken
+        {
+            miete(aktiverSpieler);
+        }
     }
     
     // zeigt Straßeninfos mit (True) oder ohne (False) Immobilieninfos
