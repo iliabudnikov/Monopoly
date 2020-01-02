@@ -236,7 +236,7 @@ public class Spieler
     public void removeGrundstück(int position)
     {
         int i = 0;
-        while (i < grundstuecke.size() && ((Grundstueck)Main.spielfeld[grundstuecke.get(i)]).getPosition() != position)
+        while (i < grundstuecke.size() && ((Grundstueck)Main.spielfeld[grundstuecke.get(i)]).getFeldnummer() != position)
             i++;
         
         grundstuecke.remove(i);
