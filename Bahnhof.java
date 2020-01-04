@@ -52,9 +52,9 @@ public class Bahnhof extends Grundstueck
     	}
     }
     
-    public String toString()
+    public String toString(Spieler welcherSpieler)
     {
-    	String ergebnis = "Der " + getFeldname();
+    	String ergebnis = "-- Der " + getFeldname() + " --";
     	//Falls dieses Feld keinem Gehört, wird dies Ausgegeben
     	if(getBesitzer() == null)
     	{
@@ -63,8 +63,11 @@ public class Bahnhof extends Grundstueck
     	//Ausgeben vom Besitzer des Feldes
     	else
     	{
-    		ergebnis = ergebnis + "\nDieses " + getFeldname() + " gehört dem Spieler mit der Figur :" + getBesitzer().getFigur() + ".";
-    	}
+			if (welcherSpieler.equals(getBesitzer()))
+				ergebnis = ergebnis + "\nDieser " + getFeldname() + " gehört dir.";
+			else
+				ergebnis = ergebnis + "\nDieser " + getFeldname() + " gehört dem Spieler mit der Figur: " + getBesitzer().getFigur() + ".";
+	  	}
     	
     	return ergebnis;
     }

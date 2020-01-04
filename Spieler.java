@@ -229,6 +229,10 @@ public class Spieler
         }
         return ausgabe;
     }
+    public ArrayList<Integer> getGrundstücke()
+    {
+    	return grundstuecke;
+    }
     public void addGrundstück(int position)
     {
         grundstuecke.add(position);
@@ -249,24 +253,49 @@ public class Spieler
     	System.out.println("\nDu besitzt folgende Grundstücke:\n");
     	for(int i = 0; i < grundstuecke.size(); i++)
     	{
-    		System.out.println(i + ". " + Main.spielfeld[grundstuecke.get(i)].getFeldname() + ". ");
-    		if(Main.spielfeld[grundstuecke.get(i)].getFeld().equals("Straße"))
-    		{
-    			if(!(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHypothek()))
-    			{
-					if(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() == 0)
-						System.out.println("Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und keine Häuser.");
-					else if(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() != 4)
-    					System.out.println("Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() + " Häusern.");
+			if (grundstuecke.size() > 1)
+			{
+				System.out.print((i+1) + ". " + Main.spielfeld[grundstuecke.get(i)].getFeldname());
+				if(Main.spielfeld[grundstuecke.get(i)].getFeld().equals("Straße"))
+				{
+					if(!(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHypothek()))
+					{
+						if(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() == 0)
+							System.out.print(". Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und keine Häuser.");
+						else if(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() != 4)
+							System.out.print(". Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() + " Häusern.");
+						else
+							System.out.print(". Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und ein Hotel.");
+					}
 					else
-						System.out.println("Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und ein Hotel.");
+					{
+						System.out.print(". Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und auf sie ist eine Hypothek angemeldet.");
+					}
 				}
-    			else
-    			{
-    				System.out.println("Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und auf sie ist eine Hypothek angemeldet.");
-    			}
+			}
+			else
+			{
+				System.out.print(Main.spielfeld[grundstuecke.get(i)].getFeldname());
+				if(Main.spielfeld[grundstuecke.get(i)].getFeld().equals("Straße"))
+				{
+					if(!(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHypothek()))
+					{
+						if(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() == 0)
+							System.out.print(". Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und keine Häuser.");
+						else if(((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() != 4)
+							System.out.print(". Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getHausAnzahl() + " Häusern.");
+						else
+							System.out.print(". Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und ein Hotel.");
+					}
+					else
+					{
+						System.out.print(". Diese Straße hat die Farbe " + ((Strasse)Main.spielfeld[grundstuecke.get(i)]).getFarbe() + " und auf sie ist eine Hypothek angemeldet.");
+					}
+				}
 			}
 		}
+
+		System.out.println();
     }
 
 	// -- Verfahren mit Häusern --
@@ -331,7 +360,7 @@ public class Spieler
 	public ArrayList<Integer> sayWhereCanHaus()
 	{
 		ArrayList<Integer> strassen = new ArrayList<Integer>();
-		String [] farben = {"Lila", "Türkis", "Violett", "Orange", "Rot", "Geld", "Grün", "Blau"};
+		String [] farben = {"Lila", "Türkis", "Violett", "Orange", "Rot", "Gelb", "Grün", "Blau"};
 		boolean koennenWeiter = false; // sagt, ob für die Farbe alle Straße schon gefunden ist und wir weiter gehen können
 		int hausanzahl; // wie viele Häuser auf jeder Straße der Farbe stehen
 		int hauspreis; // Preis eines Hauses, das gebaut werden könnte
@@ -431,7 +460,7 @@ public class Spieler
 		for (int i = 0; i <  strassen.length; i++)
 		{	// Zählen alle erlaubten Straßen auf
 			System.out.println((i+1) + ". ");
-			((Strasse)Main.spielfeld[strassen[i]]).toString(true);
+			((Strasse)Main.spielfeld[strassen[i]]).toString(true, null);
 		}
 						
 		System.out.println("\nWähle eine Straße aus der Liste.");
@@ -639,7 +668,7 @@ public class Spieler
 		System.out.println("\nHier sind die Grundstücke mit den Hypotheken:\n");
 		for(int i = 0; i < alleHypotheken.size(); i++)
 		{
-			System.out.println(i + ". " + Main.spielfeld[grundstuecke.get(i)].getFeldname());
+			System.out.println((i+1) + ". " + Main.spielfeld[grundstuecke.get(i)].getFeldname());
 		}
 	}
 	// -- Hypotheke --
@@ -670,9 +699,9 @@ public class Spieler
     			{
     				if(rundenImGefängnis == 3)
     				{
-    					System.out.println("\nDu bist bereits 3 Runden im Gefängnis, du musst 50 Geld bezahlen");
+    					System.out.println("\nDu bist bereits 3 Runden im Gefängnis, du musst 50 Mark bezahlen");
     				}
-    				ausgabe.add("Aus dem Gefängnis Freikaufen (dies kostet 50 Mark)");
+    				ausgabe.add("Aus dem Gefängnis freikaufen (Dies kostet 50 Mark)");
     			}
         		//Wenn der Spieler im Gefängnis ist und mindestens eine "Komme aus dem Gefängnis frei" karte besitzt, wird diese zu benutzen als Aktion hinzugefügt.
         		if(getGefängnisKarte() > 0 && !(rundenImGefängnis == 3))
@@ -757,7 +786,6 @@ public class Spieler
     	{
     		ausgabe.add("Haus bauen");
     	}
-    	ausgabe.add("Besitz anzeigen");
     	//Hat der Spieler mindestens ein Haus, welches er verkaufen kann?
     	if(sayIfCanHausVerkaufen())
     	{
@@ -871,82 +899,354 @@ public class Spieler
 		return false;
 	}
 
-
-
-	public void gefaengnisFreiVerkaufen(Spieler welcherSpieler)
-	{
-		// !!!
-	}
-
-	public void grundstueckVerkaufen(Spieler welcherSpieler)
-	{
-		// !!!
-	}
-
-
-
 	public void HandelnVerfahren()
 	{
-		System.out.println("\nMit wem möchtest du handeln?");
-		System.out.println("\nGib eine Nummer des Spielers ein (1 - " + Main.alleSpieler.size() + ").");
-		int spielernummer = Main.checkCorrectNum(1, Main.alleSpieler.size());
-
-		// Reihenfolge möglichen Aktionen
-		int variableFreiKarten = 0;
-		int variableGrundstueck = 0;
-
-		if(kommAusDemGefängnisFreiKarten > 0)
-			variableFreiKarten = 1;
-		else // bevor diese Methode aufzurufen, hat man die positive Anwort von der sayIfCanHandeln bekommen => mindestens eine Variante ist möglich
-			variableGrundstueck = 1;
-		
-		if (variableGrundstueck == 0) // wenn kommAusDemGefängnisFreiKarten > 0 war
+		if(Main.alleSpieler.size() > 2) // wenn mehr als 2 Spieler spielen
 		{
-			for(int i : grundstuecke)
+			System.out.println("\nMit wem möchtest du handeln?\n");
+			ArrayList<Integer> möglicheHandelsPatner = new ArrayList<Integer>();
+			for(int i = 0; i < Main.alleSpieler.size(); i++)
 			{
-				if(!((Grundstueck)Main.spielfeld[i]).getHypothek())
-				{   
-					if (Main.spielfeld[i].getFeld() == "Strasse")
-					{	
-						if (((Strasse)((Grundstueck)Main.spielfeld[i])).getHausAnzahl() == 0)
-							variableGrundstueck = 2;
-					}
-					else
-						variableGrundstueck = 2;
+				if(!(i == spielernummer))
+				{
+					System.out.println("Für den Spieler mit der Figur " + Main.alleSpieler.get(i).getFigur() + " gebe " + (möglicheHandelsPatner.size() + 1) + " ein.");
+					möglicheHandelsPatner.add(i);
 				}
 			}
-		}
 			
-		if (variableGrundstueck == 2)
-		{	
-			System.out.println("\nWas willst du dem Spieler anbieten?\n");
-			System.out.println("1. „Du kommst aus dem Gefängnis frei“-Karten");
-			System.out.println("2. Grundstücke");
-			System.out.println("3. nichts");
-
-			int eingabe = Main.checkCorrectNum(1, 2);
-
-			if (eingabe == 1)
-				gefaengnisFreiVerkaufen(Main.alleSpieler.get(spielernummer));
-			else if (eingabe == 2)
-				grundstueckVerkaufen(Main.alleSpieler.get(spielernummer));
+			int spielernummer = Main.checkCorrectNum(1, möglicheHandelsPatner.size());
+			Handeln(möglicheHandelsPatner.get(spielernummer - 1));
 		}
-		else if(variableGrundstueck == 1)
+		else
+			Handeln((getSpielernummer()+1)%Main.alleSpieler.size()); //derjenige, der nicht der Aktive ist
+	}
+	
+	public void Handeln(int welcherSpieler)
+	{
+		//Grundstücke, die der AktiveSpieler dem Anderen Anbietet
+		ArrayList<Integer> angeboteneGrundstücke = new ArrayList<Integer>();
+		//Grundstücke, die der AktiveSpieler dem Anderen nach dem Handeln gibt
+		ArrayList<Integer> erhaltendeGrundstücke = new ArrayList<Integer>();
+		//Geld, das der AktiveSpieler dem Anderen nach dem Handel gibt
+		int angebotenesGeld = 0;
+		//Geld, das der AktiveSpieler von dem Anderen nach dem Handeln erhält
+		int erhaltenesGeld = 0;
+		//KommeAusDemGefängnisFreiKarten, die der AktiveSpieler dem Anderen nach dem Handel gibt
+		int angeboteneKarten = 0;
+		//KommeAusDemGefängnisFreiKarten, die der AktiveSpieler dem Anderen nach dem Handeln erhält
+		int erhalteneKarten = 0;
+		
+		ArrayList<String> möglicheAngebote = new ArrayList<String>();
+		ArrayList<String> möglicheGegenangebote = new ArrayList<String>();
+		
+		
+		boolean handelAktiv = true;
+		while(handelAktiv)
 		{
-			System.out.println("\nDu kannst nur Grundstücke verkaufen.");
-			System.out.print("\nMöchtest du?\n(ja - 1, nein - sonstiges)\n\n-> ");
-			String eingabe = sc.next();
-			if(eingabe.equals("1"))
-				grundstueckVerkaufen(Main.alleSpieler.get(spielernummer));
+			//In diesem Loop macht der Spieler sein Angebot
+			boolean angebotFertig = false;
+			boolean ersteWahl = true;
+			while(!angebotFertig)
+			{
+				möglicheAngebote.clear();
+				//Erstellen von möglicheAngebote
+				if(getGeld() - angebotenesGeld > 0)
+				{
+					möglicheAngebote.add("Geld");
+				}
+				if(getGefängnisKarte() - angeboteneKarten > 0)
+				{
+					möglicheAngebote.add("„Du kommst aus dem Gefängnis frei“-Karten");
+				}
+				if(!grundstuecke.isEmpty() && angeboteneGrundstücke.size() < grundstuecke.size())
+				{
+					möglicheAngebote.add("Grundstücke");
+				}
+				if(!ersteWahl)
+				{
+					möglicheAngebote.add("Angebot abschließen");
+				}
+				möglicheAngebote.add("Handeln abbrechen");
+				
+				if (ersteWahl)
+					System.out.println("\nWas möchtest du dem Spieler anbieten?\n");
+				else
+					System.out.println("\nWas möchtest du dem Spieler noch anbieten?\n");
+				//Ausgabe der Möglichen angebote
+				for(int i = 0; i < möglicheAngebote.size(); i++)
+				{
+					System.out.println("Für " + möglicheAngebote.get(i) + " gebe " + (i+1) + " ein." );
+				}
+				int eingabe = Main.checkCorrectNum(1, möglicheAngebote.size());
+				switch(möglicheAngebote.get(eingabe -1))
+				{
+					case"Geld":
+						System.out.println("\nDu kannst " + (getGeld() - angebotenesGeld) + " Mark anbieten.\nWie viel möchtest du zum Handel?");
+						angebotenesGeld = Main.checkCorrectNum(1, getGeld()-angebotenesGeld);
+						ersteWahl = false;
+						break;
+					case"„Du kommst aus dem Gefängnis frei“-Karten":
+						if((getGefängnisKarte()-angeboteneKarten) > 1)
+						{
+							System.out.println("\nDu kannst " + (getGefängnisKarte() - angeboteneKarten) + " Karten anbieten.\nWie viele möchtest du zum Handel?");
+							angeboteneKarten = Main.checkCorrectNum(1, getGefängnisKarte()-angeboteneKarten);
+						}
+						else
+						{
+							System.out.println("\nDu hast nur eine Karte fürs Angebot.");
+							angeboteneKarten = 1;
+						}
+						ersteWahl = false;
+						break;
+					case"Grundstücke":
+						System.out.println("\nDu hast die folgenden Grundstücke:\n");
+						//Elemente von der ArrayList grundstuecke, welche nicht bereits teil von angeboteneGrundstücke sind
+						ArrayList<Integer> auswählbareGrundstücke = new ArrayList<Integer>();
+						//Hinzufügen der Grundstücke zu auswählbareGrundstücke
+						for(int i = 0; i < grundstuecke.size(); i++)
+						{
+							if(angeboteneGrundstücke.isEmpty())
+							{
+								auswählbareGrundstücke.add(grundstuecke.get(i));
+							}
+							else
+							{
+								for(int j = 0; j < angeboteneGrundstücke.size(); j++)
+								{
+									if(!(grundstuecke.get(i) == angeboteneGrundstücke.get(j)))
+									{
+										auswählbareGrundstücke.add(grundstuecke.get(i));
+									}
+								}
+							}
+						}
+						
+						for(int j = 0; j < auswählbareGrundstücke.size(); j++)
+						{
+							System.out.println(Main.spielfeld[auswählbareGrundstücke.get(j)].getFeldname() + " (" + (j + 1) + ")");
+						}
+						System.out.println("\nWelches der Grundstücke möchtest du zum Handel anbieten?");
+						eingabe = Main.checkCorrectNum(1, auswählbareGrundstücke.size());
+						angeboteneGrundstücke.add(auswählbareGrundstücke.get(eingabe - 1));
+						ersteWahl = false;
+						break;
+					case"Angebot abschließen":
+						angebotFertig = true;
+						break;
+					case"Handeln abbrechen":
+						return;
+				}
+				
+				//Ausgeben von allem was Angeboten wird.
+				if(angebotenesGeld != 0)
+				{
+					System.out.println("\nDu bietest " + angebotenesGeld + " Mark an.");
+				}
+				if(angeboteneKarten != 0)
+				{
+					System.out.println("\nDu bietest " + angeboteneKarten + " „Du kommst aus dem Gefängnis frei“-Karten an.");
+				}
+				if(!angeboteneGrundstücke.isEmpty())
+				{
+					System.out.println("\nDu bietest folgende Grundstücke an:\n");
+					for(int i = 0; i < angeboteneGrundstücke.size(); i++)
+					{
+						System.out.println((i+1) + ". " + Main.spielfeld[angeboteneGrundstücke.get(i)].getFeldname());
+					}
+				}
+			}
+			
+
+			//                                       ANBIETEN ODER ERHALTEN?
+			//Das Gegenangebot des anderen Spielers
+			angebotFertig = false;
+			ersteWahl = true;
+			while(!angebotFertig)
+			{
+				möglicheGegenangebote.clear();
+				//Erstellen von möglicheGegenangebote
+				if(Main.alleSpieler.get(welcherSpieler).getGeld()-erhaltenesGeld > 0)
+				{
+					möglicheGegenangebote.add("Geld");
+				}
+				if(Main.alleSpieler.get(welcherSpieler).getGefängnisKarte()-erhalteneKarten > 0)
+				{
+					möglicheGegenangebote.add("„Du kommst aus dem Gefängnis frei“-Karten");
+				}
+				if(!(Main.alleSpieler.get(welcherSpieler).getGrundstücke().isEmpty()) && erhaltendeGrundstücke.size() < Main.alleSpieler.get(welcherSpieler).getGrundstücke().size())
+				{
+					möglicheGegenangebote.add("Grundstücke");
+				}
+				if(!ersteWahl)
+				{
+					möglicheGegenangebote.add("Gegenangebot abschließen");
+				}
+				möglicheGegenangebote.add("Handeln abbrechen");
+				
+				if(ersteWahl)
+					System.out.println("\nWas möchtest du vom Spieler erhalten?\n");
+				else
+					System.out.println("\nWas möchtest du vom Spieler noch erhalten?\n");
+				//Ausgabe der Möglichen angebote
+				for(int i = 0; i < möglicheGegenangebote.size(); i++)
+				{
+					System.out.println("Für " + möglicheGegenangebote.get(i) + " gebe " + (i+1) + " ein." );
+				}
+				int eingabe = Main.checkCorrectNum(1, möglicheGegenangebote.size());
+				switch(möglicheGegenangebote.get(eingabe-1))
+				{
+					case"Geld":
+						System.out.println("\nDu kannst " + (Main.alleSpieler.get(welcherSpieler).getGeld()-erhaltenesGeld) + " Mark anbieten.\nWie viel möchtest du zum Handel?");
+						erhaltenesGeld = Main.checkCorrectNum(1, Main.alleSpieler.get(welcherSpieler).getGeld());
+						break;
+					case"„Du kommst aus dem Gefängnis frei“-Karten":
+						if(Main.alleSpieler.get(welcherSpieler).getGefängnisKarte() > 1)
+						{
+							System.out.println("\nDu hast " + (Main.alleSpieler.get(welcherSpieler).getGefängnisKarte()-erhalteneKarten) + " Karten.\nWie viele möchtest du zum Handel anbieten?");
+							erhalteneKarten = Main.checkCorrectNum(1, Main.alleSpieler.get(welcherSpieler).getGefängnisKarte());
+						}
+						else
+						{
+							System.out.println("\nDu hast nur eine Karte fürs Angebot.");
+							erhalteneKarten = 1;
+						}
+						
+						break;
+					case"Grundstücke":
+						System.out.println("\nDu hast die folgenden Grundstücke:\n");
+						//Elemente von der ArrayList grundstuecke, welche nicht bereits teil von angeboteneGrundstücke sind
+						ArrayList<Integer> auswählbareGrundstücke = new ArrayList<Integer>();
+						//Hinzufügen der Grundstücke zu auswählbareGrundstücke
+						for(int i = 0; i < Main.alleSpieler.get(welcherSpieler).getGrundstücke().size(); i++)
+						{
+							if(erhaltendeGrundstücke.isEmpty())
+							{
+								auswählbareGrundstücke.add(Main.alleSpieler.get(welcherSpieler).getGrundstücke().get(i));
+							}
+							else
+							{
+								for(int j = 0; j < erhaltendeGrundstücke.size(); j++)
+								{
+									if(!(Main.alleSpieler.get(welcherSpieler).getGrundstücke().get(i) == erhaltendeGrundstücke.get(j)))
+									{
+										auswählbareGrundstücke.add(Main.alleSpieler.get(welcherSpieler).getGrundstuecke()[i]);
+									}
+								}
+							}
+						}
+						
+						for(int j = 0; j < auswählbareGrundstücke.size(); j++)
+						{
+							System.out.println((j+1) + ". " + Main.spielfeld[auswählbareGrundstücke.get(j)].getFeldname());
+						}
+						System.out.println("\nWelches der Grundstücke möchtest du zum Handel anbieten?");
+						eingabe = Main.checkCorrectNum(1, auswählbareGrundstücke.size());
+						erhaltendeGrundstücke.add(auswählbareGrundstücke.get(eingabe -1));
+						break;
+					case"Gegenangebot abschließen":
+						angebotFertig = true;
+						break;
+					case"Handeln abbrechen":
+						return;
+				}
+				
+
+				//                                           ANBIETEN ODER ERHALTEN?
+				//Ausgeben von allem was Gefordert wird.
+				if(erhaltenesGeld != 0)
+				{
+					System.out.println("\nDu bietest " + erhaltenesGeld + " Mark an.");
+				}
+				if(erhalteneKarten > 1)
+				{
+					System.out.println("\nDu bietest " + erhalteneKarten + " „Du kommst aus dem Gefängnis frei“-Karten an.");
+				}
+				else if(erhalteneKarten == 1)
+				System.out.println("\nDu bietest eine „Du kommst aus dem Gefängnis frei“-Karte an.");
+				if(!erhaltendeGrundstücke.isEmpty())
+				{
+					for(int i = 0; i < erhaltendeGrundstücke.size(); i++)
+					{
+						System.out.println("\nDu bietest folgende Grundstücke an:\n");
+						System.out.println(Main.spielfeld[erhaltendeGrundstücke.get(i)].getFeldname());
+					}
+				}
+				
+				//                                        ?
+				//Ausgeben was erhalten wird
+				if(angebotenesGeld != 0)
+				{
+				System.out.println("\nDu bietest " + angebotenesGeld + " Mark an.");
+				}
+				if(angeboteneKarten > 1)
+				{
+					System.out.println("\nDu bietest " + angeboteneKarten + " „Du kommst aus dem Gefängnis frei“-Karten an.");
+				}
+				else if(angeboteneKarten == 1)
+				System.out.println("\nDu bietest eine „Du kommst aus dem Gefängnis frei“-Karte an.");
+				if(!angeboteneGrundstücke.isEmpty())
+				{
+					System.out.println("\nDu bietest folgende Grundstücke an:\n");
+					for(int i = 0; i < angeboteneGrundstücke.size(); i++)
+					{
+						System.out.println((i+1) + ". " + Main.spielfeld[angeboteneGrundstücke.get(i)].getFeldname());
+					}
+				}
+			}
+			
+			System.out.println("\nSpieler mit der Figur " + getFigur() + ", bist du mit diesem Handel zufrieden?\n(ja - 1, nein - sonstiges)\n\n-> .");
+			String eingabe1 = sc.next();
+			System.out.println("\nSpieler mit der Figur " + Main.alleSpieler.get(welcherSpieler).getFigur() + ", bist du mit diesem Handel zufrieden?\n(ja - 1, nein - sonstiges)\n\n-> .");
+			String eingabe2 = sc.next();
+
+			if(eingabe1.equals("1") && eingabe2.equals("1"))
+			{
+				handelAktiv = false;
+			}
+			else
+			{
+				System.out.println("\nDas angebot wurde zurrückgesetzt. Die beiden Spieler können nun ein anderes Angebot eingeben.");
+				//Zurrücksetzen der Angebote
+				angeboteneGrundstücke = new ArrayList<Integer>();
+				erhaltendeGrundstücke = new ArrayList<Integer>();
+				angebotenesGeld = 0;
+				erhaltenesGeld = 0;
+				angeboteneKarten = 0;
+				erhalteneKarten = 0;
+			}
+			
 		}
-		else // nur variableFreiKarten = 1
+		
+		if(handelAktiv == false)
 		{
-			System.out.println("\nDu kannst nur „Du kommst aus dem Gefängnis frei“-Karten verkaufen.");
-			System.out.print("\nMöchtest du?\n(ja - 1, nein - sonstiges)\n\n-> ");
-			String eingabe = sc.next();
-			if(eingabe == "1")
-				gefaengnisFreiVerkaufen(Main.alleSpieler.get(spielernummer));
+			//Entferen von allem Angebotenen und Hinzufügen von allem Erhaltenen
+			//Geld
+			subtractGeld(angebotenesGeld);
+			Main.alleSpieler.get(welcherSpieler).addGeld(angebotenesGeld);
+			addGeld(erhaltenesGeld);
+			Main.alleSpieler.get(welcherSpieler).subtractGeld(erhaltenesGeld);
+			//Karten
+			for(int i = 0; i < angeboteneKarten; i++)
+			{
+				subtractGefängnisKarte();
+				Main.alleSpieler.get(welcherSpieler).addGefängnisKarte();
+			}
+			for(int i = 0; i < erhalteneKarten; i++)
+			{
+				addGefängnisKarte();
+				Main.alleSpieler.get(welcherSpieler).subtractGefängnisKarte();
+			}
+			//Grundstücke
+			for(int i = 0; i < angeboteneGrundstücke.size(); i++)
+			{
+				grundstuecke.remove(angeboteneGrundstücke.get(i));
+				Main.alleSpieler.get(welcherSpieler).addGrundstück(angeboteneGrundstücke.get(i));
+			}
+			for(int i = 0; i < erhaltendeGrundstücke.size(); i++)
+			{
+				grundstuecke.add(erhaltendeGrundstücke.get(i));
+				Main.alleSpieler.get(welcherSpieler).removeGrundstück(erhaltendeGrundstücke.get(i));
+			}
 		}
 	}
-	// -- Handeln --
 }

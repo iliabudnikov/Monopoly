@@ -116,7 +116,7 @@ public class Gemeinschaftsfeld extends Aktionsfelder
         		}
         		else
         		{
-        			System.out.println("\nDu musst insgesammt " + kosten + " Geld bezahlen.");
+        			System.out.println("\nDu musst insgesammt " + kosten + " Mark bezahlen.");
         			Main.alleSpieler.get(aktiverSpieler).subtractGeld(kosten);
         		}
         		break;
@@ -136,13 +136,13 @@ public class Gemeinschaftsfeld extends Aktionsfelder
     
 	public void feldBetreten(int aktiverSpieler, int gewürfelteZahl)
     {
-        System.out.println("\nDu hast ein " + getFeld() + " betreten.");
+        System.out.println("\nDu hast das Gemeinschaftsfeld betreten.");
         Ereignis(aktiverSpieler, gewürfelteZahl);
     }
     
     public String toString()
     {
-    	String ergebnis = "Ein " + getFeldname() + ".";
+    	String ergebnis = "-- Das Gemeinschaftsfeld --";
     	return ergebnis;
     } 
 }

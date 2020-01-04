@@ -26,22 +26,26 @@ public class Steuern extends Aktionsfelder
     
     public void feldBetreten(int aktiverSpieler)
     {
-        System.out.println("\nDu hast ein " + getFeld() + " betreten.");
+        if(welchesFeld)
+            System.out.println("\nDu hast das „Zusatzsteuer“ Feld betreten.");
+        else
+            System.out.println("\nDu hast das „Einkommensteuer“ Feld betreten.");
+
         Ereignis(aktiverSpieler);
     }
     
     public String toString()
     {
-    	String ergebnis = "Das " + getFeldname() + "feld :";
+    	String ergebnis = "";
     	//Zusatzsteuer
     	if(welchesFeld)
     	{
-    		ergebnis += "Zusatzsteuer(betreten kostet 100 Geld)";
+    		ergebnis += "-- Das das „Zusatzsteuer“ Feld (betreten kostet 100 Mark) --";
     	}
     	//Einkommenssteuer
     	else
     	{
-    		ergebnis += "Einkommenssteuer(betreten kostet 200 Geld)";
+    		ergebnis += "-- Das das „Einkommensteuer“ Feld (betreten kostet 200 Mark) --";
     	}
     	
     	return ergebnis;

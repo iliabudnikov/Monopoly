@@ -105,7 +105,7 @@ public class Main
     {
         alleSpieler = new ArrayList<Spieler>();
         //Begrüßung der Spieler. Frage nach der Spieleranzahl
-        System.out.println("\nWillkommen zu Monopoly!\n\nWie viele Spieler sind an dem Spiel beteiligt?");
+        System.out.println("\nWillkommen zu Monopoly!\n\nWie viele Spieler sind am Spiel beteiligt?");
 		//Eingabe der Spieleranzahl
 		int spielerAnzahl = checkCorrectNum(2, -1);
         
@@ -122,11 +122,13 @@ public class Main
         
         for(int i = 0; i < spielerAnzahl; i++)
         {
+			System.out.println("\n-----------------------");
+
         	//Figur aussuchen
-        	System.out.println("\n\nWelche Figur möchte der Spieler " + (i+1) + "?\n");
+        	System.out.println("\nWelche Figur möchte der Spieler " + (i+1) + "?\n");
 			for(int j = 0; j < figuren.size(); j++)
             {
-            		System.out.println("Für die Figur \"" + figuren.get(j) + "\" gebe " + (j+1) + " ein.");
+            		System.out.println("Für die Figur „" + figuren.get(j) + "“ gebe " + (j+1) + " ein.");
 			}
 			
 			welcheFigur = checkCorrectNum(1, figuren.size());
@@ -170,7 +172,8 @@ public class Main
 				//Setzen des aktiven Spielers nach der Reihenfolge, welche vorher festgelegt wurde
 				aktiverSpieler = reihenfolge.get(i);
 				//Ausgeben welcher Spieler am zug ist
-				System.out.println("\n\nDer Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + " ist am Zug.");
+				System.out.println("\n-----------------------");
+				System.out.println("\nDer Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + ", du bist am Zug.");
 				System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGeld() + " Mark.");
 				if(alleSpieler.get(aktiverSpieler).getImGefängnis())
 				{
@@ -194,11 +197,14 @@ public class Main
 					int j = (aktiverSpieler + 1) % alleSpieler.size(); // um nicht überzulaufen (der nächste Spieler);
 
 					if(spielerAktiv)
-						System.out.println("\nDer Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + " hat seinen Zug beendet.\n");
+						System.out.println("\nDer Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + " hat seinen Zug beendet.");
 					else
 					{
 						System.out.println("\nDer Spieler mit der Figur " + alleSpieler.get(aktiverSpieler).getFigur() + " ist nicht mehr am Spiel beteiligt.");
 					}
+
+					System.out.println("\n-----------------------");
+					System.out.println("\nZwischenzüge:");
 
 					while(j != aktiverSpieler)
 					{
@@ -232,7 +238,7 @@ public class Main
 
 				if(alleSpieler.size() == 1)
 				{
-					System.out.println("\n\nHerzlichen Glückwunsch an den Spiler mit der Figur " + alleSpieler.get(0).getFigur() + "!!!\n");
+					System.out.println("\n\nHerzlichen Glückwunsch an den Spieler mit der Figur " + alleSpieler.get(0).getFigur() + "!!!\n");
 					break;
 				}
 			}
@@ -249,10 +255,14 @@ public class Main
 			
 			//Beinhaltet alle möglichen Aktionen die der Spieler ausführen kann
 			ArrayList<String> aktionen = alleSpieler.get(aktiverSpieler).möglicheAktionen();
+
 			if (ersteWahl)
 				System.out.println("\nWas möchtest du tun?\n");
 			else
+			{
+				System.out.println("\n-----------------------");
 				System.out.println("\nWas möchtest du noch tun?\n");
+			}
 			//Gibt aus, welche aktionen der Spieler ausführen kann und welche Zahl er dafür eingeben soll
 			for(int i = 0; i < aktionen.size(); i++)
 			{
@@ -261,6 +271,9 @@ public class Main
 			
 			int eingabe = Main.checkCorrectNum(1, aktionen.size());
 			
+			if (aktionen.get(eingabe).equals("Zug beenden"))
+				System.out.println("\n-----------------------");
+
 			//Hier kann nun die ausgewählte Aktion ausgeführt werden
 			switch(aktionen.get(eingabe-1))
 			{
@@ -305,10 +318,13 @@ public class Main
 					alleSpieler.get(aktiverSpieler).hypothekenAnzeigen();
 					break;
 				case"„Du kommst aus dem Gefängnis frei“-Kartenanzahl anzeigen":
-					System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGefängnisKarte() + " „Du kommst aus dem Gefängnis frei“-Karten.");
+					if(alleSpieler.get(aktiverSpieler).getGefängnisKarte() > 1)
+						System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGefängnisKarte() + " Karten.");
+					else
+						System.out.println("\nDu hast eine Karte.");
 					break;
 				case"Spielfeld überblicken":
-					feldAusgeben();
+					feldAusgeben(alleSpieler.get(aktiverSpieler));
 					break;
 				case"Abgeben":
 					System.out.print("\nBist du sicher?\n(ja - 1, nein - sonstiges)\n\n-> ");
@@ -319,7 +335,7 @@ public class Main
 					
 				//Man sollte warscheinich auch eine Art inventar hinzufügen, wo der Spieler ansehen kann was er alles so hat(Grundstücke, komm aus dem Gefängnis frei Karten, All sein Geld, ob seine Grundstücke Hypotheken haben, usw)
 			}
-			
+
 			ersteWahl = false;
 		}
 		
@@ -331,50 +347,63 @@ public class Main
 	//false - der Spieler nimmt am Spiel nicht mehr teil
 	public static boolean nachaktionenAusführen(int welcherSpieler, ArrayList<String> nachaktionen)
 	{
-		System.out.println("\nWas möchtest du tun?\n");
+		boolean ersteWahl = true; // um den aktuellen Zustand des Zugs dem Nutzer deutlicher zu machen, unterscheiden wir die erste Wahl des Zugs und die Weiteren
 
-		for(int i = 0; i < nachaktionen.size(); i++)
-		{
-			System.out.println("Zum " + nachaktionen.get(i) + " gebe " + (i + 1) + " ein.");
-		}
-		
-		int eingabe = Main.checkCorrectNum(1, nachaktionen.size());
-		
 		while(true)
 		{
+			if (ersteWahl)
+				System.out.println("\nWas möchtest du tun?\n");
+			else
+			{
+				System.out.println("\n-----------------------");
+				System.out.println("\nWas möchtest du noch tun?\n");
+			}
+			for(int i = 0; i < nachaktionen.size(); i++)
+			{
+				System.out.println("Zum " + nachaktionen.get(i) + " gebe " + (i + 1) + " ein.");
+			}
+			
+			int eingabe = Main.checkCorrectNum(1, nachaktionen.size());
+			
+			if (nachaktionen.get(eingabe) != "Zug beenden")
+				System.out.println("\n-----------------------");
+
 			switch(nachaktionen.get(eingabe-1))
 			{
 				case"Zwischenzug beenden":
 					return true;
 				case"Geld anzeigen":
-					System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGeld() + " Mark.");
+					System.out.println("\nDu hast " + alleSpieler.get(welcherSpieler).getGeld() + " Mark.");
 					break;
 				case"Grundstücke anzeigen":
-					alleSpieler.get(aktiverSpieler).printBesitzt();
+					alleSpieler.get(welcherSpieler).printBesitzt();
 					break;	
 				case"Haus bauen":
-					alleSpieler.get(aktiverSpieler).HausKaufenVerfahren();
+					alleSpieler.get(welcherSpieler).HausKaufenVerfahren();
 					break;
 				case"Häuser verkaufen":
-					alleSpieler.get(aktiverSpieler).HausVerkaufenVerfahren();
+					alleSpieler.get(welcherSpieler).HausVerkaufenVerfahren();
 					break;
 				case"Handeln":
-					alleSpieler.get(aktiverSpieler).HandelnVerfahren();
+					alleSpieler.get(welcherSpieler).HandelnVerfahren();
 					break;
 				case"Hypothen auf ein Grundstück aufnehmen":
-					alleSpieler.get(aktiverSpieler).hypothekAufnehmen();
+					alleSpieler.get(welcherSpieler).hypothekAufnehmen();
 					break;
 				case"Hypotheken abbezahlen":
-					alleSpieler.get(aktiverSpieler).hypothekAbbezahlen();
+					alleSpieler.get(welcherSpieler).hypothekAbbezahlen();
 					break;
 				case"aufgenommene Hypotheken anzeigen":
-					alleSpieler.get(aktiverSpieler).hypothekenAnzeigen();
+					alleSpieler.get(welcherSpieler).hypothekenAnzeigen();
 					break;
 				case"„Du kommst aus dem Gefängnis frei“-Kartenanzahl anzeigen":
-					System.out.println("\nDu hast " + alleSpieler.get(aktiverSpieler).getGefängnisKarte() + " „Du kommst aus dem Gefängnis frei“-Karten.");
+					if(alleSpieler.get(welcherSpieler).getGefängnisKarte() > 1)
+						System.out.println("\nDu hast " + alleSpieler.get(welcherSpieler).getGefängnisKarte() + " Karten.");
+					else
+						System.out.println("\nDu hast eine Karte.");
 					break;
 				case"Spielfeld überblicken":
-					feldAusgeben();
+					feldAusgeben(alleSpieler.get(welcherSpieler));
 					break;
 				case"Abgeben":
 					System.out.print("\nBist du sicher?\n(ja - 1, nein - sonstiges)\n\n-> ");
@@ -382,8 +411,9 @@ public class Main
 					if (eingabeAbgeben.equals("1"))
 						return false; // d.h., der Spieler ist nicht mehr aktiv;
 					break;
-				
 			}
+
+			ersteWahl = false;
 		}
 	}
 	
@@ -399,7 +429,10 @@ public class Main
 			int rndInt2 = rnd.nextInt(5) + 1;
 			
 			if (paschAnzahl > 0)
+			{
+				System.out.println("\n-----------------------");
 				System.out.println("\nDa du einen Pasch gewürfelt hast, würfelst du noch einmal.");
+			}
 			System.out.println("\nDu hast eine " + rndInt1 + " und eine " + rndInt2 + " gewürfelt.");
 
 			//ist der Spieler im Gefängnis? Wenn ja, muss er einen Pasch würfeln, um das Gefängnis verlassen zu können
@@ -452,11 +485,8 @@ public class Main
 				case"Gemeinschaftsfeld":
 					((Gemeinschaftsfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
 					break;
-				case"Wasserwerk":
-					((Wasserwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
-					break;
-				case"Stromwerk":
-					((Stromwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
+				case"Stadtwerk":
+					((Stadtwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
 					break;
 				case"Los":
 					((Start)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
@@ -500,9 +530,10 @@ public class Main
 				}
 			}
 		}
-		
-		System.out.println("\n\nDie Reihenfolge wurde festgelegt.\n");
-		for(int i = 0; i < alleSpieler.size(); i++)
+
+		System.out.println("\n-----------------------");
+		System.out.println("\nDie Reihenfolge wurde festgelegt.\n");
+		for(int i =  0; i < alleSpieler.size(); i++)
 		{
 			System.out.println("Der Spieler " + (i+1) + " ist der Spieler mit der Figur " + alleSpieler.get(reihenfolge[i]).getFigur() + ".");
 		}
@@ -510,19 +541,24 @@ public class Main
 		return reihenfolge;
 	}
 	
-	public static void feldAusgeben()
+	public static void feldAusgeben(Spieler welcherSpieler)
 	{
+
+		System.out.println("\nDu befindest dich auf dem Feld " + spielfeld[welcherSpieler.getPosition()].getFeldname() + ".\n");
+
+		System.out.println("\nDas Spielfeld:\n");
+
 		//Erstellen eines Arrays der Feldnummern die durch ein mal Würfeln ohne Pasch von der jetzigen Position des Aktiven Spielers erreicht werden können:
 		ArrayList<Integer> einMalWürfelnFelder = new ArrayList<Integer>();
 		for(int i = 1; i < 19; i ++)
 		{
-			if((alleSpieler.get(aktiverSpieler).getPosition() + i) > 39)
+			if((welcherSpieler.getPosition() + i) > 39)
 			{
-				einMalWürfelnFelder.add((alleSpieler.get(aktiverSpieler).getPosition() + i) - 39);
+				einMalWürfelnFelder.add((welcherSpieler.getPosition() + i) - 39);
 			}
 			else
 			{
-				einMalWürfelnFelder.add(alleSpieler.get(aktiverSpieler).getPosition() + i);
+				einMalWürfelnFelder.add(welcherSpieler.getPosition() + i);
 			}
 		}
 		//Ausgeben der Felder die durch einmaliges Würfeln erreicht werden können
@@ -531,28 +567,30 @@ public class Main
 			for(int j = 0; j < einMalWürfelnFelder.size(); j++)
 			{
 				//Ist die Feldnummer bei einem Mal würfeln erreichbar?
-				if(i == einMalWürfelnFelder.get(j) +1)
+				if(i == einMalWürfelnFelder.get(j)+1)
 				{
 					//Bestimmen der Zahl, welche gewürfelt werden muss, um dieses Feld zu erreichen
 					int zahl = 0; 
-					if(alleSpieler.get(aktiverSpieler).getPosition() < einMalWürfelnFelder.get(j))
+					if(welcherSpieler.getPosition() < einMalWürfelnFelder.get(j))
 					{
-						zahl =  einMalWürfelnFelder.get(j) - alleSpieler.get(aktiverSpieler).getPosition();
+						zahl =  einMalWürfelnFelder.get(j) - welcherSpieler.getPosition();
 					}
 					else
 					{
-						zahl = (alleSpieler.get(aktiverSpieler).getPosition() - 39) + einMalWürfelnFelder.get(j);
+						zahl = (welcherSpieler.getPosition() - 39) + einMalWürfelnFelder.get(j);
 					}
 					System.out.println("Um dieses Feld zu erreichen musst du eine " + (zahl) + " Würfeln.");
 				}
 			}
+
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
 			switch(spielfeld[i].getFeld())
 			{
 			case"Straße":
-				System.out.println(((Strasse)spielfeld[i]).toString(true));
+				System.out.println(((Strasse)spielfeld[i]).toString(true, welcherSpieler));
 				break;
 			case"Bahnhof":
-				System.out.println(((Bahnhof)spielfeld[i]).toString());
+				System.out.println(((Bahnhof)spielfeld[i]).toString(welcherSpieler));
 				break;
 			case"Ereignisfeld":
 				System.out.println(((Ereignisfeld)spielfeld[i]).toString());
@@ -560,11 +598,8 @@ public class Main
 			case"Gemeinschaftsfeld":
 				System.out.println(((Gemeinschaftsfeld)spielfeld[i]).toString());
 				break;
-			case"Wasserwerk":
-				System.out.println(((Wasserwerk)spielfeld[i]).toString());
-				break;
-			case"Stromwerk":
-				System.out.println(((Stromwerk)spielfeld[i]).toString());
+			case"Stadtwerk":
+				System.out.println(((Stadtwerk)spielfeld[i]).toString(welcherSpieler));
 				break;
 			case"Los":
 				System.out.println(((Start)spielfeld[i]).toString());
@@ -578,15 +613,31 @@ public class Main
 			case"Gefängnis":
 				System.out.println(((Gefängnis)spielfeld[i]).toString());
 				break;
+			case"Ins Gefängnis":
+				System.out.println(((InsGefängnis)spielfeld[i]).toString());
+				break;
 			}
 
+			boolean nichtAllein = false; // true, wenn auf dem entsprechenden Feld mehr als ein Spieler steht
 			for(int j = 0; j <  alleSpieler.size(); j++)
 			{
-				if(alleSpieler.get(j).getPosition() == i && j != aktiverSpieler)
+				if(alleSpieler.get(j).getPosition() == i && j != alleSpieler.indexOf(welcherSpieler))
 				{
-					System.out.println("Auf diesem Feld befindet sich der Spieler mit der Figur: " + alleSpieler.get(j).getFigur());
+					if(!nichtAllein)
+					{
+						System.out.print("Auf diesem Feld befinden sich die Spieler mit den Figuren: " + alleSpieler.get(j).getFigur());
+						nichtAllein = true;
+					}
+					else
+					{
+						System.out.print(", " + alleSpieler.get(j).getFigur());
+					}
 				}
 			}
-		}    
+			if(nichtAllein) // wenn mindestens ein Spieler steht
+				System.out.println();
+		}
+
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
 	}
 }

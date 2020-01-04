@@ -13,12 +13,12 @@ public class Start extends Aktionsfelder
     }
     public void feldBetreten(int aktiverSpieler)
     {
-        System.out.println("\nDu hast das " + getFeld() + " Feld betreten");
+        System.out.println("\nDu hast das „Los“ Feld betreten");
         Ereignis(aktiverSpieler);
     }
     public String toString()
     {
-    	String ergebnis = "Das " + getFeldname() + " Feld.";
+    	String ergebnis = "-- Das „Los“ Feld --";
     	return ergebnis;
     } 
 }

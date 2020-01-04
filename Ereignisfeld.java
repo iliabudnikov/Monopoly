@@ -27,10 +27,11 @@ public class Ereignisfeld extends Aktionsfelder
         		break;
         	//Machen Sie einen Ausflug zum Südbahnhof. Wenn Sie über Los kommen, ziehen Sie M 200 ein.
         	case 1:
-        		System.out.println("\nMach einen Ausflug zum Südbahnhof. Kommst du über Los, ziehst du 200 Mark ein.");
+        		System.out.println("\nMach einen Ausflug zum Südbahnhof.");
         		//Falls der Spieler über Los gehen muss, bekommt er 200 Geld
         		if(Main.alleSpieler.get(aktiverSpieler).getPosition() > 5)
         		{
+					System.out.println("\nWährend des Ausflugs bist du über Los gekommen. Du ziehst 200 Mark!");
         			Main.alleSpieler.get(aktiverSpieler).addGeld(200);
         		}
         		Main.alleSpieler.get(aktiverSpieler).setPosition(5);
@@ -39,14 +40,15 @@ public class Ereignisfeld extends Aktionsfelder
         		break;
         	//Ihr Bausparvertrag wird fällig. Sie erhalten M 200.
         	case 2:
-        		System.out.println("\nDein Bausparvertrag wird fällig. Du erhaltest 200 Mark.");
+        		System.out.println("\nDein Bausparvertrag wird fällig. Du erhaltest 200 Mark!");
         		Main.alleSpieler.get(aktiverSpieler).addGeld(200);
         		break;
         	//Rücken Sie vor bis zum Opernplatz. Wenn Sie über Los kommen, ziehen Sie M 200 ein.
         	case 3:
-        		System.out.println("\nRücke vor bis zum Opernplatz. Kommst du über Los, ziehst du 200 Mark ein.");
+        		System.out.println("\nRücke vor bis zum Opernplatz.");
         		if(Main.alleSpieler.get(aktiverSpieler).getPosition() > 24)
         		{
+					System.out.println("\nWährend des Vorrückens bist du über Los gekommen. Du ziehst 200 Mark!");
         			Main.alleSpieler.get(aktiverSpieler).addGeld(200);
         		}
         		Main.alleSpieler.get(aktiverSpieler).setPosition(24);
@@ -57,8 +59,13 @@ public class Ereignisfeld extends Aktionsfelder
         		System.out.println("\nRücke vor bis zum nächsten Versorgungswerk.");
         		//Entscheiden, welches der Werke näher liegt
         		//Stromwerk
-        		if(Main.alleSpieler.get(aktiverSpieler).getPosition() > 12)
+        		if(Main.alleSpieler.get(aktiverSpieler).getPosition() < 12 || Main.alleSpieler.get(aktiverSpieler).getPosition() == 36)
         		{
+					if(Main.alleSpieler.get(aktiverSpieler).getPosition() == 36)
+					{
+						System.out.println("\nWährend des Vorrückens bist du über Los gekommen. Du ziehst 200 Mark!");
+						Main.alleSpieler.get(aktiverSpieler).addGeld(200);
+					}
         			Main.alleSpieler.get(aktiverSpieler).setPosition(12);
         			((Stromwerk)Main.spielfeld[12]).feldBetreten(aktiverSpieler, gewürfelteZahl);
         		}
@@ -78,7 +85,6 @@ public class Ereignisfeld extends Aktionsfelder
         	case 6:
         		System.out.println("\nRücke vor bis auf Los und ziehe 200 Mark ein!");
         		Main.alleSpieler.get(aktiverSpieler).setPosition(0);
-        		Main.alleSpieler.get(aktiverSpieler).setPosition(12);
     			((Start)Main.spielfeld[0]).feldBetreten(aktiverSpieler);
         		break;
         	//Die Bank zahlt Ihnen eine Dividende von M 50.
@@ -88,11 +94,11 @@ public class Ereignisfeld extends Aktionsfelder
         		break;
         	//Sie lassen Ihre Häuser renovieren. Zahlen Sie: M 25 pro Haus, M 100 pro Hotel.
         	case 8:
-        		System.out.println("\nDu lässt deine Häuser renovieren. Schick, aber kostspieleg: 25 Mark pro Haus, 100 Mark pro Hotel.");
+        		System.out.println("\nDu lässt deine Häuser renovieren. Schick, aber kostspielig: 25 Mark pro Haus, 100 Mark pro Hotel.");
         		int[] grundstuecke = Main.alleSpieler.get(aktiverSpieler).getGrundstuecke();
         		for(int i = 0; i < grundstuecke.length; i++)
         		{
-        			if(Main.spielfeld[grundstuecke[i]].getFeld().equalsIgnoreCase("\nStrasse"))
+        			if(Main.spielfeld[grundstuecke[i]].getFeld().equals("Strasse"))
         			{
         				if(((Strasse)Main.spielfeld[grundstuecke[i]]).getHausAnzahl() >= 5)
         				{
@@ -111,20 +117,21 @@ public class Ereignisfeld extends Aktionsfelder
         		}
         		else
         		{
-        			System.out.println("\nDu musst insgesammt " + kosten + " Geld bezahlen.");
+        			System.out.println("\nDu musst insgesammt " + kosten + " Mark bezahlen.");
         			Main.alleSpieler.get(aktiverSpieler).subtractGeld(kosten);
         		}
         		break;
         	//Sie kommen aus dem Gefängnis frei! Behalten Sie diese Karte, bis Sie sie benötigen oder verkaufen.
         	case 9:
-        		System.out.println("\nDu kommst aus dem Gefängnis frei!");
+        		System.out.println("\nDu bekommst eine „Du kommst aus dem Gefängnis frei“-Karte!");
         		Main.alleSpieler.get(aktiverSpieler).addGefängnisKarte();
         		break;
         	//Rücken Sie vor bis zur Seestraße. Wenn Sie über Los kommen, ziehen Sie M 200 ein
         	case 10:
-        		System.out.println("\nRücke vor bis zur Seestraße. Kommst du über Los, ziehst du 200 Mark ein");
+        		System.out.println("\nRücke vor bis zur Seestraße.");
         		if(Main.alleSpieler.get(aktiverSpieler).getPosition() > 11)
         		{
+					System.out.println("\nWährend des Vorrückens bist du über Los gekommen. Du ziehst 200 Mark!");
         			Main.alleSpieler.get(aktiverSpieler).addGeld(200);
         		}
         		Main.alleSpieler.get(aktiverSpieler).setPosition(11);
@@ -167,11 +174,8 @@ public class Ereignisfeld extends Aktionsfelder
 					case"Gemeinschaftsfeld":
 						((Gemeinschaftsfeld)Main.spielfeld[Main.alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, gewürfelteZahl);
 						break;
-					case"Wasserwerk":
-						((Wasserwerk)Main.spielfeld[Main.alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, gewürfelteZahl);
-						break;
-					case"Stromwerk":
-						((Stromwerk)Main.spielfeld[Main.alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, gewürfelteZahl);
+					case"Stadtwerk":
+						((Stadtwerk)Main.spielfeld[Main.alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, gewürfelteZahl);
 						break;
 					case"Los":
 						((Start)Main.spielfeld[Main.alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
@@ -195,84 +199,42 @@ public class Ereignisfeld extends Aktionsfelder
         		break;
         	//Rücken Sie vor bis zum nächsten Verkehrsfeld. Der Eigentümer erhält das Doppelte der normalen Miete. Wenn das Verkehrsfeld noch niemandem gehört, können Sie es von der Bank kaufen.
         	case 15:
-        		System.out.println("\nRücke vor bis zum nächsten Verkehrsfeld.");
+        		System.out.println("\nRücke vor bis zum nächsten Verkehrsfeld (Bahnhof).");
         		//Hiermit sind Bahnhöfe gemeint
         		//Herrausfinden welcher Bahnhof am nächsten am Spieler ist
-        		//Der Abstand des Spielers zu jedem Bahnhof als Array
-        		int[] abstand = new int[] {Main.alleSpieler.get(aktiverSpieler).getPosition() - 5, Main.alleSpieler.get(aktiverSpieler).getPosition() - 15, Main.alleSpieler.get(aktiverSpieler).getPosition() - 25, Main.alleSpieler.get(aktiverSpieler).getPosition() - 35};
-        		//Ist der Spieler schon an allen bahnhöfen vorbei? Dann muss er über los
-        		if(abstand[0] < 0 && abstand[1] < 0 && abstand[2] < 0 && abstand[3] < 0)
-        		{
-        			Main.alleSpieler.get(aktiverSpieler).addGeld(200);
-        			Main.alleSpieler.get(aktiverSpieler).setPosition(5);
-        			((Bahnhof)Main.spielfeld[5]).feldBetreten(aktiverSpieler);
-        		}
-        		else
-        		{
-        			//Das element von abstand das > 0 ist und am kleiner als alle anderen die > 0 sind
-        			int kleinsterAbstand = 0;
-        			//Ob in dem For loop schon ein abstand gefunden wurde, der > 0 ist
-        			boolean wertGrößer0 = false;
-        			for(int i = 0; i < 4; i++)
-        			{
-        				//ist der Wert > 0
-        				if(abstand[i] > 0)
-        				{
-        					//Gab es schonmal einen Wert der > 0 war?
-        					if(wertGrößer0)
-        					{
-        						//Ist der Wert kleiner als der kleinste der bis jetzt vorkam?
-        						if(abstand[i] < abstand[kleinsterAbstand])
-        						{
-        							kleinsterAbstand = i;
-        						}
-        					}
-        					//Falls nicht, ist das hier der kleinste Abstand
-        					else
-        					{
-        						kleinsterAbstand = i;
-        						//Es gab bereits einen Wert > 0
-        						wertGrößer0 = true;
-        					}
-        				}
-					}
-					
-        			switch(kleinsterAbstand)
-        			{
-        				case 0:
-        					Main.alleSpieler.get(aktiverSpieler).setPosition(5);
-        					System.out.println("\nDu rückst auf den Südbahnhof auf.");
-        					((Bahnhof)Main.spielfeld[5]).feldBetreten(aktiverSpieler);
-        					break;
-        				case 1:
-        					Main.alleSpieler.get(aktiverSpieler).setPosition(15);
-        					System.out.println("\nDu rückst auf den Westbahnhof auf.");
-        					((Bahnhof)Main.spielfeld[15]).feldBetreten(aktiverSpieler);
-        					break;
-        				case 2:
-        					Main.alleSpieler.get(aktiverSpieler).setPosition(25);
-        					System.out.println("\nDu rückst auf den Nordbahnhof auf.");
-        					((Bahnhof)Main.spielfeld[25]).feldBetreten(aktiverSpieler);
-        					break;
-        				case 3:
-        					Main.alleSpieler.get(aktiverSpieler).setPosition(35);
-        					System.out.println("\nDu rückst auf den Hauptbahnhof auf.");
-        					((Bahnhof)Main.spielfeld[35]).feldBetreten(aktiverSpieler);
-        					break;
-        			}
-        		}
+				
+				// hier ist alles manuell eindeutig bestimmbar
+				switch(Main.alleSpieler.get(aktiverSpieler).getPosition())
+				{
+					case 36: // wenn der Spieler auf dem Feld mit der Nummer 36 steht
+						Main.alleSpieler.get(aktiverSpieler).addGeld(200);
+						Main.alleSpieler.get(aktiverSpieler).setPosition(5);
+						System.out.println("\nDu rückst auf den Südbahnhof auf und ziehst 200 Mark, da du über Los kommst!.");
+						((Bahnhof)Main.spielfeld[5]).feldBetreten(aktiverSpieler);
+						break;
+					case 7:
+						Main.alleSpieler.get(aktiverSpieler).setPosition(15);
+						System.out.println("\nDu rückst auf den Westbahnhof auf.");
+						((Bahnhof)Main.spielfeld[15]).feldBetreten(aktiverSpieler);
+						break;
+					case 22:
+						Main.alleSpieler.get(aktiverSpieler).setPosition(25);
+						System.out.println("\nDu rückst auf den Nordbahnhof auf.");
+						((Bahnhof)Main.spielfeld[25]).feldBetreten(aktiverSpieler);
+						break;
+				}
         }
     }
     
     public void feldBetreten(int aktiverSpieler, int gewürfelteZahl)
     {
-        System.out.println("\nDu hast ein " + getFeld() + " betreten");
+        System.out.println("\nDu hast das Ereignisfeld betreten.");
         Ereignis(aktiverSpieler, gewürfelteZahl);
     }
     
     public String toString()
     {
-    	String ergebnis = "Ein " + getFeldname() + ".";
+    	String ergebnis = "-- Das Ereignisfeld --";
     	return ergebnis;
     } 
 }

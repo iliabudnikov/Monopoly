@@ -56,7 +56,7 @@ public class Strasse extends Grundstueck
     }
     public void miete(int aktiverSpieler)
     {
-    	System.out.println("\nZahle Miete von " + getMietpreis(aktiverSpieler) +" Geld an den Spieler mit der Figur " + getBesitzer().getFigur());
+    	System.out.println("\nZahle Miete von " + getMietpreis(aktiverSpieler) +" Mark an den Spieler mit der Figur " + getBesitzer().getFigur());
     	Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), getMietpreis(aktiverSpieler));
     }
     
@@ -73,21 +73,31 @@ public class Strasse extends Grundstueck
         }
     }
     
-    // zeigt Straßeninfos mit (True) oder ohne (False) Immobilieninfos
-    public String toString(boolean mitImmobilien)
+    // zeigt Straßeninfos mit (true) oder ohne (false) Immobilieninfos
+    // welcherSpieler wird für die Unterscheidung der aktiven Spieler (für den das gezeigt wird) von anderen
+    // nur für die Straße toString(): welcherSpieler == null => die Methode wird nicht für die feldAusgeben verwendet
+    public String toString(boolean mitImmobilien, Spieler welcherSpieler)
     {
-        String ergebnis = "Die " + getFeldname() + " Straße in der Farbe " + farbe;
-        
+        String ergebnis;
+        if (welcherSpieler != null)
+             ergebnis = "-- Die " + getFeldname() + " Straße in der Farbe " + farbe + " --";
+        else
+            ergebnis = "Die " + getFeldname() + " Straße in der Farbe " + farbe + ".";
+
+
         //Falls dieses Feld keinem Gehört, wird dies Ausgegeben
     	if(getBesitzer() == null)
     	{
-    		ergebnis = ergebnis + "\nDieses " + getFeldname() + " gehört keinem.";
+    		ergebnis = ergebnis + "\nDiese Straße gehört keinem.";
     	}
     	//Ausgeben vom Besitzer des Feldes
     	else
     	{
-    		ergebnis = ergebnis + "\nDieses " + getFeldname() + " gehört dem Spieler mit der Figur :" + getBesitzer().getFigur() + ".";
-    	}
+            if (welcherSpieler.equals(getBesitzer()))
+                ergebnis = ergebnis + "\nDiese Straße gehört dir.";
+            else
+                ergebnis = ergebnis + "\nDiese Straße gehört dem Spieler mit der Figur: " + getBesitzer().getFigur() + ".";
+        }
     	
     	
         if (mitImmobilien)

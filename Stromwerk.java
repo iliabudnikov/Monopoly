@@ -2,7 +2,7 @@ public class Stromwerk extends Stadtwerk
 {
     public Stromwerk(int feldnummer)
     {
-    	super(feldnummer, "Stromwerk", "Stromwerk", 150);
+    	super(feldnummer, "Stadtwerk", "Elektrizitätswerk", 150);
     }
     
     //Bei Stadtwerken, wird die Miete anders berechnet als bei anderen Feldern. 
@@ -36,20 +36,22 @@ public class Stromwerk extends Stadtwerk
     	}
     }
     
-    public String toString()
+    public String toString(Spieler welcherSpieler)
     {
-    	String ergebnis = "Das " + getFeldname();
+    	String ergebnis = "-- Der Elektrizitätswerk --";
     	//Falls dieses Feld keinem Gehört, wird dies Ausgegeben
     	if(getBesitzer() == null)
     	{
-    		ergebnis = ergebnis + "\nDieses " + getFeldname() + " gehört keinem.";
+    		ergebnis = ergebnis + "\nDieser " + getFeldname() + " gehört keinem.";
     	}
     	//Ausgeben vom Besitzer des Feldes
     	else
     	{
-    		ergebnis = ergebnis + "\nDieses " + getFeldname() + " gehört dem Spieler mit der Figur :" + getBesitzer().getFigur() + ".";
-    	}
-    	
+			if (welcherSpieler.equals(getBesitzer()))
+				ergebnis = ergebnis + "\nDieser gehört dir.";
+			else
+				ergebnis = ergebnis + "\nDieser gehört dem Spieler mit der Figur: " + getBesitzer().getFigur() + ".";
+		}
     	return ergebnis;
     }
 }
