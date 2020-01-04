@@ -10,7 +10,7 @@ public class Wasserwerk extends Stadtwerk
     //Wenn der Besitzer das andere Stadtwerk auch besitzt, ist die Miete = (Die gewürfelte Zahl des Aktiven Spielers * 4)
     public void miete(int aktiverSpieler, int gewürfelteZahl)
     {
-    	//Ist der Besitzer des Wasserrwerks auch der Besitzer des Stromwerks?
+    	//Ist der Besitzer des Wasserwerks auch der Besitzer des Stromwerks?
     	if(getBesitzer() == ((Stadtwerk)(Main.spielfeld[12])).getBesitzer())
     	{
 			System.out.println("\nJetzt zahlst du dem Eigentümer den zehnfachen Betrag deines Wurfergebnisses.");
@@ -52,7 +52,10 @@ public class Wasserwerk extends Stadtwerk
 			else
     			ergebnis = ergebnis + "\nDieser gehört dem Spieler mit der Figur: " + getBesitzer().getFigur() + ".";
     	}
-    	
+		
+		if(getHypothek())
+            ergebnis += " Der Wasserwerk ist mit einer Hypothek.";
+
     	return ergebnis;
     }
 }

@@ -56,7 +56,7 @@ public class Strasse extends Grundstueck
     }
     public void miete(int aktiverSpieler)
     {
-    	System.out.println("\nZahle Miete von " + getMietpreis(aktiverSpieler) +" Mark an den Spieler mit der Figur " + getBesitzer().getFigur());
+    	System.out.println("\nZahle Miete von " + getMietpreis(aktiverSpieler) +" Mark an den Spieler mit der Figur " + getBesitzer().getFigur() + ".");
     	Main.alleSpieler.get(aktiverSpieler).paySpieler(getBesitzer().getSpielernummer(), getMietpreis(aktiverSpieler));
     }
     
@@ -73,10 +73,9 @@ public class Strasse extends Grundstueck
         }
     }
     
-    // zeigt Straßeninfos mit (true) oder ohne (false) Immobilieninfos
     // welcherSpieler wird für die Unterscheidung der aktiven Spieler (für den das gezeigt wird) von anderen
     // nur für die Straße toString(): welcherSpieler == null => die Methode wird nicht für die feldAusgeben verwendet
-    public String toString(boolean mitImmobilien, Spieler welcherSpieler)
+    public String toString(Spieler welcherSpieler)
     {
         String ergebnis;
         if (welcherSpieler != null)
@@ -98,9 +97,10 @@ public class Strasse extends Grundstueck
             else
                 ergebnis = ergebnis + "\nDiese Straße gehört dem Spieler mit der Figur: " + getBesitzer().getFigur() + ".";
         }
-    	
-    	
-        if (mitImmobilien)
+        
+        if(getHypothek())
+            ergebnis += " Die Straße ist mit einer Hypothek.";
+        else
         {
             switch (hausAnzahl)
             {
@@ -117,7 +117,6 @@ public class Strasse extends Grundstueck
                     ergebnis += " Auf der Straße gibt es " + hausAnzahl + " Häuse.";
             }
         }
-
         return ergebnis;
     }
 }

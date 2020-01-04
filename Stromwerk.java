@@ -52,6 +52,10 @@ public class Stromwerk extends Stadtwerk
 			else
 				ergebnis = ergebnis + "\nDieser gehört dem Spieler mit der Figur: " + getBesitzer().getFigur() + ".";
 		}
+
+		if(getHypothek())
+			ergebnis += " Der Elektrizitätswerk ist mit einer Hypothek.";
+		
     	return ergebnis;
     }
 }

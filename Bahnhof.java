@@ -68,7 +68,10 @@ public class Bahnhof extends Grundstueck
 			else
 				ergebnis = ergebnis + "\nDieser " + getFeldname() + " gehört dem Spieler mit der Figur: " + getBesitzer().getFigur() + ".";
 	  	}
-    	
+		
+		if(getHypothek())
+		  ergebnis += " Der Bahnhof ist mit einer Hypothek.";
+		
     	return ergebnis;
     }
 }

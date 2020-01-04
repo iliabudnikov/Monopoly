@@ -238,7 +238,7 @@ public class Main
 
 				if(alleSpieler.size() == 1)
 				{
-					System.out.println("\n\nHerzlichen Glückwunsch an den Spieler mit der Figur " + alleSpieler.get(0).getFigur() + "!!!\n");
+					System.out.println("\n＼(＾∀＾)メ(＾∀＾)ノ\n\nHerzlichen Glückwunsch an den Spieler mit der Figur " + alleSpieler.get(0).getFigur() + "!!!\n");
 					break;
 				}
 			}
@@ -271,7 +271,7 @@ public class Main
 			
 			int eingabe = Main.checkCorrectNum(1, aktionen.size());
 			
-			if (aktionen.get(eingabe).equals("Zug beenden"))
+			if(!aktionen.get(eingabe-1).equals("Zug beenden"))
 				System.out.println("\n-----------------------");
 
 			//Hier kann nun die ausgewählte Aktion ausgeführt werden
@@ -366,7 +366,7 @@ public class Main
 			
 			int eingabe = Main.checkCorrectNum(1, nachaktionen.size());
 			
-			if (nachaktionen.get(eingabe) != "Zug beenden")
+			if (!nachaktionen.get(eingabe-1).equals("Zwischenzug beenden"))
 				System.out.println("\n-----------------------");
 
 			switch(nachaktionen.get(eingabe-1))
@@ -589,7 +589,7 @@ public class Main
 			switch(spielfeld[i].getFeld())
 			{
 			case"Straße":
-				System.out.println(((Strasse)spielfeld[i]).toString(true, welcherSpieler));
+				System.out.println(((Strasse)spielfeld[i]).toString(welcherSpieler));
 				break;
 			case"Bahnhof":
 				System.out.println(((Bahnhof)spielfeld[i]).toString(welcherSpieler));

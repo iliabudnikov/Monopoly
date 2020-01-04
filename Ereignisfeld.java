@@ -84,8 +84,8 @@ public class Ereignisfeld extends Aktionsfelder
         	//Rücken Sie vor bis auf Los. (Ziehe M 200 ein).
         	case 6:
         		System.out.println("\nRücke vor bis auf Los und ziehe 200 Mark ein!");
-        		Main.alleSpieler.get(aktiverSpieler).setPosition(0);
-    			((Start)Main.spielfeld[0]).feldBetreten(aktiverSpieler);
+				Main.alleSpieler.get(aktiverSpieler).setPosition(0);
+				Main.alleSpieler.get(aktiverSpieler).addGeld(200);
         		break;
         	//Die Bank zahlt Ihnen eine Dividende von M 50.
         	case 7:
