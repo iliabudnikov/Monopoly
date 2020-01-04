@@ -1248,5 +1248,12 @@ public class Spieler
 				Main.alleSpieler.get(welcherSpieler).removeGrundstück(erhaltendeGrundstücke.get(i));
 			}
 		}
-	}
+		for(int i = 0; i < erhaltendeGrundstücke.size(); i++)
+		{
+			grundstuecke.add(erhaltendeGrundstücke.get(i));
+			Main.alleSpieler.get(welcherSpieler).removeGrundstück(erhaltendeGrundstücke.get(i));
+		}
+		
+		
+}
 }

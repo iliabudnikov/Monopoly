@@ -333,6 +333,7 @@ public class Main
 						return false; // d.h., der Spieler ist nicht mehr aktiv;
 					break;
 					
+				
 				//Man sollte warscheinich auch eine Art inventar hinzufügen, wo der Spieler ansehen kann was er alles so hat(Grundstücke, komm aus dem Gefängnis frei Karten, All sein Geld, ob seine Grundstücke Hypotheken haben, usw)
 			}
 
@@ -411,6 +412,7 @@ public class Main
 					if (eingabeAbgeben.equals("1"))
 						return false; // d.h., der Spieler ist nicht mehr aktiv;
 					break;
+				
 			}
 
 			ersteWahl = false;
