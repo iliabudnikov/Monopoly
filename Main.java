@@ -553,7 +553,7 @@ public class Main
 
 		//Erstellen eines Arrays der Feldnummern die durch ein mal Würfeln ohne Pasch von der jetzigen Position des Aktiven Spielers erreicht werden können:
 		ArrayList<Integer> einMalWürfelnFelder = new ArrayList<Integer>();
-		for(int i = 1; i < 19; i ++)
+		for(int i = 1; i < 13; i ++)
 		{
 			if((welcherSpieler.getPosition() + i) > 39)
 			{

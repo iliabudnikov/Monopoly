@@ -1107,25 +1107,25 @@ public class Spieler
 				switch(möglicheGegenangebote.get(eingabe-1))
 				{
 					case"Geld":
-						System.out.println("\nDu kannst " + (Main.alleSpieler.get(welcherSpieler).getGeld()-erhaltenesGeld) + " Mark anbieten.\nWie viel möchtest du zum Handeln?");
+						System.out.println("\nDer Spieler hat " + (Main.alleSpieler.get(welcherSpieler).getGeld()-erhaltenesGeld) + " Mark.\nWie viel möchtest du zum Handeln anfragen?");
 						erhaltenesGeld = Main.checkCorrectNum(1, Main.alleSpieler.get(welcherSpieler).getGeld());
 						ersteWahl = false;
 						break;
 					case"„Du kommst aus dem Gefängnis frei“-Karten":
 						if(Main.alleSpieler.get(welcherSpieler).getGefängnisKarte() > 1)
 						{
-							System.out.println("\nDu hast " + (Main.alleSpieler.get(welcherSpieler).getGefängnisKarte()-erhalteneKarten) + " Karten.\nWie viele möchtest du zum Handel anbieten?");
+							System.out.println("\nDer Spieler hat " + (Main.alleSpieler.get(welcherSpieler).getGefängnisKarte()-erhalteneKarten) + " Karten.\nWie viele möchtest du zum Handel anfragen?");
 							erhalteneKarten = Main.checkCorrectNum(1, Main.alleSpieler.get(welcherSpieler).getGefängnisKarte());
 						}
 						else
 						{
-							System.out.println("\nDu hast nur eine Karte fürs Angebot.");
+							System.out.println("\nDer Spieler hat nur eine Karte fürs Angebot.");
 							erhalteneKarten = 1;
 						}
 						ersteWahl = false;
 						break;
 					case"Grundstücke":
-						System.out.println("\nDu hast die folgenden Grundstücke:\n");
+						System.out.println("\nDer Spieler hat die folgenden Grundstücke:\n");
 						//Elemente von der ArrayList grundstuecke, welche nicht bereits teil von angeboteneGrundstücke sind
 						ArrayList<Integer> auswählbareGrundstücke = new ArrayList<Integer>();
 						//Hinzufügen der Grundstücke zu auswählbareGrundstücke
@@ -1151,7 +1151,7 @@ public class Spieler
 						{
 							System.out.println((j+1) + ". " + Main.spielfeld[auswählbareGrundstücke.get(j)].getFeldname());
 						}
-						System.out.println("\nWelches der Grundstücke möchtest du zum Handel anbieten?");
+						System.out.println("\nWelches der Grundstücke möchtest du zum Handel anfragen?");
 						eingabe = Main.checkCorrectNum(1, auswählbareGrundstücke.size());
 						erhaltendeGrundstücke.add(auswählbareGrundstücke.get(eingabe -1));
 						ersteWahl = false;
@@ -1169,19 +1169,19 @@ public class Spieler
 				//Ausgeben von allem was Gefordert wird.
 				if(erhaltenesGeld != 0)
 				{
-					System.out.println("\nDu bietest " + erhaltenesGeld + " Mark an.");
+					System.out.println("\nDu forderst " + erhaltenesGeld + " Mark.");
 				}
 				if(erhalteneKarten > 1)
 				{
-					System.out.println("\nDu bietest " + erhalteneKarten + " „Du kommst aus dem Gefängnis frei“-Karten an.");
+					System.out.println("\nDu forderst " + erhalteneKarten + " „Du kommst aus dem Gefängnis frei“-Karten.");
 				}
 				else if(erhalteneKarten == 1)
-				System.out.println("\nDu bietest eine „Du kommst aus dem Gefängnis frei“-Karte an.");
+				System.out.println("\nDu forderst eine „Du kommst aus dem Gefängnis frei“-Karte.");
 				if(!erhaltendeGrundstücke.isEmpty())
 				{
 					for(int i = 0; i < erhaltendeGrundstücke.size(); i++)
 					{
-						System.out.println("\nDu bietest folgende Grundstücke an:\n");
+						System.out.println("\nDu forderst folgende Grundstücke an:\n");
 						System.out.println(Main.spielfeld[erhaltendeGrundstücke.get(i)].getFeldname());
 					}
 				}
