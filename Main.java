@@ -10,6 +10,7 @@ public class Main
     public static ArrayList<Spieler> alleSpieler;
     public static Feld [] spielfeld;
 	private static int aktiverSpieler;
+	
 	private static Scanner sc = new Scanner(System.in);
 	
 	// überprüft die Eingabe des Benutzer (funktioniert mit ganzen Zahlen)

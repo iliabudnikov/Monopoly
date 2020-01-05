@@ -99,7 +99,7 @@ public class Strasse extends Grundstueck
         }
         
         if(getHypothek())
-            ergebnis += " Die Straße ist mit einer Hypothek.";
+            ergebnis += " Auf die Straße wurde eine Hypothek aufgenommen.";
         else
         {
             switch (hausAnzahl)

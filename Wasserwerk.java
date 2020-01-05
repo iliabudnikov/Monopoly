@@ -54,7 +54,7 @@ public class Wasserwerk extends Stadtwerk
     	}
 		
 		if(getHypothek())
-            ergebnis += " Der Wasserwerk ist mit einer Hypothek.";
+            ergebnis += " Auf den Wasserwerk wurde eine Hypothek aufgenommen.";
 
     	return ergebnis;
     }

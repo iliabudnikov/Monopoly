@@ -140,6 +140,7 @@ public abstract class Grundstueck extends Feld
             Main.alleSpieler.get(spitzenreiter).subtractGeld(getPreis());
 
             System.out.println("\nNun gehört das Feld " + getFeldname() + " dem Spieler mit der Figur " + Main.alleSpieler.get(spitzenreiter).getFigur() + ".");
+            System.out.println("\nZurück zum Spieler mit der Figur " + Main.alleSpieler.get(aktiverSpieler).getFigur() + ".");	
             return;     // um tiefer in die Methode nicht zu gehen
         }
         

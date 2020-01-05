@@ -54,7 +54,7 @@ public class Stromwerk extends Stadtwerk
 		}
 
 		if(getHypothek())
-			ergebnis += " Der Elektrizitätswerk ist mit einer Hypothek.";
+			ergebnis += " Auf den Elektrizitätswerk wurde eine Hypothek aufgenommen.";
 		
     	return ergebnis;
     }
