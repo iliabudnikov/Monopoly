@@ -70,7 +70,7 @@ public class Bahnhof extends Grundstueck
 	  	}
 		
 		if(getHypothek())
-		  ergebnis += " Der Bahnhof ist mit einer Hypothek.";
+		  ergebnis += " Auf den Bahnhof wurde eine Hypothek aufgenommen.";
 		
     	return ergebnis;
     }

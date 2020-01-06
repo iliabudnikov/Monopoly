@@ -5,7 +5,7 @@ public abstract class Stadtwerk extends Grundstueck
     	super(feldnummer, feld, feldname, preis, null);
     }
 	
-	public void feldBetreten(int aktiverSpieler, int gewürfelteZahl)
+	public void feldBetretenSW(int aktiverSpieler, int gewürfelteZahl) // Polymorphism spielt gegen Entwickler... (ohne SW am Ende werden die Overrides in der Subklassen im Programm aufgerufen)
 	{
 		System.out.println("\nDu hast den " + getFeldname() + " betreten.");
 
@@ -19,7 +19,7 @@ public abstract class Stadtwerk extends Grundstueck
 		}
 	}
 
-	public String toString(Spieler welcherSpieler)
+	public String toStringSW(Spieler welcherSpieler)
 	{
 		if(getFeld().equals("Wasserwerk"))
 		{

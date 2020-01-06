@@ -10,6 +10,7 @@ public class Main
     public static ArrayList<Spieler> alleSpieler;
     public static Feld [] spielfeld;
 	private static int aktiverSpieler;
+
 	private static Scanner sc = new Scanner(System.in);
 	
 	// überprüft die Eingabe des Benutzer (funktioniert mit ganzen Zahlen)
@@ -326,10 +327,10 @@ public class Main
 				case"Spielfeld überblicken":
 					feldAusgeben(alleSpieler.get(aktiverSpieler));
 					break;
-				case"Abgeben":
+				case"Aufgeben":
 					System.out.print("\nBist du sicher?\n(ja - 1, nein - sonstiges)\n\n-> ");
-					String eingabeAbgeben = sc.next();
-					if (eingabeAbgeben.equals("1"))
+					String eingabeAufgeben = sc.next();
+					if (eingabeAufgeben.equals("1"))
 						return false; // d.h., der Spieler ist nicht mehr aktiv;
 					break;
 					
@@ -388,7 +389,7 @@ public class Main
 				case"Handeln":
 					alleSpieler.get(welcherSpieler).HandelnVerfahren();
 					break;
-				case"Hypothen auf ein Grundstück aufnehmen":
+				case"Hypotheken auf ein Grundstück aufnehmen":
 					alleSpieler.get(welcherSpieler).hypothekAufnehmen();
 					break;
 				case"Hypotheken abbezahlen":
@@ -406,10 +407,10 @@ public class Main
 				case"Spielfeld überblicken":
 					feldAusgeben(alleSpieler.get(welcherSpieler));
 					break;
-				case"Abgeben":
+				case"Aufgeben":
 					System.out.print("\nBist du sicher?\n(ja - 1, nein - sonstiges)\n\n-> ");
-					String eingabeAbgeben = sc.next();
-					if (eingabeAbgeben.equals("1"))
+					String eingabeAufgeben = sc.next();
+					if (eingabeAufgeben.equals("1"))
 						return false; // d.h., der Spieler ist nicht mehr aktiv;
 					break;
 				
@@ -488,7 +489,7 @@ public class Main
 					((Gemeinschaftsfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
 					break;
 				case"Stadtwerk":
-					((Stadtwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
+					((Stadtwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetretenSW(aktiverSpieler, (rndInt1 + rndInt2));
 					break;
 				case"Los":
 					((Start)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);
@@ -601,7 +602,7 @@ public class Main
 				System.out.println(((Gemeinschaftsfeld)spielfeld[i]).toString());
 				break;
 			case"Stadtwerk":
-				System.out.println(((Stadtwerk)spielfeld[i]).toString(welcherSpieler));
+				System.out.println(((Stadtwerk)spielfeld[i]).toStringSW(welcherSpieler));
 				break;
 			case"Los":
 				System.out.println(((Start)spielfeld[i]).toString());

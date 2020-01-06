@@ -22,7 +22,6 @@ public class Ereignisfeld extends Aktionsfelder
         	case 0:
         		System.out.println("\nRücke vor bis zur Schlossallee.");
         		Main.alleSpieler.get(aktiverSpieler).setPosition(39);
-        		//Dieser Teil des Programms ist noch nicht Implementiert.
         		((Strasse)Main.spielfeld[39]).feldBetreten(aktiverSpieler);
         		break;
         	//Machen Sie einen Ausflug zum Südbahnhof. Wenn Sie über Los kommen, ziehen Sie M 200 ein.
@@ -35,7 +34,6 @@ public class Ereignisfeld extends Aktionsfelder
         			Main.alleSpieler.get(aktiverSpieler).addGeld(200);
         		}
         		Main.alleSpieler.get(aktiverSpieler).setPosition(5);
-        		//Dieser Teil des Programms ist noch nicht Implementiert.
         		((Bahnhof)Main.spielfeld[5]).feldBetreten(aktiverSpieler);
         		break;
         	//Ihr Bausparvertrag wird fällig. Sie erhalten M 200.
@@ -67,13 +65,13 @@ public class Ereignisfeld extends Aktionsfelder
 						Main.alleSpieler.get(aktiverSpieler).addGeld(200);
 					}
         			Main.alleSpieler.get(aktiverSpieler).setPosition(12);
-        			((Stromwerk)Main.spielfeld[12]).feldBetreten(aktiverSpieler, gewürfelteZahl);
+        			((Stadtwerk)Main.spielfeld[12]).feldBetretenSW(aktiverSpieler, gewürfelteZahl);
         		}
         		//Wasserwerk
         		else
         		{
         			Main.alleSpieler.get(aktiverSpieler).setPosition(28);
-        			((Wasserwerk)Main.spielfeld[28]).feldBetreten(aktiverSpieler, gewürfelteZahl);
+        			((Stadtwerk)Main.spielfeld[28]).feldBetretenSW(aktiverSpieler, gewürfelteZahl);
         		}
         		break;
         	//Gehen Sie in das Gefängnis. Begeben Sie sich direkt dorthin. Gehen Sie nicht über Los. Ziehen Sie nicht M 200 ein
@@ -175,7 +173,7 @@ public class Ereignisfeld extends Aktionsfelder
 						((Gemeinschaftsfeld)Main.spielfeld[Main.alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, gewürfelteZahl);
 						break;
 					case"Stadtwerk":
-						((Stadtwerk)Main.spielfeld[Main.alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, gewürfelteZahl);
+						((Stadtwerk)Main.spielfeld[Main.alleSpieler.get(aktiverSpieler).getPosition()]).feldBetretenSW(aktiverSpieler, gewürfelteZahl);
 						break;
 					case"Los":
 						((Start)Main.spielfeld[Main.alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler);

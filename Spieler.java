@@ -606,12 +606,12 @@ public class Spieler
     		if(((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() > getGeld())
     		{
     			//Ausgeben vom Hypothekspreis und dem dazugehörigen Grundstücksnamen
-    			System.out.println("\nFür das Grundstück" + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " kannst du dir die Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Mark nicht leisten");
+    			System.out.println("\nFür das Grundstück " + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " kannst du dir die Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Mark nicht leisten");
     			alleHypotheken.remove(i);
     			//Da dieses Element nun entfernt wurde, ist alleHypotheken.get(i) ein anderes element als vorher. Daher wird der Loop für diesen Wert von i erneut ausgeführt
     			i--;
     		}
-    		System.out.println("\nFür das Grundstück" + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " mit einer Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Mark gebe " + (i+1) + " ein.");
+    		System.out.println("\nFür das Grundstück " + Main.spielfeld[alleHypotheken.get(i)].getFeldname() + " mit einer Hypothek von " + ((Grundstueck)Main.spielfeld[alleHypotheken.get(i)]).getHypothekPreis() + " Mark gebe " + (i+1) + " ein.");
     	}
     	
     	int eingabe = Main.checkCorrectNum(1, alleHypotheken.size());
@@ -747,9 +747,9 @@ public class Spieler
     		ausgabe.add("Häuser verkaufen");
     	}
     	//Der Spieler kann wenn er am Zug ist jederzeit handeln. Hier gibt es keine Beschränkung, weswegen dies Immmer in der Liste ist.
-    	if(sayIfCanHausVerkaufen())
-    	{
-    		ausgabe.add("Häuser verkaufen");
+		if (sayIfCanHandeln())
+		{
+			ausgabe.add("Handeln");
 		}
 
 		// Hat der Speiler eine Hypothek?
@@ -776,7 +776,7 @@ public class Spieler
     	}
 		
     	ausgabe.add("Spielfeld überblicken");
-		ausgabe.add("Abgeben");
+		ausgabe.add("Aufgeben");
 
     	return ausgabe;
 	}
@@ -836,7 +836,7 @@ public class Spieler
     	}
 		
     	ausgabe.add("Spielfeld überblicken");
-		ausgabe.add("Abgeben");
+		ausgabe.add("Aufgeben");
 
     	return ausgabe;
     }
@@ -1050,7 +1050,7 @@ public class Spieler
 						angebotFertig = true;
 						break;
 					case"Handeln abbrechen":
-						System.out.println("\nZurück zum Spieler mit der Figur " + Main.alleSpieler.get(welcherSpieler).getFigur() + ".");	
+						System.out.println("\nZurück zum Spieler mit der Figur " + Main.alleSpieler.get(welcherSpieler).getFigur() + ".");
 						return;
 				}
 				
@@ -1072,7 +1072,6 @@ public class Spieler
 						System.out.println((i+1) + ". " + Main.spielfeld[angeboteneGrundstücke.get(i)].getFeldname());
 					}
 				}
-				System.out.println("\n-----------------------");
 			}
 			
 			//Das Gegenangebot des anderen Spielers
@@ -1212,7 +1211,6 @@ public class Spieler
 						System.out.println((i+1) + ". " + Main.spielfeld[angeboteneGrundstücke.get(i)].getFeldname());
 					}
 				}
-				System.out.println("\n-----------------------");
 			}
 			
 			System.out.println("\nSpieler mit der Figur " + getFigur() + ", bist du mit diesem Handel zufrieden?\n(ja - 1, nein - sonstiges)\n\n-> .");
