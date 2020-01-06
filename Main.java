@@ -484,9 +484,11 @@ public class Main
 					break;
 				case"Ereignisfeld":
 					((Ereignisfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
+					rnd.setSeed(System.currentTimeMillis() + 1);
 					break;
 				case"Gemeinschaftsfeld":
 					((Gemeinschaftsfeld)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetreten(aktiverSpieler, (rndInt1 + rndInt2));
+					rnd.setSeed(System.currentTimeMillis() + 1);
 					break;
 				case"Stadtwerk":
 					((Stadtwerk)spielfeld[alleSpieler.get(aktiverSpieler).getPosition()]).feldBetretenSW(aktiverSpieler, (rndInt1 + rndInt2));
