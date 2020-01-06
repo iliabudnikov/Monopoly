@@ -75,13 +75,16 @@ public abstract class Grundstueck extends Feld
 
 	// ---------------- Auktionsteil ----------------
     // zählt, wie viele Spieler noch in der Auktion teilnehmen (will nicht teilnehmen oder Budget < Gebot)
-    private static int zählMöglicheTeilnehmer(int [] teilnehmer, int teilnehmerSize, int Gebot)
+    private static int zählMöglicheTeilnehmer(int [] teilnehmer, int teilnehmerSize, int Gebot, int werHatGeboten)
     {
         int anzahl = 0;
         
         for (int i = 0; i < teilnehmerSize; i++) 
-        {
-            anzahl = ((teilnehmer[i] != -1) && (Main.alleSpieler.get(i).getGeld() > Gebot)) ? anzahl+1 : anzahl;
+        {   // sonst konnte der Spieler, der ein Gebot gleich gemacht hat, Va banque gehen und plötzlich entfernt (nicht mitgezählt) werden
+            if(i != werHatGeboten)
+                anzahl = ((teilnehmer[i] != -1) && (Main.alleSpieler.get(i).getGeld() > Gebot)) ? anzahl+1 : anzahl;
+            else
+                anzahl++; // der Spieler hat gleich gebot, er kann nicht entfernt (nicht mitgezählt) werden!
         }
         
         return anzahl;
@@ -97,15 +100,16 @@ public abstract class Grundstueck extends Feld
         int dreckigesGebot; // ungeprüftes Gebot des Spielers (kann <= als das aktuelle Gebot oder > als das Budget des Spielers sein)
         int spitzenreiter = -1; // Nummer des aktuellen spitzenreiters der Auktion
         System.out.println("\n-----------------------");
-        System.out.println("\nDas Grundstück wird versteigt.");
+        System.out.println("\nDas Grundstück wird versteigert.");
         System.out.println("\nDas Anfangsgebot beträgt 10 Mark.");
         
         int i = (aktiverSpieler + 1) % Main.alleSpieler.size(); // fangen mit dem nächsten Spieler an
-        while (zählMöglicheTeilnehmer(teilnehmer, Main.alleSpieler.size(), gebot) > 1)
+        int werHatGeboten = -1; // wer hat gleich ein Gebot gemacht? Das darf man nicht vergessen...
+        while (zählMöglicheTeilnehmer(teilnehmer, Main.alleSpieler.size(), gebot, werHatGeboten) > 1)
         {
             if (teilnehmer[i] != -1 && Main.alleSpieler.get(i).getGeld() > gebot) // will noch immer teilnehmen und Budget >= Gebot
             {
-                System.out.print("\nSpieler mit der Figur " + Main.alleSpieler.get(i).getFigur() + ", wie viel bietest du? (gib eine Ganzzahl ein)"
+                System.out.print("\nSpieler mit der Figur " + Main.alleSpieler.get(i).getFigur() + ", wie viel bietest du? (gib eine Ganzzahl ein, du hast " + Main.alleSpieler.get(i).getGeld() + " Mark)"
                 + "\nGib irgendeinen Buchstaben, wenn du die Auktion verlassen möchtest.\n\n-> ");
                 
                 if (sc.hasNextInt()) { // wenn kein Buchstabe
@@ -130,6 +134,8 @@ public abstract class Grundstueck extends Feld
                 System.out.println("\nSpieler mit der Figur " + Main.alleSpieler.get(i).getFigur() + ", leider hast du nicht genug Geld, um weiter in der Auktion teilzunehmen.");
                 teilnehmer[i] = -1;
             }
+
+            werHatGeboten = i;
             i = ++i % Main.alleSpieler.size(); // läuft im Spielerkreis von 0 bis Spielerarraygröße-1
         }
             
@@ -205,6 +211,7 @@ public abstract class Grundstueck extends Feld
         }
         else
         {
+            System.out.println("\nLeider hast du nicht genug Geld, um die Straße zu kaufen.");
             versteigGrundstück(aktiverSpieler);
         }
     }
