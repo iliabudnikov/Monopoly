@@ -302,10 +302,10 @@ public class Spieler
 	// sagt, ob der Spieler alle Straße in der Farbe hat
 	public boolean sayIfAlleFarben(String farbe)
 	{
-		int strassenAnzahl = 1; // die Anzahl von Straßen mit gleichen Farben
+		int strassenAnzahl = 0; // die Anzahl von Straßen mit gleichen Farben
 		for(int i : grundstuecke)
 		{
-			if (Main.spielfeld[i].getFeld() == "Strasse" && ((Strasse)((Grundstueck)Main.spielfeld[i])).getFarbe() == farbe && !((Grundstueck)Main.spielfeld[i]).getHypothek())
+			if (Main.spielfeld[i].getFeld() == "Straße" && ((Strasse)Main.spielfeld[i]).getFarbe() == farbe && !((Grundstueck)Main.spielfeld[i]).getHypothek())
 				strassenAnzahl += 1; // wenn eine Straße gefunden ist und ihre Farbe passend ist
 		}
 		
@@ -322,8 +322,11 @@ public class Spieler
 		int minHausanzahl = 5;
 		for (int i : grundstuecke) // genug Geld für die Hausbauung (bauen dort, wo min Häuse stehen) 
 		{
-			if (((Strasse)Main.spielfeld[i]).getFarbe() == ((Strasse)Main.spielfeld[strassennummer]).getFarbe() && ((Strasse)Main.spielfeld[i]).getHausAnzahl() < minHausanzahl)
-				minHausanzahl = ((Strasse)Main.spielfeld[i]).getHausAnzahl();
+			if(Main.spielfeld[i].getFeld().equals("Straße"))
+			{
+				if (((Strasse)Main.spielfeld[i]).getFarbe() == ((Strasse)Main.spielfeld[strassennummer]).getFarbe() && ((Strasse)Main.spielfeld[i]).getHausAnzahl() < minHausanzahl)
+					minHausanzahl = ((Strasse)Main.spielfeld[i]).getHausAnzahl();
+			}
 		}
 
 		if (minHausanzahl < 4) // genug Geld für ein Haus
@@ -342,7 +345,7 @@ public class Spieler
 		ArrayList<String> farben = new ArrayList<String>(); // um dieselben Farben mehrmals nicht zu prüfen
 		for(int i : grundstuecke) // grundstuecke.size()-1, da das letzte Grundstück schon sinnlos zu prüfen ist
 		{
-			if (Main.spielfeld[i].getFeld() == "Strasse" && !farben.contains(((Strasse)Main.spielfeld[i]).getFarbe()))
+			if (Main.spielfeld[i].getFeld() == "Straße" && !farben.contains(((Strasse)Main.spielfeld[i]).getFarbe()))
 			// wenn das Grundstück eine Straße ist und die Farbe wir noch nicht geprüft haben
 			{
 				if (sayIfAlleFarben(((Strasse)Main.spielfeld[i]).getFarbe()))
@@ -374,7 +377,7 @@ public class Spieler
 				{
 					for(int j : grundstuecke)
 					{
-						if(Main.spielfeld[j].getFeld() == "Strasse" && ((Strasse)Main.spielfeld[j]).getFarbe() == i)
+						if(Main.spielfeld[j].getFeld() == "Straße" && ((Strasse)Main.spielfeld[j]).getFarbe() == i)
 						{
 							if(((Strasse)Main.spielfeld[j]).getHausAnzahl() < hausanzahl)
 							{
@@ -407,7 +410,7 @@ public class Spieler
 		for(int i : grundstuecke)
 		{
 			//Nur Strassen können häuser haben, weswegen hier nur die Elemente von grundstuecke betrachtet werden, die Strassen sind
-			if(Main.spielfeld[i].getFeld() == "Strasse")
+			if(Main.spielfeld[i].getFeld() == "Straße")
 			{
 				//Ist auf einer Strasse des Spielers mindestens ein Haus?
 				if(((Strasse)Main.spielfeld[i]).getHausAnzahl() > 0)
@@ -460,7 +463,8 @@ public class Spieler
 		for (int i = 0; i <  strassen.length; i++)
 		{	// Zählen alle erlaubten Straßen auf
 			System.out.println((i+1) + ". ");
-			((Strasse)Main.spielfeld[strassen[i]]).toString(null);
+			System.out.println(((Strasse)Main.spielfeld[strassen[i]]).getFeldname());
+			System.out.println("Hausanzahl: "+ ((Strasse)Main.spielfeld[strassen[i]]).getHausAnzahl());
 		}
 						
 		System.out.println("\nWähle eine Straße aus der Liste.");
@@ -476,9 +480,12 @@ public class Spieler
     	for(int i : grundstuecke)
     	{
     		//Wenn das Grundstück ein Haus hat, wird es zur grundstückMitHaus ArrayList hinzugefügt
-    		if(((Strasse)Main.spielfeld[i]).hasHaus())
+    		if(Main.spielfeld[i].getFeld().equals("Straße"));
     		{
-    			grundstückeMitHaus.add(i);
+    			if(((Strasse)Main.spielfeld[i]).hasHaus())
+        		{
+        			grundstückeMitHaus.add(i);
+        		}
     		}
     	}
 		
@@ -533,7 +540,7 @@ public class Spieler
         		if(!((Grundstueck)Main.spielfeld[i]).getHypothek())
         		{
         			//Für Strassen können nur Hypotheken aufgenommen werden, wenn kein Haus auf ihnen steht
-            		if(Main.spielfeld[i].getFeld() == "Strasse")
+            		if(Main.spielfeld[i].getFeld() == "Straße")
             		{
             			if(((Strasse)Main.spielfeld[i]).getHausAnzahl() == 0)
                 			return true;
@@ -622,7 +629,7 @@ public class Spieler
     		if(!((Grundstueck)Main.spielfeld[i]).getHypothek())
     		{
     			//Für Strassen können nur Hypotheken aufgenommen werden, wenn kein Haus auf ihnen steht
-        		if(Main.spielfeld[i].getFeld() == "Strasse")
+        		if(Main.spielfeld[i].getFeld() == "Straße")
         		{
         			if(((Strasse)Main.spielfeld[i]).getHausAnzahl() == 0)
             		{
@@ -880,7 +887,7 @@ public class Spieler
 	{
 		ArrayList<Integer> strassen = new ArrayList<Integer>();
 		for(int i : grundstuecke)
-			if(Main.spielfeld[i].getFeld() == "Strasse" && ((Strasse)Main.spielfeld[i]).getHausAnzahl() == 0)
+			if(Main.spielfeld[i].getFeld() == "Straße" && ((Strasse)Main.spielfeld[i]).getHausAnzahl() == 0)
 				strassen.add(i);
 		return strassen;
 	}
@@ -892,7 +899,7 @@ public class Spieler
 		{
 			if(!((Grundstueck)Main.spielfeld[i]).getHypothek())
 			{   // wenn das Grundstück eine Straße ist, dann muss Sie unbebaut sein
-				if (Main.spielfeld[i].getFeld() == "Strasse")
+				if (Main.spielfeld[i].getFeld() == "Straße")
 				{	
 					if (((Strasse)((Grundstueck)Main.spielfeld[i])).getHausAnzahl() == 0)
 						return true;
